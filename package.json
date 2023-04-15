@@ -1,0 +1,12 @@
+{
+  "name": "music-team-monorepo",
+  "private": true,
+  "workspaces": [
+    "apps"
+  ],
+  "version": "1.0.0",
+  "license": "MIT",
+  "devDependencies": {
+    "prettier": "^2.8.7"
+  }
+}
