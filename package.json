@@ -2,7 +2,7 @@
   "name": "music-team-monorepo",
   "private": true,
   "workspaces": [
-    "apps"
+    "apps/*"
   ],
   "version": "1.0.0",
   "license": "MIT",
