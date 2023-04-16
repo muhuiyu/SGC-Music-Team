@@ -11,9 +11,13 @@
   "dependencies": {
     "@fortawesome/free-solid-svg-icons": "^6.4.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
+    "@headlessui/react": "^1.7.14",
+    "@heroicons/react": "^2.0.17",
     "@material-ui/core": "^4.12.4",
     "@material-ui/icons": "^4.11.3",
     "@mui/icons-material": "^5.11.16",
+    "classnames": "^2.3.2",
+    "firebase": "^9.19.1",
     "immer": "^9.0.21",
     "localforage": "^1.10.0",
     "lodash": "^4.17.21",
@@ -21,6 +25,7 @@
     "match-sorter": "^6.3.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-firebase-hooks": "^5.1.1",
     "react-router-dom": "^6.10.0",
     "sort-by": "^1.2.0"
   },

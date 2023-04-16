@@ -49,4 +49,5 @@ export default interface User {
   phoneNumber: string
   permissions?: Permission[]
   roles: UserRole[]
+  imageUrlString?: string
 }

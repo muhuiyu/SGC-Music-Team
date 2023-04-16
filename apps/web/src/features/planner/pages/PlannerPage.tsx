@@ -3,6 +3,7 @@ import { DateTime } from 'luxon'
 import { useMemo, useState } from 'react'
 import NavBar from '../../../components/NavBar'
 import SideBar from '../../../components/SideBar'
+import { testUser } from '../../../mock/MockData'
 
 const monthFormatter = Intl.DateTimeFormat('en', { month: 'short' })
 const thisYear = new Date().getFullYear()
@@ -29,10 +30,14 @@ export default function PlannerPage() {
 
   return (
     <div className="flex flex-row flex-1 h-full">
-      <SideBar />
-      <main className="p-4 flex flex-col flex-1">
-        {/* Navbar */}
-        <NavBar title="Planner" />
+      <SideBar
+        currentPage="planner"
+        onUpdateSelection={function (selected: boolean): void {
+          throw new Error('Function not implemented.')
+        }}
+      />
+      <main className="p-8 flex flex-col flex-1">
+        <NavBar title="Planner" user={testUser} />
 
         <div className="flex flex-row justify-end">
           <form>
@@ -56,6 +61,7 @@ export default function PlannerPage() {
                   <option
                     key={`${firstMonth}_${secondMonth}`}
                     value={`${firstMonth}_${secondMonth}`}
+                    onChange={() => setMonths([firstMonth, secondMonth])}
                   >
                     {monthFormatter.format(firstDate)} & {monthFormatter.format(secondDate)}
                   </option>
