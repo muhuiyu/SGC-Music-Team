@@ -2,11 +2,11 @@ import NavBar from '../../../components/NavBar'
 import TableHeader from '../../../components/PageHeader'
 import SideBar from '../../../components/SideBar'
 import { testUser } from '../../../mock/MockData'
-import User from '../../../models/User'
+import UserModel from '../../../models/User'
 import MemberListTable from '../components/MemberListTable'
 
 export default function MembersPage() {
-  const members: User[] = [
+  const members: UserModel[] = [
     {
       id: '1',
       name: 'John Doe',

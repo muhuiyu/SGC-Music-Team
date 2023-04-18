@@ -24,7 +24,7 @@ export default function SideBar(props: Props) {
   )
 
   return (
-    <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 max-w-[300px]">
+    <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 max-w-[250px]">
       <div className="flex h-16 shrink-0 items-center py-12">
         <img
           className="h-12 w-auto"
@@ -96,7 +96,8 @@ export default function SideBar(props: Props) {
                 </li>
               ))}
             </ul>
-          </li>        </ul>
+          </li>{' '}
+        </ul>
       </nav>
     </div>
   )

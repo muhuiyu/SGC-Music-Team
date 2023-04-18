@@ -2,10 +2,7 @@ import { Menu, Transition } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import classNames from 'classnames'
 import { Fragment } from 'react'
-import User from '../models/User'
-import { updateCurrentUser } from 'firebase/auth'
-
-
+import UserModel from '../models/User'
 
 const items = [
   { name: 'Account Settings', isDestructive: false, href: '/settings' },
@@ -14,7 +11,7 @@ const items = [
 
 interface NavBarProps {
   title: string
-  user: User
+  user: UserModel
 }
 
 export default function NavBar(props: NavBarProps) {

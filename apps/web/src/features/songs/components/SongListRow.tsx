@@ -1,7 +1,7 @@
 import { IconButton } from '@material-ui/core'
 import { Check, Close, LinkOutlined, YouTube } from '@material-ui/icons'
 import { useMemo, useState } from 'react'
-import User from '../../../models/User'
+import UserModel from '../../../models/User'
 
 interface Props {
   song: Song
@@ -9,7 +9,7 @@ interface Props {
   selected?: boolean
   onUpdateSelection(selected: boolean): void
   onRequestEdit(): void
-  onCommitEdit(details: Partial<User>): void
+  onCommitEdit(details: Partial<UserModel>): void
   onCancelEdit(): void
 }
 

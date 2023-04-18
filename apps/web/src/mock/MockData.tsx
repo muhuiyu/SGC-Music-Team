@@ -1,6 +1,6 @@
-import User from '../models/User'
+import UserModel from '../models/User'
 
-export const testUser: User = {
+export const testUser: UserModel = {
   id: 'user-1',
   name: 'Grace Yu',
   email: 'muyuhello@gmail.com',
