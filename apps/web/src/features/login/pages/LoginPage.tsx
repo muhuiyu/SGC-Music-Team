@@ -1,19 +1,34 @@
+import { useQuery } from '@tanstack/react-query'
+import classNames from 'classnames'
 import { useEffect } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { useNavigate } from 'react-router-dom'
-import { auth, signInWithGoogle } from '../../../api/providers/FirebaseProvider'
-import LoadingPage from '../../common/pages/LoadingPage'
+import { auth, getUserProfile, signInWithGoogle } from '../../../api/providers/FirebaseProvider'
+import { logoImageUrl } from '../../common/assets/AppImages'
 
 export default function LoginPage() {
   const [user, loading, error] = useAuthState(auth)
   const navigate = useNavigate()
+
+  const { data: fetchedUserData, isFetching: isFetchingUser } = useQuery({
+    queryKey: ['userProfile', user?.uid ?? ''],
+    queryFn: async () => (user ? getUserProfile(user.uid) : null),
+    enabled: !!user?.uid,
+  })
+
   useEffect(() => {
-    if (loading) {
-      ;<LoadingPage />
+    if (loading || isFetchingUser) {
       return
     }
-    if (user) navigate('/')
-  }, [user, loading])
+    if (user && typeof fetchedUserData !== 'undefined') {
+      if (fetchedUserData === null) {
+        navigate('/signup')
+      } else {
+        navigate('/')
+      }
+    }
+  }, [user, loading, fetchedUserData, isFetchingUser])
+
   return (
     <>
       <div
@@ -23,11 +38,7 @@ export default function LoginPage() {
         }}
       >
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
-          <img
-            className="mx-auto h-12 w-auto"
-            src="https://stgeorges.org.sg/wp-content/uploads/SGC-logo-Red-R3-300x75.png"
-            alt="St George Church"
-          />
+          <img className="mx-auto h-12 w-auto" src={logoImageUrl} alt="St George Church" />
           <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
             Sign in to your account
           </h2>
@@ -44,6 +55,16 @@ export default function LoginPage() {
             </button>
           </div>
         </div>
+      </div>
+
+      {/* Loading */}
+      <div
+        className={classNames(
+          'absolute inset-0 bg-white bg-opacity-80 flex justify-center items-center',
+          { hidden: !loading && !isFetchingUser },
+        )}
+      >
+        <span className="text-2xl">Loading&hellip;</span>
       </div>
     </>
   )

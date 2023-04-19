@@ -1,7 +1,7 @@
-import UserModel from '../../../models/User'
+import User from '../../../models/User'
 
 interface Props {
-  users: UserModel[]
+  users: User[]
 }
 
 export default function PlannerUserList(props: Props) {
@@ -15,7 +15,7 @@ export default function PlannerUserList(props: Props) {
               <img className="h-10 w-10 rounded-full" src={item.imageUrlString ?? ''} alt="" />
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-900">{item.name}</p>
-                <p className="text-sm text-gray-500">{item.roles.join(', ')}</p>
+                <p className="text-sm text-gray-500">{item.availableRoles.join(', ')}</p>
               </div>
             </div>
             <div className="text-sm text-blue-600">0/8 weeks</div>

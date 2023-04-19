@@ -2,153 +2,12 @@ import { DateTime } from 'luxon'
 import { useMemo, useState } from 'react'
 import NavBar from '../../../components/NavBar'
 import SideBar from '../../../components/SideBar'
-import { testUser } from '../../../mock/MockData'
-import Service from '../../../models/Service'
-import UserModel from '../../../models/User'
+import { services, testUser, users } from '../../../mock/MockData'
 import PlannerTable from '../components/PlannerTable'
 import PlannerYearMonthsFilter from '../components/PlannerYearMonthsFilter'
 
 const thisYear = new Date().getFullYear()
 const thisMonth = new Date().getMonth()
-
-const services: Service[] = [
-  {
-    id: 'service-1',
-    dateTime: DateTime.fromJSDate(new Date(2023, 5, 12, 10, 0, 0, 0)),
-    topic: 'Easter',
-    songs: [],
-    duty: {},
-    note: 'nothing',
-    songNotes: {},
-  },
-  {
-    id: 'service-2',
-    dateTime: DateTime.fromJSDate(new Date(2023, 5, 19, 10, 0, 0, 0)),
-    topic: 'Easter',
-    songs: [],
-    duty: {},
-    note: 'nothing',
-    songNotes: {},
-  },
-  {
-    id: 'service-3',
-    dateTime: DateTime.fromJSDate(new Date(2023, 5, 26, 10, 0, 0, 0)),
-    topic: 'Easter',
-    songs: [],
-    duty: {},
-    note: 'nothing',
-    songNotes: {},
-  },
-  {
-    id: 'service-3',
-    dateTime: DateTime.fromJSDate(new Date(2023, 6, 5, 10, 0, 0, 0)),
-    topic: 'Easter',
-    songs: [],
-    duty: {},
-    note: 'nothing',
-    songNotes: {},
-  },
-  {
-    id: 'service-3',
-    dateTime: DateTime.fromJSDate(new Date(2023, 6, 10, 10, 0, 0, 0)),
-    topic: 'Easter',
-    songs: [],
-    duty: {},
-    note: 'nothing',
-    songNotes: {},
-  },
-  {
-    id: 'service-3',
-    dateTime: DateTime.fromJSDate(new Date(2023, 6, 17, 10, 0, 0, 0)),
-    topic: 'Easter',
-    songs: [],
-    duty: {},
-    note: 'nothing',
-    songNotes: {},
-  },
-  {
-    id: 'service-3',
-    dateTime: DateTime.fromJSDate(new Date(2023, 6, 24, 10, 0, 0, 0)),
-    topic: 'Easter',
-    songs: [],
-    duty: {},
-    note: 'nothing',
-    songNotes: {},
-  },
-]
-
-const users: UserModel[] = [
-  {
-    id: 'user-1',
-    name: 'Grace Yu',
-    email: 'muyuhello@gmail.com',
-    phoneNumber: '89516033',
-    permissions: [],
-    roles: ['drums', 'bass'],
-    imageUrlString:
-      'https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-  },
-  {
-    id: 'user-1',
-    name: 'James Tomlins',
-    email: 'muyuhello@gmail.com',
-    phoneNumber: '89516033',
-    permissions: [],
-    roles: ['drums', 'bass'],
-    imageUrlString:
-      'https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-  },
-  {
-    id: 'user-1',
-    name: 'Jeff',
-    email: 'muyuhello@gmail.com',
-    phoneNumber: '89516033',
-    permissions: [],
-    roles: ['drums', 'bass'],
-    imageUrlString:
-      'https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-  },
-  {
-    id: 'user-1',
-    name: 'Jeff',
-    email: 'muyuhello@gmail.com',
-    phoneNumber: '89516033',
-    permissions: [],
-    roles: ['drums', 'bass'],
-    imageUrlString:
-      'https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-  },
-  {
-    id: 'user-1',
-    name: 'Jeff',
-    email: 'muyuhello@gmail.com',
-    phoneNumber: '89516033',
-    permissions: [],
-    roles: ['drums', 'bass'],
-    imageUrlString:
-      'https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-  },
-  {
-    id: 'user-1',
-    name: 'Jeff',
-    email: 'muyuhello@gmail.com',
-    phoneNumber: '89516033',
-    permissions: [],
-    roles: ['drums', 'bass'],
-    imageUrlString:
-      'https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-  },
-  {
-    id: 'user-1',
-    name: 'Jeff',
-    email: 'muyuhello@gmail.com',
-    phoneNumber: '89516033',
-    permissions: [],
-    roles: ['drums', 'bass'],
-    imageUrlString:
-      'https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-  },
-]
 
 export default function PlannerPage() {
   const [selectedYear, setYear] = useState(thisYear)
@@ -177,7 +36,7 @@ export default function PlannerPage() {
           throw new Error('Function not implemented.')
         }}
       />
-      <main className="p-8 flex flex-col flex-1">
+      <main className="p-8 flex flex-col flex-1 overflow-x-clip">
         <NavBar title="Planner" user={testUser} />
         <PlannerYearMonthsFilter
           selectedYear={selectedYear}

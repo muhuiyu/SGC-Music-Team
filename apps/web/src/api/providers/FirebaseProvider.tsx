@@ -1,26 +1,76 @@
 import { initializeApp } from 'firebase/app'
-import { GoogleAuthProvider, getAuth, signInWithRedirect, signOut } from 'firebase/auth'
-import { getFirestore } from 'firebase/firestore'
+import {
+  User as FirebaseUser,
+  GoogleAuthProvider,
+  getAuth,
+  signInWithRedirect,
+  signOut,
+} from 'firebase/auth'
+import { DocumentData, DocumentSnapshot, doc, getDoc, getFirestore } from 'firebase/firestore'
+import { firebaseConfig } from '../../FirebaseConfig'
+import User, { Permission, UserRole } from '../../models/User'
 
-const firebaseConfig = {
-  apiKey: 'AIzaSyBW830MCh3XcxkCM7qVSi1xukbZHqb9ZA4',
-  authDomain: 'music-team-roster.firebaseapp.com',
-  projectId: 'music-team-roster',
-  storageBucket: 'music-team-roster.appspot.com',
-  messagingSenderId: '949364282512',
-  appId: '1:949364282512:web:ec4582017533fe1d1d3415',
-}
-
+// Set up
 const app = initializeApp(firebaseConfig)
 const googleProvider = new GoogleAuthProvider()
 export const auth = getAuth(app)
 export const db = getFirestore(app)
 
+// Reference names
+const usersReference = 'users'
+const songsReference = 'songs'
+const servicesReference = 'services'
+
+// Sign in
 export const signInWithGoogle = async () => {
   const result = await signInWithRedirect(auth, googleProvider)
   console.log(result)
 }
-
+// Sign out
 export const logout = () => {
   signOut(auth)
+}
+
+// user
+interface RawUser {
+  email: string
+  isLead: boolean
+  name: string
+  permissions: Permission[]
+  phoneNumber: string
+  roles: UserRole[]
+  userId: User['id']
+}
+
+export function userFromSnapshot(snapshot: DocumentSnapshot<DocumentData>): User {
+  const { ...docData } = snapshot.data() as RawUser
+  return {
+    ...docData,
+    id: snapshot.id,
+  }
+}
+
+export async function getUserProfile(userId: FirebaseUser['uid']): Promise<User | null> {
+  const snapshot = await getDoc(doc(db, usersReference, userId))
+  if (!snapshot.exists()) return null
+  return userFromSnapshot(snapshot)
+}
+
+// song
+interface RawSong {
+  id: Song['id']
+  name: string
+  author: string
+  key: Song['key']
+  tempo: number
+  songUrlString: string
+  sheetUrlString: string
+}
+
+export function songFromSnapshot(snapshot: DocumentSnapshot<DocumentData>): Song {
+  const { ...docData } = snapshot.data() as RawSong
+  return {
+    ...docData,
+    id: snapshot.id,
+  }
 }

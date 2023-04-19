@@ -1,6 +1,7 @@
 import { Disclosure } from '@headlessui/react'
 import { ChevronRightIcon } from '@heroicons/react/20/solid'
 import classNames from 'classnames'
+import { logoImageUrl } from '../features/common/assets/AppImages'
 import { AppPage, AppPageInfo, allAppPages, pageInfo } from '../models/AppPage'
 
 interface NavigationItem extends AppPageInfo {
@@ -26,11 +27,7 @@ export default function SideBar(props: Props) {
   return (
     <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 max-w-[250px]">
       <div className="flex h-16 shrink-0 items-center py-12">
-        <img
-          className="h-12 w-auto"
-          src="https://stgeorges.org.sg/wp-content/uploads/SGC-logo-Red-R3-300x75.png"
-          alt="St George Church"
-        />
+        <img className="h-12 w-auto" src={logoImageUrl} alt="St George Church" />
       </div>
       <nav className="flex flex-1 flex-col">
         <ul role="list" className="flex flex-1 flex-col gap-y-7">

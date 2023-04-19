@@ -1,16 +1,11 @@
-type Permission = 'editMembers' | 'editPlanner'
-export type UserRole = 'lead' | 'piano' | 'drums' | 'pa' | 'guitar' | 'bass' | 'vocal'
+export type Permission = 'editMembers' | 'editPlanner'
+export type UserRole = 'piano' | 'drums' | 'pa' | 'guitar' | 'bass' | 'vocal'
+export const allRoles: UserRole[] = ['piano', 'drums', 'pa', 'guitar', 'bass', 'vocal']
 
 export const roleInfo: Record<
   UserRole,
   { colorCode: string; textColorCode: string; iconName: string; name: string }
 > = {
-  lead: {
-    colorCode: '#031',
-    textColorCode: '#fff',
-    iconName: 'microphone',
-    name: 'Lead',
-  },
   piano: {
     colorCode: '#ee0',
     textColorCode: '#000',
@@ -44,16 +39,18 @@ export const roleInfo: Record<
   vocal: {
     colorCode: '#82c',
     textColorCode: '#fff',
-    iconName: 'vocal',
+    iconName: 'microphone',
+    name: 'Vocal',
   },
 }
 
-export default interface UserModel {
+export default interface User {
   id: string
   name: string
   email: string
   phoneNumber: string
   permissions?: Permission[]
-  roles: UserRole[]
+  availableRoles: UserRole[]
+  isLead: boolean
   imageUrlString?: string
 }

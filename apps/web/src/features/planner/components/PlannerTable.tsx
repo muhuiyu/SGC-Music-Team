@@ -1,31 +1,35 @@
+import classNames from 'classnames'
+import { useState } from 'react'
 import Service from '../../../models/Service'
-import UserModel from '../../../models/User'
+import User from '../../../models/User'
 import PlannerTableCell from './PlannerTableCell'
+import PlannerTableLeadCell from './PlannerTableLeadCell'
+import PlannerTableUserCell from './PlannerTableUserCell'
 
 interface Props {
-  users: UserModel[]
+  users: User[]
   services: Service[]
 }
 
 export default function PlannerTable(props: Props) {
   const { users, services } = props
+  const [editingLeadService, setEditingLeadService] = useState<Service['id'] | null>(null)
+  const [editingUserService, setEditingUserService] = useState<
+    [userId: User['id'], serviceId: Service['id']] | null
+  >(null)
+
   return (
-    <div className="mt-8 flow-root">
-      <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+    <div className="mt-8 flow-root overflow-x-scroll">
+      <div className="-mx-4 -my-2 sm:-mx-6 lg:-mx-8">
         <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8 overflow-x-scroll">
           <table className="min-w-full divide-y divide-gray-300">
             <thead>
               <tr className="divide-x">
-                <th
-                  scope="col"
-                  className="px-5 py-5 text-left text-sm font-semibold text-gray-900 sm:pl-0"
-                >
-                  User
-                </th>
+                <th></th>
                 {services.map((item) => (
                   <th
                     scope="col"
-                    className="px-5 py-5 text-left text-sm font-semibold text-gray-900 w-30"
+                    className="px-5 py-5 text-left text-sm font-semibold text-gray-900 w-[500px]"
                   >
                     {item.dateTime.monthShort} {item.dateTime.day}
                   </th>
@@ -33,31 +37,68 @@ export default function PlannerTable(props: Props) {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 bg-white">
-              {users.map((item, index) => (
-                <tr className="divide-x" key={item.email}>
+              <tr className="divide-x">
+                <td className="whitespace-nowrap px-5 py-5 text-sm font-bold sm:pl-0">
+                  Music team lead
+                </td>
+                {services.map((service) => (
+                  <PlannerTableLeadCell
+                    users={users}
+                    service={service}
+                    isEditing={
+                      editingUserService === null &&
+                      editingLeadService !== null &&
+                      editingLeadService === service.id
+                    }
+                    onStartEditing={() => {
+                      setEditingLeadService(service.id)
+                      setEditingUserService(null)
+                    }}
+                    onEndEditing={() => {
+                      setEditingLeadService((prev) => {
+                        if (prev && prev === service.id) {
+                          return null
+                        } else {
+                          return prev
+                        }
+                      })
+                    }}
+                  />
+                ))}
+                <td className="whitespace-nowrap px-5 py-5 text-sm font-bold">Music team lead</td>
+              </tr>
+              {users.map((user, index) => (
+                <tr
+                  className={classNames('divide-x', index === 0 ? 'divide-y-8' : '')}
+                  key={user.email}
+                >
                   {/* user row */}
-                  <td className={'whitespace-nowrap px-5 py-5 text-sm sm:pl-0 sticky'}>
-                    <div className="flex items-center">
-                      <div className="h-11 w-11 flex-shrink-0">
-                        <img
-                          className="h-11 w-11 rounded-full"
-                          src={item.imageUrlString ?? ''}
-                          alt=""
-                        />
-                      </div>
-                      <div className="ml-4">
-                        <div className="font-medium text-gray-900">{item.name}</div>
-                        <div className="mt-1 text-gray-500">{item.email}</div>
-                      </div>
-                    </div>
-                  </td>
-                  {services.map((item) => (
+                  <PlannerTableUserCell user={user} shouldAddLeftPadding={false} />
+                  {services.map((service) => (
                     <PlannerTableCell
-                      service={item}
+                      service={service}
                       user={users[index]}
-                      onRequestEdit={undefined}
+                      isEditing={
+                        editingUserService !== null &&
+                        editingUserService[0] === user.id &&
+                        editingUserService[1] === service.id
+                      }
+                      onStartEditing={() => {
+                        setEditingUserService([user.id, service.id])
+                        setEditingLeadService(null)
+                      }}
+                      onEndEditing={() => {
+                        setEditingUserService((prev) => {
+                          if (prev && prev[0] === user.id && prev[1] === service.id) {
+                            return null
+                          } else {
+                            return prev
+                          }
+                        })
+                      }}
                     />
                   ))}
+                  <PlannerTableUserCell user={user} shouldAddLeftPadding={true} />
                 </tr>
               ))}
             </tbody>

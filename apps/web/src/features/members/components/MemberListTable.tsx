@@ -1,11 +1,11 @@
 import produce from 'immer'
 import _ from 'lodash'
 import { useMemo, useState } from 'react'
-import UserModel from '../../../models/User'
+import User from '../../../models/User'
 import MemberListRow from './MemberListRow'
 
 interface Props {
-  users: UserModel[]
+  users: User[]
 }
 
 export default function MemberListTable({ users: suppliedUsers }: Props) {
@@ -23,8 +23,8 @@ export default function MemberListTable({ users: suppliedUsers }: Props) {
     })
   }, [users, searchQuery])
 
-  const [editingMemberId, setEditingMemberId] = useState<UserModel['id'] | null>(null)
-  const [selectedMemberIds, setSelectedMemberIds] = useState<UserModel['id'][]>([])
+  const [editingMemberId, setEditingMemberId] = useState<User['id'] | null>(null)
+  const [selectedMemberIds, setSelectedMemberIds] = useState<User['id'][]>([])
 
   const areAllMembersSelected = useMemo(() => {
     return _.isEmpty(_.difference(_.map(users, 'id'), selectedMemberIds))

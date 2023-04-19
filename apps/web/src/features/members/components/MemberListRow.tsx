@@ -2,15 +2,15 @@ import { IconButton } from '@material-ui/core'
 import { Check, Close } from '@material-ui/icons'
 import produce from 'immer'
 import { useMemo, useState } from 'react'
-import UserModel, { roleInfo } from '../../../models/User'
+import User, { roleInfo } from '../../../models/User'
 
 interface Props {
-  user: UserModel
+  user: User
   editing: boolean
   selected?: boolean
   onUpdateSelection(selected: boolean): void
   onRequestEdit(): void
-  onCommitEdit(details: Partial<UserModel>): void
+  onCommitEdit(details: Partial<User>): void
   onCancelEdit(): void
 }
 
@@ -25,7 +25,7 @@ export default function MemberListRow(props: Props) {
     onCancelEdit,
   } = props
 
-  const [editingUser, setEditingUser] = useState<Partial<UserModel>>({})
+  const [editingUser, setEditingUser] = useState<Partial<User>>({})
 
   const resolvedUser = useMemo(
     () => ({
@@ -69,7 +69,7 @@ export default function MemberListRow(props: Props) {
         )}
       </td>
       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 flex flex-row gap-1">
-        {resolvedUser.roles.map((role, index) => (
+        {resolvedUser.availableRoles.map((role, index) => (
           <span
             className="inline-flex rounded-full px-2 text-xs font-medium leading-5"
             style={{

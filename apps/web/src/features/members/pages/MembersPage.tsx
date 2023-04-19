@@ -1,35 +1,12 @@
+import useAllUsers from '../../../api/providers/useAllUsers'
 import NavBar from '../../../components/NavBar'
 import TableHeader from '../../../components/PageHeader'
 import SideBar from '../../../components/SideBar'
 import { testUser } from '../../../mock/MockData'
-import UserModel from '../../../models/User'
 import MemberListTable from '../components/MemberListTable'
 
 export default function MembersPage() {
-  const members: UserModel[] = [
-    {
-      id: '1',
-      name: 'John Doe',
-      email: 'john@example.com',
-      phoneNumber: '123-456-7890',
-      roles: ['bass', 'drums', 'guitar'],
-    },
-    {
-      id: '2',
-      name: 'Jane Doe',
-      email: 'jane@example.com',
-      phoneNumber: '123-456-7890',
-      roles: ['lead', 'piano'],
-    },
-    {
-      id: '3',
-      name: 'Bob Smith',
-      email: 'bob@example.com',
-      phoneNumber: '123-456-7890',
-      roles: ['pa', 'vocal'],
-    },
-  ]
-
+  const users = useAllUsers()
   return (
     <div className="flex flex-row flex-1 h-full">
       <SideBar
@@ -48,7 +25,7 @@ export default function MembersPage() {
           }}
         />
         {/* table */}
-        <MemberListTable users={members} />
+        <MemberListTable users={users} />
       </main>
     </div>
   )
