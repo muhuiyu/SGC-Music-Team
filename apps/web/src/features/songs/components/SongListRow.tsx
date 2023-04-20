@@ -1,6 +1,7 @@
 import { IconButton } from '@material-ui/core'
 import { Check, Close, LinkOutlined, YouTube } from '@material-ui/icons'
 import { useMemo, useState } from 'react'
+import { Song } from '../../../models/Song'
 import User from '../../../models/User'
 
 interface Props {
@@ -112,13 +113,13 @@ export default function SongListRow(props: Props) {
         {editing ? (
           <input
             type="text"
-            name="songLinkUrl"
-            value={resolvedSong.songUrlString}
+            name="sheetLinkUrl"
+            value={resolvedSong.sheetUrlString}
             style={{ backgroundColor: 'lightblue' }}
-            onChange={onEditField('songLinkUrl')}
+            onChange={onEditField('sheetLinkUrl')}
           />
         ) : (
-          <a href={resolvedSong.songUrlString}>
+          <a href={resolvedSong.sheetUrlString}>
             <LinkOutlined />
           </a>
         )}
@@ -127,13 +128,13 @@ export default function SongListRow(props: Props) {
         {editing ? (
           <input
             type="text"
-            name="sheetLinkUrl"
-            value={resolvedSong.sheetUrlString}
+            name="songLinkUrl"
+            value={resolvedSong.songUrlString}
             style={{ backgroundColor: 'lightblue' }}
-            onChange={onEditField('sheetLinkUrl')}
+            onChange={onEditField('songLinkUrl')}
           />
         ) : (
-          <a href={resolvedSong.sheetUrlString}>
+          <a href={resolvedSong.songUrlString}>
             <YouTube htmlColor="red" />{' '}
           </a>
         )}

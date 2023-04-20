@@ -1,17 +1,20 @@
+import classNames from 'classnames'
 import produce from 'immer'
 import _ from 'lodash'
 import { useMemo, useState } from 'react'
 import User from '../../../models/User'
+import Spinner from '../../common/components/Spinner'
 import MemberListRow from './MemberListRow'
 
 interface Props {
   users: User[]
+  updateUser(userId: User['id'], details: Partial<User>): void
+  isLoading: boolean
 }
 
-export default function MemberListTable({ users: suppliedUsers }: Props) {
+export default function MemberListTable({ users, updateUser, isLoading }: Props) {
   // Search
   const [searchQuery, setSearchQuery] = useState('')
-  const [users, setMembers] = useState(suppliedUsers)
 
   const filteredData = useMemo(() => {
     if (_.isEmpty(searchQuery)) {
@@ -118,11 +121,7 @@ export default function MemberListTable({ users: suppliedUsers }: Props) {
                       }}
                       onRequestEdit={() => setEditingMemberId(member.id)}
                       onCommitEdit={(details) => {
-                        setMembers(
-                          produce((draft) => {
-                            _.merge(draft[index], details)
-                          }),
-                        )
+                        updateUser(member.id, details)
                         setEditingMemberId(null)
                       }}
                       onCancelEdit={() => setEditingMemberId(null)}
@@ -130,6 +129,17 @@ export default function MemberListTable({ users: suppliedUsers }: Props) {
                   ))}
                 </tbody>
               </table>
+              {/* Loading */}
+              <div
+                className={classNames(
+                  'absolute inset-0 flex justify-center items-center text-center',
+                  {
+                    hidden: !isLoading,
+                  },
+                )}
+              >
+                <Spinner />
+              </div>
             </div>
           </div>
         </div>

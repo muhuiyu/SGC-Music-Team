@@ -9,17 +9,13 @@ import {
 import { DocumentData, DocumentSnapshot, doc, getDoc, getFirestore } from 'firebase/firestore'
 import { firebaseConfig } from '../../FirebaseConfig'
 import User, { Permission, UserRole } from '../../models/User'
+import { usersReference } from '../constants/FirebaseKeys'
 
 // Set up
 const app = initializeApp(firebaseConfig)
 const googleProvider = new GoogleAuthProvider()
 export const auth = getAuth(app)
 export const db = getFirestore(app)
-
-// Reference names
-const usersReference = 'users'
-const songsReference = 'songs'
-const servicesReference = 'services'
 
 // Sign in
 export const signInWithGoogle = async () => {
@@ -38,7 +34,7 @@ interface RawUser {
   name: string
   permissions: Permission[]
   phoneNumber: string
-  roles: UserRole[]
+  availableRoles: UserRole[]
   userId: User['id']
 }
 

@@ -6,7 +6,7 @@ import { testUser } from '../../../mock/MockData'
 import MemberListTable from '../components/MemberListTable'
 
 export default function MembersPage() {
-  const users = useAllUsers()
+  const { users, updateUser, isLoading } = useAllUsers()
   return (
     <div className="flex flex-row flex-1 h-full">
       <SideBar
@@ -25,7 +25,7 @@ export default function MembersPage() {
           }}
         />
         {/* table */}
-        <MemberListTable users={users} />
+        <MemberListTable {...{ users, updateUser, isLoading }} />
       </main>
     </div>
   )

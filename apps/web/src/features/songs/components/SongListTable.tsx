@@ -1,16 +1,19 @@
+import classNames from 'classnames'
 import produce from 'immer'
 import _ from 'lodash'
 import { useMemo, useState } from 'react'
+import Spinner from '../../common/components/Spinner'
 import SongListRow from './SongListRow'
 
 interface Props {
   songs: Song[]
+  updateSong(songId: Song['id'], details: Partial<Song>): void
+  isLoading: boolean
 }
 
-export default function SongListTable({ songs: suppliedSongs }: Props) {
+export default function SongListTable({ songs, updateSong, isLoading }: Props) {
   // Search
   const [searchQuery, setSearchQuery] = useState('')
-  const [songs, setSongs] = useState(suppliedSongs)
 
   const filteredData = useMemo(() => {
     if (_.isEmpty(searchQuery)) {
@@ -111,30 +114,26 @@ export default function SongListTable({ songs: suppliedSongs }: Props) {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 bg-white">
-                    {filteredData.map((item, index) => (
+                    {filteredData.map((song, index) => (
                       <SongListRow
-                        key={item.id}
-                        song={item}
-                        editing={item.id === editingSongId}
-                        selected={selectedSongIds.includes(item.id)}
+                        key={song.id}
+                        song={song}
+                        editing={song.id === editingSongId}
+                        selected={selectedSongIds.includes(song.id)}
                         onUpdateSelection={(selected) => {
                           setSelectedSongIds(
                             produce((draft) => {
                               if (selected) {
-                                draft.push(item.id)
+                                draft.push(song.id)
                               } else {
-                                _.pull(draft, item.id)
+                                _.pull(draft, song.id)
                               }
                             }),
                           )
                         }}
-                        onRequestEdit={() => setEditingSongId(item.id)}
+                        onRequestEdit={() => setEditingSongId(song.id)}
                         onCommitEdit={(details) => {
-                          setSongs(
-                            produce((draft) => {
-                              _.merge(draft[index], details)
-                            }),
-                          )
+                          updateSong(song.id, details)
                           setEditingSongId(null)
                         }}
                         onCancelEdit={() => setEditingSongId(null)}
@@ -142,6 +141,17 @@ export default function SongListTable({ songs: suppliedSongs }: Props) {
                     ))}
                   </tbody>
                 </table>
+                {/* Loading */}
+                <div
+                  className={classNames(
+                    'absolute inset-0 flex justify-center items-center text-center',
+                    {
+                      hidden: !isLoading,
+                    },
+                  )}
+                >
+                  <Spinner />
+                </div>
               </div>
             </div>
           </div>

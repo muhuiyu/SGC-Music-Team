@@ -6,7 +6,7 @@ import { testUser } from '../../../mock/MockData'
 import SongListTable from '../components/SongListTable'
 
 export default function SongsPage() {
-  const songs = useAllSongs()
+  const { songs, updateSong, isLoading } = useAllSongs()
 
   return (
     <div className="flex flex-row flex-1 h-full">
@@ -27,7 +27,7 @@ export default function SongsPage() {
         />
 
         {/* table */}
-        <SongListTable songs={songs} />
+        <SongListTable {...{ songs, updateSong, isLoading }} />
         {/* table end  */}
       </main>
     </div>
