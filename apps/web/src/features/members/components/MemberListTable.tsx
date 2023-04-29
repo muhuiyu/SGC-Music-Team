@@ -2,7 +2,7 @@ import classNames from 'classnames'
 import produce from 'immer'
 import _ from 'lodash'
 import { useMemo, useState } from 'react'
-import User from '../../../models/User'
+import User from '../../../models/user/User'
 import Spinner from '../../common/components/Spinner'
 import MemberListRow from './MemberListRow'
 
@@ -13,25 +13,12 @@ interface Props {
 }
 
 export default function MemberListTable({ users, updateUser, isLoading }: Props) {
-  // Search
-  const [searchQuery, setSearchQuery] = useState('')
+  const [editingUserId, setEditingUserId] = useState<User['id'] | null>(null)
+  const [selectedUserIds, setSelectedUserIds] = useState<User['id'][]>([])
 
-  const filteredData = useMemo(() => {
-    if (_.isEmpty(searchQuery)) {
-      return users
-    }
-    const lowercasedQuery = searchQuery.toLowerCase()
-    return users.filter((user) => {
-      return user.name.toLowerCase().includes(lowercasedQuery)
-    })
-  }, [users, searchQuery])
-
-  const [editingMemberId, setEditingMemberId] = useState<User['id'] | null>(null)
-  const [selectedMemberIds, setSelectedMemberIds] = useState<User['id'][]>([])
-
-  const areAllMembersSelected = useMemo(() => {
-    return _.isEmpty(_.difference(_.map(users, 'id'), selectedMemberIds))
-  }, [selectedMemberIds, users])
+  const areAllUsersSelected = useMemo(() => {
+    return _.isEmpty(_.difference(_.map(users, 'id'), selectedUserIds))
+  }, [selectedUserIds, users])
 
   return (
     <div className="mt-8 flow-root">
@@ -39,7 +26,7 @@ export default function MemberListTable({ users, updateUser, isLoading }: Props)
         <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
           <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
             <div className="relative">
-              {selectedMemberIds.length > 0 && (
+              {selectedUserIds.length > 0 && (
                 <div className="absolute left-14 top-0 flex h-12 items-center space-x-3 bg-white sm:left-12">
                   <button
                     type="button"
@@ -62,12 +49,12 @@ export default function MemberListTable({ users, updateUser, isLoading }: Props)
                       <input
                         type="checkbox"
                         className="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                        checked={areAllMembersSelected}
+                        checked={areAllUsersSelected}
                         onChange={(e) => {
                           if (e.target.checked) {
-                            setSelectedMemberIds(_.map(users, 'id'))
+                            setSelectedUserIds(_.map(users, 'id'))
                           } else {
-                            setSelectedMemberIds([])
+                            setSelectedUserIds([])
                           }
                         }}
                       />
@@ -102,29 +89,29 @@ export default function MemberListTable({ users, updateUser, isLoading }: Props)
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white">
-                  {filteredData.map((member, index) => (
+                  {users.map((user, index) => (
                     <MemberListRow
-                      key={member.id}
-                      user={member}
-                      editing={member.id === editingMemberId}
-                      selected={selectedMemberIds.includes(member.id)}
+                      key={user.id}
+                      user={user}
+                      editing={user.id === editingUserId}
+                      selected={selectedUserIds.includes(user.id)}
                       onUpdateSelection={(selected) => {
-                        setSelectedMemberIds(
+                        setSelectedUserIds(
                           produce((draft) => {
                             if (selected) {
-                              draft.push(member.id)
+                              draft.push(user.id)
                             } else {
-                              _.pull(draft, member.id)
+                              _.pull(draft, user.id)
                             }
                           }),
                         )
                       }}
-                      onRequestEdit={() => setEditingMemberId(member.id)}
+                      onRequestEdit={() => setEditingUserId(user.id)}
                       onCommitEdit={(details) => {
-                        updateUser(member.id, details)
-                        setEditingMemberId(null)
+                        updateUser(user.id, details)
+                        setEditingUserId(null)
                       }}
-                      onCancelEdit={() => setEditingMemberId(null)}
+                      onCancelEdit={() => setEditingUserId(null)}
                     />
                   ))}
                 </tbody>

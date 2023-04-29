@@ -2,30 +2,31 @@ import { Menu, Transition } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import classNames from 'classnames'
 import { Fragment } from 'react'
-import User from '../models/User'
+import { AppPage, pageInfo } from '../models/common/AppPage'
+import User from '../models/user/User'
 
 const items = [
   { name: 'Account Settings', isDestructive: false, href: '/settings' },
   { name: 'Logout', isDestructive: true, href: '/logout' },
 ]
 
-interface NavBarProps {
-  title: string
-  user: User
+interface Props {
+  currentPage: AppPage
+  user: User | null | undefined
 }
 
-export default function NavBar(props: NavBarProps) {
-  const { title, user } = props
+export default function NavBar({ currentPage, user }: Props) {
   return (
     <div className="flex flex-row justify-between items-center pb-10">
       <div className="sm:flex-auto">
         <h2 className="text-2xl font-semibold leading-6 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
-          {title}
+          {pageInfo[currentPage].name}
         </h2>
         {/* <p className="mt-2 text-sm text-gray-700">
           A list of all the users including their name, title, email and role.
         </p> */}
       </div>
+      {/* notification */}
       <div className="flex flex-row items-center gap-1">
         <button
           id="dropdownNotificationButton"
@@ -48,7 +49,8 @@ export default function NavBar(props: NavBarProps) {
           </div>
         </button>
 
-        <div
+        {/* notification panel */}
+        {/* <div
           id="dropdownNotification"
           className="z-20 hidden w-full max-w-sm bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-800 dark:divide-gray-700"
           aria-labelledby="dropdownNotificationButton"
@@ -230,7 +232,7 @@ export default function NavBar(props: NavBarProps) {
               View all
             </div>
           </a>
-        </div>
+        </div> */}
 
         <Menu as="div" className="relative inline-block text-left">
           <div>
@@ -240,7 +242,7 @@ export default function NavBar(props: NavBarProps) {
                 src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
                 alt=""
               />
-              <span aria-hidden="true">{user.name}</span>
+              <span aria-hidden="true">{user?.name ?? 'guest'}</span>
               <ChevronDownIcon className="-mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
             </Menu.Button>
           </div>

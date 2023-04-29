@@ -7,8 +7,13 @@ import {
   signOut,
 } from 'firebase/auth'
 import { DocumentData, DocumentSnapshot, doc, getDoc, getFirestore } from 'firebase/firestore'
+import { DateTime } from 'luxon'
 import { firebaseConfig } from '../../FirebaseConfig'
-import User, { Permission, UserRole } from '../../models/User'
+import { Availability } from '../../features/dashboard/components/AvailabilitySurveyModal'
+import Service from '../../models/service/Service'
+import { Song } from '../../models/song/Song'
+import { SongTag } from '../../models/song/SongTag'
+import User, { Permission, UserRole } from '../../models/user/User'
 import { usersReference } from '../constants/FirebaseKeys'
 
 // Set up
@@ -56,11 +61,12 @@ export async function getUserProfile(userId: FirebaseUser['uid']): Promise<User 
 interface RawSong {
   id: Song['id']
   name: string
-  author: string
+  version: string
   key: Song['key']
   tempo: number
   songUrlString: string
   sheetUrlString: string
+  tags: SongTag[]
 }
 
 export function songFromSnapshot(snapshot: DocumentSnapshot<DocumentData>): Song {
@@ -69,4 +75,32 @@ export function songFromSnapshot(snapshot: DocumentSnapshot<DocumentData>): Song
     ...docData,
     id: snapshot.id,
   }
+}
+
+// service
+interface RawService {
+  id: string
+  year: number
+  month: number
+  dateTime: string
+  topic: string
+  lead: User['id'] | undefined
+  assignments: { [userId: User['id']]: UserRole }
+  songs: Song[]
+  songNotes: { [songId: Song['id']]: string }
+  note: string
+}
+
+export function serviceFromSnapshot(snapshot: DocumentSnapshot<DocumentData>): Service {
+  const { ...docData } = snapshot.data() as RawService
+  return {
+    ...docData,
+    id: snapshot.id,
+    dateTime: DateTime.fromISO(docData['dateTime']),
+  }
+}
+
+export function availabilityFromSnapshot(snapshot: DocumentSnapshot<DocumentData>): Availability {
+  const { ...docData } = snapshot.data() as Availability
+  return docData
 }

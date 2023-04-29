@@ -3,7 +3,7 @@ import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import classNames from 'classnames'
 import _ from 'lodash'
 import { Fragment, useMemo } from 'react'
-import { monthFormatter } from '../../common/pages/helper/MonthFormatter'
+import { monthFormatter } from '../pages/helper/MonthFormatter'
 
 interface Props {
   selectedYear: number
@@ -14,7 +14,7 @@ interface Props {
   onChangeMonths(months: [number, number]): void
 }
 
-export default function PlannerYearMonthsFilter(props: Props) {
+export default function YearMonthsFilter(props: Props) {
   const { selectedYear, thisYear, thisMonth, months, onChangeYear, onChangeMonths } = props
 
   const firstDate = useMemo(() => {
@@ -108,7 +108,9 @@ export default function PlannerYearMonthsFilter(props: Props) {
                           active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                           'block w-full px-4 py-2 text-left text-sm',
                         )}
-                        onClick={() => onChangeMonths(months)}
+                        onClick={() => {
+                          onChangeMonths([firstMonth, secondMonth])
+                        }}
                       >
                         {monthFormatter.format(firstDate)} & {monthFormatter.format(secondDate)}
                       </button>

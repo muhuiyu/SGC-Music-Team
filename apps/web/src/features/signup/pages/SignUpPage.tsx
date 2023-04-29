@@ -3,7 +3,7 @@ import classNames from 'classnames'
 import { useState } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { auth } from '../../../api/providers/FirebaseProvider'
-import { allRoles, roleInfo } from '../../../models/User'
+import { allRoles, roleInfo } from '../../../models/user/User'
 import { logoImageUrl } from '../../common/assets/AppImages'
 import PhoneTextField from '../../common/components/PhoneTextField'
 

@@ -1,72 +1,35 @@
-import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import classNames from 'classnames'
 import produce from 'immer'
 import _ from 'lodash'
 import { useMemo, useState } from 'react'
-import { Song } from '../../../models/song/Song'
+import Service from '../../../models/service/Service'
 import Spinner from '../../common/components/Spinner'
-import SongListRow from './SongListRow'
+import ServiceListRow from './ServiceListRow'
 
 interface Props {
-  songs: Song[]
-  updateSong(songId: Song['id'], details: Partial<Song>): void
-  orderBy: 'name' | 'tempo' | 'version' | 'key'
-  setOrderBy(order: 'name' | 'tempo' | 'version' | 'key'): void
+  services: Service[]
+  updateService(serviceId: Service['id'], details: Partial<Service>): void
   isLoading: boolean
 }
 
-interface Header {
-  name: string
-  key: 'name' | 'tempo' | 'version' | 'key' | 'sheetUrlString' | 'songUrlString'
-  order: 'name' | 'tempo' | 'version' | 'key'
-}
+const headers = [
+  {
+    name: 'Topic',
+    key: 'topic',
+  },
+  {
+    name: 'Date',
+    key: 'date',
+  },
+]
 
-export default function SongListTable({
-  songs,
-  updateSong,
-  orderBy,
-  setOrderBy,
-  isLoading,
-}: Props) {
-  const [editingSongId, setEditingSongId] = useState<Song['id'] | null>(null)
-  const [selectedSongIds, setSelectedSongIds] = useState<Song['id'][]>([])
+export default function ServiceListTable({ services, updateService, isLoading }: Props) {
+  const [editingServiceId, setEditingServiceId] = useState<Service['id'] | null>(null)
+  const [selectedServiceIds, setSelectedServiceIds] = useState<Service['id'][]>([])
 
-  const headers: Header[] = [
-    {
-      name: 'Name',
-      key: 'name',
-      order: 'name',
-    },
-    {
-      name: 'Version (author/artist)',
-      key: 'version',
-      order: 'version',
-    },
-    {
-      name: 'Key',
-      key: 'key',
-      order: 'key',
-    },
-    {
-      name: 'Tempo',
-      key: 'tempo',
-      order: 'tempo',
-    },
-    {
-      name: 'Chart',
-      key: 'sheetUrlString',
-      order: 'name',
-    },
-    {
-      name: 'Song',
-      key: 'songUrlString',
-      order: 'name',
-    },
-  ]
-
-  const areAllSongsSelected = useMemo(() => {
-    return _.isEmpty(_.difference(_.map(songs, 'id'), selectedSongIds))
-  }, [selectedSongIds, songs])
+  const areAllServicesSelected = useMemo(() => {
+    return _.isEmpty(_.difference(_.map(services, 'id'), selectedServiceIds))
+  }, [selectedServiceIds, services])
 
   return (
     <>
@@ -75,7 +38,7 @@ export default function SongListTable({
           <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
             <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
               <div className="relative">
-                {selectedSongIds.length > 0 && (
+                {selectedServiceIds.length > 0 && (
                   <div className="absolute left-14 top-0 flex h-12 items-center space-x-3 bg-white sm:left-12">
                     <button
                       type="button"
@@ -98,42 +61,24 @@ export default function SongListTable({
                         <input
                           type="checkbox"
                           className="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                          checked={areAllSongsSelected}
+                          checked={areAllServicesSelected}
                           onChange={(e) => {
                             if (e.target.checked) {
-                              setSelectedSongIds(_.map(songs, 'id'))
+                              setSelectedServiceIds(_.map(services, 'id'))
                             } else {
-                              setSelectedSongIds([])
+                              setSelectedServiceIds([])
                             }
                           }}
                         />
                       </th>
                       {headers.map((header) => (
                         <th
+                          key={header.key}
                           scope="col"
-                          className={classNames(
-                            header.key === 'name' ? 'py-3.5 pl-4 pr-3 sm:pl-6' : 'px-3 py-3.5',
-                            'text-left text-sm font-semibold text-gray-900',
-                          )}
+                          className="py-3.5 pl-4 pr-3 sm:pl-6
+                            text-left text-sm font-semibold text-gray-900"
                         >
-                          <button
-                            className="group inline-flex"
-                            onClick={() => setOrderBy(header.order)}
-                          >
-                            {header.name}
-                            {header.key != 'songUrlString' && header.key != 'sheetUrlString' && (
-                              <span
-                                className={classNames(
-                                  orderBy !== header.order
-                                    ? 'invisible group-hover:visible group-focus:visible text-gray-400'
-                                    : 'bg-gray-100 text-gray-900 group-hover:bg-gray-200',
-                                  'ml-2 flex-none rounded text-left',
-                                )}
-                              >
-                                <ChevronDownIcon className="h-5 w-5" aria-hidden="true" />
-                              </span>
-                            )}
-                          </button>
+                          {header.name}
                         </th>
                       ))}
 
@@ -143,29 +88,29 @@ export default function SongListTable({
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 bg-white">
-                    {songs.map((song, index) => (
-                      <SongListRow
-                        key={song.id}
-                        song={song}
-                        editing={song.id === editingSongId}
-                        selected={selectedSongIds.includes(song.id)}
+                    {services.map((service, index) => (
+                      <ServiceListRow
+                        key={service.id}
+                        service={service}
+                        editing={service.id === editingServiceId}
+                        selected={selectedServiceIds.includes(service.id)}
                         onUpdateSelection={(selected) => {
-                          setSelectedSongIds(
+                          setSelectedServiceIds(
                             produce((draft) => {
                               if (selected) {
-                                draft.push(song.id)
+                                draft.push(service.id)
                               } else {
-                                _.pull(draft, song.id)
+                                _.pull(draft, service.id)
                               }
                             }),
                           )
                         }}
-                        onRequestEdit={() => setEditingSongId(song.id)}
+                        onRequestEdit={() => setEditingServiceId(service.id)}
                         onCommitEdit={(details) => {
-                          updateSong(song.id, details)
-                          setEditingSongId(null)
+                          updateService(service.id, details)
+                          setEditingServiceId(null)
                         }}
-                        onCancelEdit={() => setEditingSongId(null)}
+                        onCancelEdit={() => setEditingServiceId(null)}
                       />
                     ))}
                   </tbody>

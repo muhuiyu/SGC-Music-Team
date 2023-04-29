@@ -1,8 +1,8 @@
 import { PlusIcon, XMarkIcon } from '@heroicons/react/20/solid'
 import classNames from 'classnames'
 import { useState } from 'react'
-import Service from '../../../models/Service'
-import User from '../../../models/User'
+import Service from '../../../models/service/Service'
+import User from '../../../models/user/User'
 
 interface Props {
   users: User[]

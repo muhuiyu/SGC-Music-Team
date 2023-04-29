@@ -1,20 +1,20 @@
 import { DateTime } from 'luxon'
-import Service from '../models/Service'
-import User from '../models/User'
-
-export const testUser: User = {
-  id: 'user-1',
-  name: 'Grace Yu',
-  email: 'muyuhello@gmail.com',
-  phoneNumber: '89516033',
-  availableRoles: ['drums', 'piano'],
-  isLead: false,
-}
+import Service from '../models/service/Service'
+import User from '../models/user/User'
 
 export const services: Service[] = [
   {
     id: 'service-1',
-    dateTime: DateTime.fromJSDate(new Date(2023, 5, 12, 10, 0, 0, 0)),
+    dateTime: DateTime.fromObject(
+      {
+        year: 2023,
+        month: 5,
+        day: 7,
+        hour: 10,
+        minute: 15,
+      },
+      { zone: 'Asia/Singapore' },
+    ),
     topic: 'Easter',
     songs: [],
     assignments: {},
@@ -24,7 +24,16 @@ export const services: Service[] = [
   },
   {
     id: 'service-2',
-    dateTime: DateTime.fromJSDate(new Date(2023, 5, 19, 10, 0, 0, 0)),
+    dateTime: DateTime.fromObject(
+      {
+        year: 2023,
+        month: 5,
+        day: 14,
+        hour: 10,
+        minute: 15,
+      },
+      { zone: 'Asia/Singapore' },
+    ),
     topic: 'Easter',
     songs: [],
     lead: 'user-2',
@@ -34,7 +43,16 @@ export const services: Service[] = [
   },
   {
     id: 'service-3',
-    dateTime: DateTime.fromJSDate(new Date(2023, 5, 26, 10, 0, 0, 0)),
+    dateTime: DateTime.fromObject(
+      {
+        year: 2023,
+        month: 5,
+        day: 21,
+        hour: 10,
+        minute: 15,
+      },
+      { zone: 'Asia/Singapore' },
+    ),
     topic: 'Easter',
     songs: [],
     assignments: {},
@@ -44,7 +62,16 @@ export const services: Service[] = [
   },
   {
     id: 'service-4',
-    dateTime: DateTime.fromJSDate(new Date(2023, 6, 5, 10, 0, 0, 0)),
+    dateTime: DateTime.fromObject(
+      {
+        year: 2023,
+        month: 5,
+        day: 28,
+        hour: 10,
+        minute: 15,
+      },
+      { zone: 'Asia/Singapore' },
+    ),
     topic: 'Easter',
     songs: [],
     assignments: {},
@@ -54,7 +81,16 @@ export const services: Service[] = [
   },
   {
     id: 'service-5',
-    dateTime: DateTime.fromJSDate(new Date(2023, 6, 10, 10, 0, 0, 0)),
+    dateTime: DateTime.fromObject(
+      {
+        year: 2023,
+        month: 6,
+        day: 4,
+        hour: 10,
+        minute: 15,
+      },
+      { zone: 'Asia/Singapore' },
+    ),
     topic: 'Easter',
     songs: [],
     lead: undefined,
@@ -64,7 +100,16 @@ export const services: Service[] = [
   },
   {
     id: 'service-6',
-    dateTime: DateTime.fromJSDate(new Date(2023, 6, 17, 10, 0, 0, 0)),
+    dateTime: DateTime.fromObject(
+      {
+        year: 2023,
+        month: 6,
+        day: 11,
+        hour: 10,
+        minute: 15,
+      },
+      { zone: 'Asia/Singapore' },
+    ),
     topic: 'Easter',
     songs: [],
     lead: 'user-5',
@@ -74,7 +119,35 @@ export const services: Service[] = [
   },
   {
     id: 'service-7',
-    dateTime: DateTime.fromJSDate(new Date(2023, 6, 24, 10, 0, 0, 0)),
+    dateTime: DateTime.fromObject(
+      {
+        year: 2023,
+        month: 6,
+        day: 18,
+        hour: 10,
+        minute: 15,
+      },
+      { zone: 'Asia/Singapore' },
+    ),
+    topic: 'Easter',
+    songs: [],
+    lead: 'user-2',
+    assignments: {},
+    note: 'nothing',
+    songNotes: {},
+  },
+  {
+    id: 'service-8',
+    dateTime: DateTime.fromObject(
+      {
+        year: 2023,
+        month: 6,
+        day: 25,
+        hour: 10,
+        minute: 15,
+      },
+      { zone: 'Asia/Singapore' },
+    ),
     topic: 'Easter',
     songs: [],
     lead: 'user-2',
@@ -161,38 +234,5 @@ export const users: User[] = [
     imageUrlString:
       'https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
     isLead: true,
-  },
-]
-
-const songs: Song[] = [
-  {
-    id: 'song-1',
-    name: '10,000 reasons',
-    author: 'Matt Redman',
-    tempo: 73,
-    key: 'D',
-    sheetUrlString:
-      'https://drive.google.com/file/d/1XNuqZDNr68Ab-L1zChZcXSTrYsIOJiHI/view?usp=share_link',
-    songUrlString: 'https://www.youtube.com/watch?v=DXDGE_lRI0E',
-  },
-  {
-    id: 'song-2',
-    name: 'Blessed Be Your Name',
-    author: 'Matt Redman',
-    tempo: 116,
-    key: 'A',
-    sheetUrlString:
-      'https://drive.google.com/file/d/13GB-j8kFLj-M2mvIEwopinCSA9XbvxO7/view?usp=share_link',
-    songUrlString: 'https://www.youtube.com/watch?v=tTpTQ4kBLxA',
-  },
-  {
-    id: 'song-3',
-    name: 'Mighty to Save',
-    author: 'Hillsong',
-    tempo: 74,
-    key: 'G',
-    sheetUrlString:
-      'https://drive.google.com/file/d/1eoSE8E89fflSFJgqCBgfdJJ_9JQdR3-i/view?usp=share_link',
-    songUrlString: 'https://www.youtube.com/watch?v=GEAcs2B-kNc',
   },
 ]

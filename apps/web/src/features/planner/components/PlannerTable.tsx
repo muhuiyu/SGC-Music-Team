@@ -1,7 +1,8 @@
 import classNames from 'classnames'
 import { useState } from 'react'
-import Service from '../../../models/Service'
-import User from '../../../models/User'
+import Service from '../../../models/service/Service'
+import User from '../../../models/user/User'
+import Spinner from '../../common/components/Spinner'
 import PlannerTableCell from './PlannerTableCell'
 import PlannerTableLeadCell from './PlannerTableLeadCell'
 import PlannerTableUserCell from './PlannerTableUserCell'
@@ -9,17 +10,17 @@ import PlannerTableUserCell from './PlannerTableUserCell'
 interface Props {
   users: User[]
   services: Service[]
+  isLoading: boolean
 }
 
-export default function PlannerTable(props: Props) {
-  const { users, services } = props
+export default function PlannerTable({ users, services, isLoading }: Props) {
   const [editingLeadService, setEditingLeadService] = useState<Service['id'] | null>(null)
   const [editingUserService, setEditingUserService] = useState<
     [userId: User['id'], serviceId: Service['id']] | null
   >(null)
 
   return (
-    <div className="mt-8 flow-root overflow-x-scroll">
+    <div className="mt-8 flow-root overflow-x-scroll overflow-y-scroll">
       <div className="-mx-4 -my-2 sm:-mx-6 lg:-mx-8">
         <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8 overflow-x-scroll">
           <table className="min-w-full divide-y divide-gray-300">
@@ -103,6 +104,14 @@ export default function PlannerTable(props: Props) {
               ))}
             </tbody>
           </table>
+          {/* Loading */}
+          <div
+            className={classNames('absolute inset-0 flex justify-center items-center text-center', {
+              hidden: !isLoading,
+            })}
+          >
+            <Spinner />
+          </div>
         </div>
       </div>
     </div>

@@ -7,10 +7,10 @@ import {
   SignalIcon,
 } from '@heroicons/react/24/outline'
 import { useState } from 'react'
+import useCurrentUser from '../../../api/providers/useCurrentUser'
 import NavBar from '../../../components/NavBar'
-import TableHeader from '../../../components/PageHeader'
 import SideBar from '../../../components/SideBar'
-import { testUser } from '../../../mock/MockData'
+import TableHeader from '../../../components/TableHeader'
 import SettingsForm from '../components/SettingsForm'
 
 const navigation = [
@@ -28,6 +28,7 @@ const teams = [
 ]
 
 export default function SettingsPage() {
+  const { currentUser } = useCurrentUser()
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
@@ -40,7 +41,7 @@ export default function SettingsPage() {
           }}
         />
         <main className="p-8 flex flex-col flex-1">
-          <NavBar title="Settings" user={testUser} />
+          <NavBar currentPage="settings" user={currentUser} />
           <TableHeader
             title="Settings"
             onClickButton={function (): void {

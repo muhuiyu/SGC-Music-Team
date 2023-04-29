@@ -2,7 +2,7 @@ import { IconButton } from '@material-ui/core'
 import { Check, Close } from '@material-ui/icons'
 import produce from 'immer'
 import { useMemo, useState } from 'react'
-import User, { roleInfo } from '../../../models/User'
+import User, { roleInfo } from '../../../models/user/User'
 
 interface Props {
   user: User

@@ -1,6 +1,6 @@
 export default function Spinner() {
   return (
-    <div>
+    <>
       <div role="status" className="absolute -translate-x-1/2 -translate-y-1/2 top-2/4 left-1/2">
         <svg
           aria-hidden="true"
@@ -20,6 +20,6 @@ export default function Spinner() {
         </svg>
         <span className="sr-only">Loading...</span>
       </div>
-    </div>
+    </>
   )
 }

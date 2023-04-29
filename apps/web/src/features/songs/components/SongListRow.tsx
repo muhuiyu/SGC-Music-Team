@@ -1,8 +1,10 @@
 import { IconButton } from '@material-ui/core'
 import { Check, Close, LinkOutlined, YouTube } from '@material-ui/icons'
+import produce from 'immer'
+import _ from 'lodash'
 import { useMemo, useState } from 'react'
-import { Song } from '../../../models/Song'
-import User from '../../../models/User'
+import { Song } from '../../../models/song/Song'
+import User from '../../../models/user/User'
 
 interface Props {
   song: Song
@@ -35,15 +37,18 @@ export default function SongListRow(props: Props) {
     [song, editingSong],
   )
 
-  const onEditField =
-    (field: 'name' | 'author' | 'key' | 'tempo' | 'songLinkUrl' | 'sheetLinkUrl') =>
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      // TODO:
-      // setEditingSong(
-      //   produce((draft) => {
-      //     draft[field] = e.target.value
-      //   }),
-      // )
+  const updateSongDetail = <K extends keyof Omit<Song, 'id'>>(key: K, value: Song[K]) => {
+    setEditingSong(
+      produce((draft) => {
+        draft[key] = value
+      }),
+    )
+  }
+
+  const onChangeSongDetail =
+    <K extends keyof Omit<Song, 'id'>>(key: K) =>
+    (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => {
+      updateSongDetail(key, e.target.value as Song[K])
     }
 
   return (
@@ -64,7 +69,7 @@ export default function SongListRow(props: Props) {
             name="name"
             value={resolvedSong.name}
             style={{ backgroundColor: 'lightblue' }}
-            onChange={onEditField('name')}
+            onChange={onChangeSongDetail('name')}
           />
         ) : (
           resolvedSong.name
@@ -74,13 +79,13 @@ export default function SongListRow(props: Props) {
         {editing ? (
           <input
             type="text"
-            name="author"
-            value={resolvedSong.author}
+            name="version"
+            value={resolvedSong.version}
             style={{ backgroundColor: 'lightblue' }}
-            onChange={onEditField('author')}
+            onChange={onChangeSongDetail('version')}
           />
         ) : (
-          resolvedSong.author
+          resolvedSong.version
         )}
       </td>
       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
@@ -90,7 +95,7 @@ export default function SongListRow(props: Props) {
             name="key"
             value={resolvedSong.key}
             style={{ backgroundColor: 'lightblue' }}
-            onChange={onEditField('key')}
+            onChange={onChangeSongDetail('key')}
           />
         ) : (
           resolvedSong.key
@@ -99,14 +104,17 @@ export default function SongListRow(props: Props) {
       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
         {editing ? (
           <input
-            type="text"
+            type="number"
             name="tempo"
             value={resolvedSong.tempo}
             style={{ backgroundColor: 'lightblue' }}
-            onChange={onEditField('tempo')}
+            onChange={(e) => {
+              const tempo = Number.parseInt(e.target.value, 10)
+              updateSongDetail('tempo', tempo)
+            }}
           />
         ) : (
-          resolvedSong.tempo
+          resolvedSong.tempo !== 0 && resolvedSong.tempo
         )}
       </td>
       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
@@ -116,12 +124,14 @@ export default function SongListRow(props: Props) {
             name="sheetLinkUrl"
             value={resolvedSong.sheetUrlString}
             style={{ backgroundColor: 'lightblue' }}
-            onChange={onEditField('sheetLinkUrl')}
+            onChange={onChangeSongDetail('sheetUrlString')}
           />
         ) : (
-          <a href={resolvedSong.sheetUrlString}>
-            <LinkOutlined />
-          </a>
+          !_.isEmpty(resolvedSong.sheetUrlString) && (
+            <a href={resolvedSong.sheetUrlString}>
+              <LinkOutlined />
+            </a>
+          )
         )}
       </td>
       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
@@ -131,12 +141,14 @@ export default function SongListRow(props: Props) {
             name="songLinkUrl"
             value={resolvedSong.songUrlString}
             style={{ backgroundColor: 'lightblue' }}
-            onChange={onEditField('songLinkUrl')}
+            onChange={onChangeSongDetail('songUrlString')}
           />
         ) : (
-          <a href={resolvedSong.songUrlString}>
-            <YouTube htmlColor="red" />{' '}
-          </a>
+          !_.isEmpty(resolvedSong.songUrlString) && (
+            <a href={resolvedSong.songUrlString}>
+              <YouTube htmlColor="red" />{' '}
+            </a>
+          )
         )}
       </td>
       <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">

@@ -2,7 +2,7 @@ import { Disclosure } from '@headlessui/react'
 import { ChevronRightIcon } from '@heroicons/react/20/solid'
 import classNames from 'classnames'
 import { logoImageUrl } from '../features/common/assets/AppImages'
-import { AppPage, AppPageInfo, allAppPages, pageInfo } from '../models/AppPage'
+import { AppPage, AppPageInfo, navigationPages, pageInfo } from '../models/common/AppPage'
 
 interface NavigationItem extends AppPageInfo {
   current: boolean
@@ -17,7 +17,7 @@ interface Props {
 export default function SideBar(props: Props) {
   const { currentPage, onUpdateSelection } = props
 
-  const generalNavigation: NavigationItem[] = allAppPages.slice(0, 5).map(
+  const generalNavigation: NavigationItem[] = navigationPages.map(
     (item): NavigationItem => ({
       ...pageInfo[item],
       current: item == currentPage,
@@ -45,7 +45,7 @@ export default function SideBar(props: Props) {
                               'flex items-center w-full text-left rounded-md p-2 gap-x-3 text-sm leading-6 font-semibold text-gray-700',
                             )}
                           >
-                            <item.Icon
+                            <item.icon
                               className="h-6 w-6 shrink-0 text-gray-400"
                               aria-hidden="true"
                             />
@@ -86,7 +86,7 @@ export default function SideBar(props: Props) {
                         'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold text-gray-700',
                       )}
                     >
-                      <item.Icon className="h-6 w-6 shrink-0 text-gray-400" aria-hidden="true" />
+                      <item.icon className="h-6 w-6 shrink-0 text-gray-400" aria-hidden="true" />
                       {item.name}
                     </a>
                   )}

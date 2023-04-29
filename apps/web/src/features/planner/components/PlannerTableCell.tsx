@@ -1,8 +1,8 @@
 import { ChevronDownIcon, XMarkIcon } from '@heroicons/react/20/solid'
 import classNames from 'classnames'
 import { useState } from 'react'
-import Service from '../../../models/Service'
-import User, { UserRole, roleInfo } from '../../../models/User'
+import Service from '../../../models/service/Service'
+import User, { UserRole, roleInfo } from '../../../models/user/User'
 
 interface Props {
   service: Service

@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import User from '../../../models/User'
+import User from '../../../models/user/User'
 
 interface Props {
   user: User
