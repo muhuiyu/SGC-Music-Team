@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { useNavigate } from 'react-router-dom'
 import { auth, getUserProfile, signInWithGoogle } from '../../../api/providers/FirebaseProvider'
+
 import { logoImageUrl } from '../../common/assets/AppImages'
 
 export default function LoginPage() {

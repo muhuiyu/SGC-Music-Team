@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { withRequireAuth } from '../../../api/auth/Auth'
 import useAllServices from '../../../api/providers/useAllServices'
 import useAllUsers from '../../../api/providers/useAllUsers'
 import useCurrentUser from '../../../api/providers/useCurrentUser'
@@ -12,7 +13,7 @@ import PlannerTable from '../components/PlannerTable'
 const thisYear = new Date().getFullYear()
 const thisMonth = new Date().getMonth()
 
-export default function PlannerPage() {
+const PlannerPage = () => {
   const { users, isLoading: isGetAllUsersLoading } = useAllUsers()
   const { currentUser } = useCurrentUser()
 
@@ -58,3 +59,5 @@ export default function PlannerPage() {
     </div>
   )
 }
+
+export default withRequireAuth(PlannerPage)

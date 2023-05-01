@@ -3,11 +3,13 @@ import classNames from 'classnames'
 import produce from 'immer'
 import { DateTime } from 'luxon'
 import { useState } from 'react'
-import { Availability } from '../../../models/service/Availability'
+import { Availability, AvailabilityState } from '../../../models/service/Availability'
 import { getFormattedLocalString } from '../../../models/service/Service'
+import Spinner from '../../common/components/Spinner'
 
 interface Props {
   isShowingAvailabilitySurveryModal: boolean
+  isFetching: boolean
   responses: Availability[]
   onSubmit(responses: Availability[]): void
   onDismiss(): void
@@ -16,6 +18,7 @@ interface Props {
 
 export default function AvailabilitySurveyModal({
   isShowingAvailabilitySurveryModal,
+  isFetching,
   responses,
   onSubmit,
   onDismiss,
@@ -23,7 +26,7 @@ export default function AvailabilitySurveyModal({
 }: Props) {
   const [currentResponses, setCurrentResponses] = useState<Availability[]>(responses)
 
-  const onChangeAvailability = (dateTime: DateTime, value: boolean) => {
+  const onChangeAvailability = (dateTime: DateTime, value: AvailabilityState) => {
     // todo
     const index = currentResponses.findIndex((e) => e.dateTime == dateTime)
     setCurrentResponses(
@@ -32,6 +35,8 @@ export default function AvailabilitySurveyModal({
       }),
     )
   }
+
+  // console.log(responses)
 
   return (
     <div
@@ -59,26 +64,34 @@ export default function AvailabilitySurveyModal({
           <p className="text-md font-normal text-gray-500 pt-4 pb-8">
             Select all the time you're available to serve
           </p>
-          {currentResponses.map((response) => (
-            <button
-              key={response.dateTime.toISO()}
-              type="button"
-              className={classNames(
-                'py-2.5 px-5 mr-2 mb-2 text-sm font-medium rounded-lg ',
-                response.isAvailable
-                  ? 'text-white bg-blue-700 border border-blue-800 hover:bg-blue-800 '
-                  : 'text-gray-900 bg-white border border-gray-200 hover:bg-gray-100 hover:text-blue-700 ',
-              )}
-              onClick={() => {
-                onChangeAvailability(response.dateTime, !response.isAvailable)
-              }}
-            >
-              {getFormattedLocalString(response.dateTime, 'MMM dd, yyyy')}
-            </button>
-          ))}
+          {isFetching ? (
+            <Spinner />
+          ) : (
+            currentResponses.map((response) => (
+              <button
+                key={response.dateTime.toISO()}
+                type="button"
+                className={classNames(
+                  'py-2.5 px-5 mr-2 mb-2 text-sm font-medium rounded-lg ',
+                  response.isAvailable == 'yes'
+                    ? 'text-white bg-blue-700 border border-blue-800 hover:bg-blue-800 '
+                    : 'text-gray-900 bg-white border border-gray-200 hover:bg-gray-100 hover:text-blue-700 ',
+                )}
+                onClick={() => {
+                  if (response.isAvailable === 'no' || response.isAvailable === 'unknown')
+                    onChangeAvailability(response.dateTime, 'yes')
+                  else if (response.isAvailable === 'yes')
+                    onChangeAvailability(response.dateTime, 'no')
+                }}
+              >
+                {getFormattedLocalString(response.dateTime, 'MMM dd, yyyy')}
+              </button>
+            ))
+          )}
 
           <div className="flex justify-between gap-4 pt-8">
             <button
+              key="reset"
               type="reset"
               className="w-1/2 text-black bg-gray-100 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
               onClick={() => {
@@ -88,6 +101,7 @@ export default function AvailabilitySurveyModal({
               Cancel
             </button>
             <button
+              key="submit"
               type="button"
               className="w-1/2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
               onClick={(e) => {

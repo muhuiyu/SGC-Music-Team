@@ -115,6 +115,8 @@ export default function useAllServices(filter: ServiceFilter, serviceTime: HourM
     populateDefaultServicesMutation.mutate()
   }, [populateDefaultServicesMutation])
 
+  const allServiceDates = services?.map((service) => service.dateTime) ?? []
+
   const allSundays = useMemo(() => {
     let firstSunday = DateTime.fromObject({
       year: filter.year,
@@ -135,11 +137,13 @@ export default function useAllServices(filter: ServiceFilter, serviceTime: HourM
   }, [filter.year, filter.startMonth, filter.endMonth, serviceTime])
 
   return {
+    isFetching,
     services: services ?? [],
     isLoading: isFetching,
     updateService,
     addService,
     populateDefaultServices,
     allSundays,
+    allServiceDates,
   }
 }

@@ -1,35 +1,40 @@
-import { DateTime } from 'luxon'
 import { useState } from 'react'
+import { withRequireAuth } from '../../../api/auth/Auth'
+import useAllAvailability from '../../../api/providers/useAllAvailability'
+import useAllServices from '../../../api/providers/useAllServices'
 import useCurrentUser from '../../../api/providers/useCurrentUser'
 import NavBar from '../../../components/NavBar'
 import SideBar from '../../../components/SideBar'
 import { Availability } from '../../../models/service/Availability'
+import { morningServiceTime } from '../../../models/service/Service'
 import AvailabilitySurveyModal from '../components/AvailabilitySurveyModal'
-import useAllServices from '../../../api/providers/useAllServices'
 
 // use current year and next month
 const thisYear = new Date().getFullYear()
 // const thisMonth = new Date().getMonth()
 const thisMonth = 5
 
-export default function DashboardPage() {
+const DashboardPage = () => {
   const [isShowingAvailabilitySurveryModal, setShowingAvailabilitySurveryModal] = useState(true)
   // for testing, later we will connect to useNotifications
 
-  const {services} = useAllServices({})
+  const { allServiceDates, isFetching } = useAllServices(
+    {
+      year: 2023,
+      startMonth: 3,
+      endMonth: 4,
+    },
+    morningServiceTime,
+  )
 
-  const availabilitySurveyDates = [
-    DateTime.fromObject({ year: 2023, month: 5, day: 12 }),
-    DateTime.fromObject({ year: 2023, month: 5, day: 17 }),
-  ]
-
-  const responses = availabilitySurveyDates.map((dateTime) => ({
-    dateTime: dateTime,
-    isAvailable: false,
-  }))
+  const { currentUser } = useCurrentUser()
+  const { availabilities, addAvailability, isLoading } = useAllAvailability(
+    currentUser?.id ?? '',
+    allServiceDates,
+  )
 
   const onSubmitAvailabilitySurvey = (response: Availability[]) => {
-    // todo
+    addAvailability(response)
     console.log(response)
   }
   const onDismissAvailabilitySurvey = () => {
@@ -37,7 +42,6 @@ export default function DashboardPage() {
     console.log('dismiss')
   }
 
-  const { currentUser } = useCurrentUser()
   return (
     <div className="flex flex-row flex-1 h-full">
       <SideBar
@@ -52,8 +56,9 @@ export default function DashboardPage() {
         <AvailabilitySurveyModal
           {...{
             isShowingAvailabilitySurveryModal,
-            serviceDateTimes: availabilitySurveyDates,
-            responses,
+            isFetching: isLoading,
+            serviceDateTimes: allServiceDates,
+            responses: availabilities,
             onSubmit: onSubmitAvailabilitySurvey,
             onDismiss: onDismissAvailabilitySurvey,
           }}
@@ -62,3 +67,5 @@ export default function DashboardPage() {
     </div>
   )
 }
+
+export default withRequireAuth(DashboardPage)

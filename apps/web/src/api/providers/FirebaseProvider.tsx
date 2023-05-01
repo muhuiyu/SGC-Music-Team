@@ -9,7 +9,11 @@ import {
 import { DocumentData, DocumentSnapshot, doc, getDoc, getFirestore } from 'firebase/firestore'
 import { DateTime } from 'luxon'
 import { firebaseConfig } from '../../FirebaseConfig'
-import { Availability } from '../../features/dashboard/components/AvailabilitySurveyModal'
+import {
+  Availability,
+  FirebaseAvailability,
+  convertFromFirebaseAvailability,
+} from '../../models/service/Availability'
 import Service from '../../models/service/Service'
 import { Song } from '../../models/song/Song'
 import { SongTag } from '../../models/song/SongTag'
@@ -17,8 +21,8 @@ import User, { Permission, UserRole } from '../../models/user/User'
 import { usersReference } from '../constants/FirebaseKeys'
 
 // Set up
-const app = initializeApp(firebaseConfig)
-const googleProvider = new GoogleAuthProvider()
+export const app = initializeApp(firebaseConfig)
+export const googleProvider = new GoogleAuthProvider()
 export const auth = getAuth(app)
 export const db = getFirestore(app)
 
@@ -30,31 +34,6 @@ export const signInWithGoogle = async () => {
 // Sign out
 export const logout = () => {
   signOut(auth)
-}
-
-// user
-interface RawUser {
-  email: string
-  isLead: boolean
-  name: string
-  permissions: Permission[]
-  phoneNumber: string
-  availableRoles: UserRole[]
-  userId: User['id']
-}
-
-export function userFromSnapshot(snapshot: DocumentSnapshot<DocumentData>): User {
-  const { ...docData } = snapshot.data() as RawUser
-  return {
-    ...docData,
-    id: snapshot.id,
-  }
-}
-
-export async function getUserProfile(userId: FirebaseUser['uid']): Promise<User | null> {
-  const snapshot = await getDoc(doc(db, usersReference, userId))
-  if (!snapshot.exists()) return null
-  return userFromSnapshot(snapshot)
 }
 
 // song
@@ -86,7 +65,7 @@ interface RawService {
   topic: string
   lead: User['id'] | undefined
   assignments: { [userId: User['id']]: UserRole }
-  songs: Song[]
+  songs: Song['id'][]
   songNotes: { [songId: Song['id']]: string }
   note: string
 }
@@ -101,6 +80,44 @@ export function serviceFromSnapshot(snapshot: DocumentSnapshot<DocumentData>): S
 }
 
 export function availabilityFromSnapshot(snapshot: DocumentSnapshot<DocumentData>): Availability {
-  const { ...docData } = snapshot.data() as Availability
-  return docData
+  const { ...docData } = snapshot.data() as FirebaseAvailability
+  return convertFromFirebaseAvailability(docData)
+}
+
+// export const auth = firebase.auth()
+// const googleProvider = new firebase.auth.GoogleAuthProvider()
+// export const signInWithGoogle = () => {
+//   auth
+//     .signInWithPopup(googleProvider)
+//     .then((res) => {
+//       console.log(res.user)
+//     })
+//     .catch((error) => {
+//       console.log(error.message)
+//     })
+// }
+
+// user
+interface RawUser {
+  email: string
+  isLead: boolean
+  name: string
+  permissions: Permission[]
+  phoneNumber: string
+  availableRoles: UserRole[]
+  userId: User['id']
+}
+
+export function userFromSnapshot(snapshot: DocumentSnapshot<DocumentData>): User {
+  const { ...docData } = snapshot.data() as RawUser
+  return {
+    ...docData,
+    id: snapshot.id,
+  }
+}
+
+export async function getUserProfile(userId: FirebaseUser['uid']): Promise<User | null> {
+  const snapshot = await getDoc(doc(db, usersReference, userId))
+  if (!snapshot.exists()) return null
+  return userFromSnapshot(snapshot)
 }

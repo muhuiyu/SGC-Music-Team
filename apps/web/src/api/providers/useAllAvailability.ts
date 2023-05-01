@@ -1,32 +1,77 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { collection, doc, getDoc, getDocs, setDoc, updateDoc } from 'firebase/firestore'
-import { useCallback } from 'react'
+import {
+  Timestamp,
+  and,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  setDoc,
+  updateDoc,
+  where,
+} from 'firebase/firestore'
+import { useCallback, useMemo } from 'react'
 
-import { Availability } from '../../models/service/Availability'
-import User from '../../models/user/User'
+import _ from 'lodash'
+import { DateTime } from 'luxon'
+import { Availability, getAvailabilityKey } from '../../models/service/Availability'
 import { availabilityQueryKey, usersQueryKey, usersReference } from '../constants/FirebaseKeys'
 import { availabilityFromSnapshot, db } from './FirebaseProvider'
 
-export default function useAllAvailability(userId: string) {
+export default function useAllAvailability(userId: string | null, serviceDates: DateTime[]) {
+  const [minServiceDate, maxServiceDate] = useMemo(() => {
+    let max: DateTime | undefined
+    let min: DateTime | undefined
+    for (const serviceDate of serviceDates) {
+      if (!max || max < serviceDate) {
+        max = serviceDate
+      }
+      if (!min || min > serviceDate) {
+        min = serviceDate
+      }
+    }
+    return [min, max]
+  }, [serviceDates])
+
   const { data: availabilities, isFetching } = useQuery({
     queryKey: [availabilityQueryKey],
     queryFn: async () => {
-      const snapshot = await getDoc(doc(db, usersReference, userId))
-      if (!snapshot.exists()) return null
-      const querySnapshot = await getDocs(collection(db, snapshot.ref.path))
-      return querySnapshot.docs.map(availabilityFromSnapshot)
+      if (!userId || !minServiceDate || !maxServiceDate) {
+        return []
+      }
+
+      const servicesQuery = query(
+        collection(db, `${usersReference}/${userId}/availabilities`),
+        and(
+          where('timestamp', '>=', Timestamp.fromDate(minServiceDate.toJSDate())),
+          where('timestamp', '<=', Timestamp.fromDate(maxServiceDate.toJSDate())),
+        ),
+      )
+      const snapshot = await getDocs(servicesQuery)
+      const docIdToDoc = _.fromPairs(snapshot.docs.map((doc) => [doc.id, doc]))
+      return serviceDates.map((serviceDate): Availability => {
+        const dateKey = getAvailabilityKey(serviceDate)
+        const doc = docIdToDoc[dateKey]
+        if (!doc) {
+          return {
+            dateTime: serviceDate,
+            isAvailable: 'unknown',
+          }
+        }
+        return availabilityFromSnapshot(doc)
+      })
     },
+    enabled: !_.isEmpty(userId) && !!maxServiceDate && !!minServiceDate,
   })
 
   const queryClient = useQueryClient()
   const addMutation = useMutation({
-    mutationFn: async ({
-      userId,
-      availabilities,
-    }: {
-      userId: User['id']
-      availabilities: Availability[]
-    }) => {
+    mutationFn: async ({ availabilities }: { availabilities: Availability[] }) => {
+      if (!userId) {
+        return
+      }
+
       const snapshot = await getDoc(doc(db, usersReference, userId))
       if (!snapshot.exists()) return null
       const promises = availabilities.map(async (availability) => {
@@ -40,20 +85,18 @@ export default function useAllAvailability(userId: string) {
   })
 
   const addAvailability = useCallback(
-    (userId: User['id'], availabilities: Availability[]) => {
-      addMutation.mutate({ userId, availabilities })
+    (availabilities: Availability[]) => {
+      addMutation.mutate({ availabilities })
     },
     [addMutation],
   )
 
   const updateMutation = useMutation({
-    mutationFn: async ({
-      userId,
-      availabilities,
-    }: {
-      userId: User['id']
-      availabilities: Availability[]
-    }) => {
+    mutationFn: async ({ availabilities }: { availabilities: Availability[] }) => {
+      if (!userId) {
+        return
+      }
+
       const snapshot = await getDoc(doc(db, usersReference, userId))
       if (!snapshot.exists()) return null
       const promises = availabilities.map(async (availability) => {
@@ -71,8 +114,8 @@ export default function useAllAvailability(userId: string) {
   })
 
   const updateAvailability = useCallback(
-    (userId: User['id'], availabilities: Availability[]) => {
-      updateMutation.mutate({ userId, availabilities })
+    (availabilities: Availability[]) => {
+      updateMutation.mutate({ availabilities })
     },
     [updateMutation],
   )
@@ -80,6 +123,7 @@ export default function useAllAvailability(userId: string) {
   return {
     availabilities: availabilities ?? [],
     isLoading: isFetching,
+    addAvailability,
     updateAvailability,
   }
 }

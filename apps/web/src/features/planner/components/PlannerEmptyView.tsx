@@ -1,7 +1,6 @@
-import { AppPage, pageInfo } from '../../../models/common/AppPage'
+import { pageInfo } from '../../../models/common/AppPage'
 
 export default function PlannerEmptyView() {
-  const serviceList = 'serviceList' as AppPage
   return (
     <>
       {' '}
@@ -10,7 +9,7 @@ export default function PlannerEmptyView() {
           There's no service in selected months. Please go to <b>Service List</b> page to add
           services first.
         </span>
-        <a href={pageInfo[serviceList].href}>
+        <a href={pageInfo.serviceList.href}>
           <button
             type="button"
             className="block rounded-md w-auto bg-primary px-3 py-1.5 text-center text-sm font-semibold  text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
