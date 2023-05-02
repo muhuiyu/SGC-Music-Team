@@ -8,6 +8,8 @@ import { Song } from '../../../models/song/Song'
 
 interface Props {
   isShowingAddSongModal: boolean
+  song: Song
+  onSaveSong(details: Song): void
   onAddSong(details: Omit<Song, 'id'>): void
   onDismiss(): void
   className?: string
@@ -15,20 +17,22 @@ interface Props {
 
 export default function AddSongModal({
   isShowingAddSongModal,
+  song,
+  onSaveSong,
   onAddSong,
   onDismiss,
   className,
 }: Props) {
-  const [songDetails, setSongDetails] = useState<Omit<Song, 'id'>>({
-    name: '',
-    version: '',
-    sheetUrlString: '',
-    songUrlString: '',
-    key: 'C',
-    tags: [],
-  })
+  const [editingSong, setEditingSong] = useState<Partial<Song>>({})
+  const resolvedSong = useMemo(
+    () => ({
+      ...song,
+      ...editingSong,
+    }),
+    [song, editingSong],
+  )
 
-  const clearSongDetails = () => {
+  const clearresolvedSong = () => {
     updateSongDetail('name', '')
     updateSongDetail('version', '')
     updateSongDetail('sheetUrlString', '')
@@ -36,8 +40,8 @@ export default function AddSongModal({
     updateSongDetail('key', 'C')
   }
 
-  const updateSongDetail = <K extends keyof Omit<Song, 'id'>>(key: K, value: Song[K]) => {
-    setSongDetails(
+  const updateSongDetail = <K extends keyof Song>(key: K, value: Song[K]) => {
+    setEditingSong(
       produce((draft) => {
         draft[key] = value
       }),
@@ -51,8 +55,8 @@ export default function AddSongModal({
     }
 
   const areDetailsValid = useMemo(() => {
-    return !_.isEmpty(songDetails.name)
-  }, [songDetails])
+    return !_.isEmpty(resolvedSong.name)
+  }, [resolvedSong])
 
   return (
     <div
@@ -72,13 +76,15 @@ export default function AddSongModal({
             width={24}
             height={24}
             onClick={() => {
-              clearSongDetails()
+              clearresolvedSong()
               onDismiss()
             }}
           />
           {/* title */}
           <div className="py-4 border-b rounded-t">
-            <h3 className="text-base font-semibold text-gray-900 lg:text-xl">Add song</h3>
+            <h3 className="text-base font-semibold text-gray-900 lg:text-xl">
+              {song.id === '' ? 'Add song' : 'Edit song'}
+            </h3>
           </div>
 
           <form className="space-y-6 text-left pt-6" action="#">
@@ -94,7 +100,7 @@ export default function AddSongModal({
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                 placeholder="e.g. Alive"
                 required
-                value={songDetails.name}
+                value={resolvedSong.name}
                 onChange={onChangeSongDetail('name')}
               />
             </div>
@@ -109,7 +115,7 @@ export default function AddSongModal({
                 id="version"
                 placeholder="e.g. Hillsong"
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  "
-                value={songDetails.version}
+                value={resolvedSong.version}
                 onChange={onChangeSongDetail('version')}
               />
             </div>
@@ -127,7 +133,7 @@ export default function AddSongModal({
                 id="songUrlString"
                 placeholder="e.g. youtube, spotify..."
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  "
-                value={songDetails.songUrlString}
+                value={resolvedSong.songUrlString}
                 onChange={onChangeSongDetail('songUrlString')}
               />
             </div>
@@ -145,7 +151,7 @@ export default function AddSongModal({
                 id="sheetUrlString"
                 placeholder="e.g. Google Drive shared link"
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  "
-                value={songDetails.sheetUrlString}
+                value={resolvedSong.sheetUrlString}
                 onChange={onChangeSongDetail('sheetUrlString')}
               />
             </div>
@@ -159,7 +165,7 @@ export default function AddSongModal({
                   name="key"
                   id="key"
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  "
-                  value={songDetails.key}
+                  value={resolvedSong.key}
                   onChange={onChangeSongDetail('key')}
                 >
                   {allKeys.map((key) => (
@@ -185,7 +191,7 @@ export default function AddSongModal({
                   id="tempo"
                   placeholder="e.g. 178"
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  "
-                  value={songDetails.tempo ?? 0}
+                  value={resolvedSong.tempo ?? 0}
                   onChange={(e) => {
                     const tempo = Number.parseInt(e.target.value, 10)
                     if (tempo !== 0) updateSongDetail('tempo', tempo)
@@ -198,7 +204,7 @@ export default function AddSongModal({
                 type="reset"
                 className="w-1/2 text-black bg-gray-100 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                 onClick={() => {
-                  clearSongDetails()
+                  clearresolvedSong()
                   onDismiss()
                 }}
               >
@@ -210,9 +216,12 @@ export default function AddSongModal({
                 onClick={(e) => {
                   e.preventDefault()
                   e.stopPropagation()
-
-                  onAddSong(songDetails)
-                  clearSongDetails()
+                  if (resolvedSong.id === '') {
+                    onAddSong(resolvedSong)
+                  } else {
+                    onSaveSong(resolvedSong)
+                  }
+                  clearresolvedSong()
                 }}
                 disabled={!areDetailsValid}
               >

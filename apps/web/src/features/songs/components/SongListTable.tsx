@@ -13,6 +13,7 @@ interface Props {
   orderBy: 'name' | 'tempo' | 'version' | 'key'
   setOrderBy(order: 'name' | 'tempo' | 'version' | 'key'): void
   isLoading: boolean
+  onRequestEdit(song: Song): void
 }
 
 interface Header {
@@ -23,12 +24,11 @@ interface Header {
 
 export default function SongListTable({
   songs,
-  updateSong,
   orderBy,
   setOrderBy,
   isLoading,
+  onRequestEdit,
 }: Props) {
-  const [editingSongId, setEditingSongId] = useState<Song['id'] | null>(null)
   const [selectedSongIds, setSelectedSongIds] = useState<Song['id'][]>([])
 
   const headers: Header[] = [
@@ -147,7 +147,6 @@ export default function SongListTable({
                       <SongListRow
                         key={song.id}
                         song={song}
-                        editing={song.id === editingSongId}
                         selected={selectedSongIds.includes(song.id)}
                         onUpdateSelection={(selected) => {
                           setSelectedSongIds(
@@ -160,12 +159,7 @@ export default function SongListTable({
                             }),
                           )
                         }}
-                        onRequestEdit={() => setEditingSongId(song.id)}
-                        onCommitEdit={(details) => {
-                          updateSong(song.id, details)
-                          setEditingSongId(null)
-                        }}
-                        onCancelEdit={() => setEditingSongId(null)}
+                        onRequestEdit={() => onRequestEdit(song)}
                       />
                     ))}
                   </tbody>

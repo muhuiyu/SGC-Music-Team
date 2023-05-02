@@ -20,6 +20,11 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
   {
+    path: pageInfo.signup.href,
+    element: <SignUpPage />,
+    errorElement: <ErrorPage />,
+  },
+  {
     path: pageInfo.dashboard.href,
     Component: () => <DashboardPage />,
     errorElement: <ErrorPage />,
@@ -31,33 +36,29 @@ const router = createBrowserRouter([
   },
   {
     path: pageInfo.calendar.href,
-    element: <CalendarPage />,
+    Component: () => <CalendarPage />,
     errorElement: <ErrorPage />,
   },
   {
     path: pageInfo.songs.href,
-    element: <SongsPage />,
+    Component: () => <SongsPage />,
     errorElement: <ErrorPage />,
   },
   {
     path: pageInfo.members.href,
-    element: <MembersPage />,
+    Component: () => <MembersPage />,
     errorElement: <ErrorPage />,
   },
   {
     path: pageInfo.settings.href,
-    element: <SettingsPage />,
+    Component: () => <SettingsPage />,
     errorElement: <ErrorPage />,
   },
-  {
-    path: pageInfo.signup.href,
-    element: <SignUpPage />,
-    errorElement: <ErrorPage />,
-  },
+
   // TODO: define logout
   {
     path: pageInfo.serviceList.href,
-    element: <ServiceListPage />,
+    Component: () => <ServiceListPage />,
     errorElement: <ErrorPage />,
   },
 ])

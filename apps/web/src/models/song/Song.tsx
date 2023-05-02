@@ -11,3 +11,14 @@ export interface Song {
   sheetUrlString: string
   tags: SongTag[]
 }
+
+export const emptySong: Song = {
+  id: '',
+  name: '',
+  version: '',
+  key: 'C',
+  tempo: 0,
+  songUrlString: '',
+  sheetUrlString: '',
+  tags: [],
+}

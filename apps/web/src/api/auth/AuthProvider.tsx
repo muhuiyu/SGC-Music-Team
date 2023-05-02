@@ -1,8 +1,9 @@
 import { User as FirebaseUser, signInWithRedirect, signOut } from 'firebase/auth'
 import React, { useState } from 'react'
 import { auth, googleProvider } from '../providers/FirebaseProvider'
-import { AuthContext } from './Auth'
+import { AuthContext } from './AuthContext'
 
+// Auth Provider
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   let [user, setUser] = useState<FirebaseUser | null>(null)
 

@@ -15,9 +15,14 @@ import { useCallback, useMemo } from 'react'
 
 import _ from 'lodash'
 import { DateTime } from 'luxon'
-import { Availability, getAvailabilityKey } from '../../models/service/Availability'
+import {
+  Availability,
+  availabilityFromSnapshot,
+  convertToFirebaseAvailability,
+  getDateTimeKey,
+} from '../../models/service/Availability'
 import { availabilityQueryKey, usersQueryKey, usersReference } from '../constants/FirebaseKeys'
-import { availabilityFromSnapshot, db } from './FirebaseProvider'
+import { db } from './FirebaseProvider'
 
 export default function useAllAvailability(userId: string | null, serviceDates: DateTime[]) {
   const [minServiceDate, maxServiceDate] = useMemo(() => {
@@ -42,7 +47,7 @@ export default function useAllAvailability(userId: string | null, serviceDates: 
       }
 
       const servicesQuery = query(
-        collection(db, `${usersReference}/${userId}/availabilities`),
+        collection(db, usersReference, userId, 'availabilities'),
         and(
           where('timestamp', '>=', Timestamp.fromDate(minServiceDate.toJSDate())),
           where('timestamp', '<=', Timestamp.fromDate(maxServiceDate.toJSDate())),
@@ -51,12 +56,12 @@ export default function useAllAvailability(userId: string | null, serviceDates: 
       const snapshot = await getDocs(servicesQuery)
       const docIdToDoc = _.fromPairs(snapshot.docs.map((doc) => [doc.id, doc]))
       return serviceDates.map((serviceDate): Availability => {
-        const dateKey = getAvailabilityKey(serviceDate)
+        const dateKey = getDateTimeKey(serviceDate)
         const doc = docIdToDoc[dateKey]
         if (!doc) {
           return {
             dateTime: serviceDate,
-            isAvailable: 'unknown',
+            availabilityState: 'unknown',
           }
         }
         return availabilityFromSnapshot(doc)
@@ -71,13 +76,15 @@ export default function useAllAvailability(userId: string | null, serviceDates: 
       if (!userId) {
         return
       }
-
-      const snapshot = await getDoc(doc(db, usersReference, userId))
-      if (!snapshot.exists()) return null
-      const promises = availabilities.map(async (availability) => {
-        setDoc(doc(db, snapshot.ref.path, availability.dateTime.toISO() ?? ''), availability)
-      })
-      return Promise.all(promises)
+      return Promise.all(
+        availabilities.map(async (availability) => {
+          const path = collection(db, usersReference, userId, 'availabilities').path
+          setDoc(
+            doc(db, path, getDateTimeKey(availability.dateTime)),
+            convertToFirebaseAvailability(availability),
+          )
+        }),
+      )
     },
     onSuccess: () => {
       queryClient.invalidateQueries([usersQueryKey])
@@ -102,7 +109,7 @@ export default function useAllAvailability(userId: string | null, serviceDates: 
       const promises = availabilities.map(async (availability) => {
         const data = {
           dateTime: availability.dateTime.toISO() ?? '',
-          isAvailable: availability.isAvailable,
+          isAvailable: availability.availabilityState,
         }
         updateDoc(doc(db, snapshot.ref.path, availability.dateTime.toISO() ?? ''), data)
       })

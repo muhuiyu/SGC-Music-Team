@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import { useMemo, useState } from 'react'
+import { withRequireAuth } from '../../../api/auth/RequireAuth'
 import useAllUsers from '../../../api/providers/useAllUsers'
 import useCurrentUser from '../../../api/providers/useCurrentUser'
 import NavBar from '../../../components/NavBar'
@@ -7,7 +8,7 @@ import SideBar from '../../../components/SideBar'
 import TableHeader from '../../../components/TableHeader'
 import MemberListTable from '../components/MemberListTable'
 
-export default function MembersPage() {
+const MembersPage = () => {
   const { users, updateUser, isLoading } = useAllUsers()
   const { currentUser } = useCurrentUser()
   const [searchQuery, setSearchQuery] = useState('')
@@ -52,3 +53,4 @@ export default function MembersPage() {
     </>
   )
 }
+export default withRequireAuth(MembersPage)

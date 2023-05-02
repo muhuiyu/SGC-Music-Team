@@ -1,12 +1,15 @@
+import { DocumentData, DocumentSnapshot, Timestamp } from 'firebase/firestore'
 import { DateTime } from 'luxon'
 import { Song } from '../song/Song'
 import User, { UserRole } from '../user/User'
 
+// 10:15
 export const morningServiceTime: HourMinute = {
   hour: 10,
   minute: 15,
 }
 
+// 17:30
 export const eveningServiceTime: HourMinute = {
   hour: 17,
   minute: 30,
@@ -40,4 +43,34 @@ export const getFormattedLocalString = (
 
 export const serviceComparator = (a: Service, b: Service) => {
   return a.dateTime < b.dateTime
+}
+
+// service
+export interface FirebaseService {
+  year: number
+  month: number
+  timestamp: Timestamp
+  topic: string
+  lead: User['id'] | undefined
+  assignments: { [userId: User['id']]: UserRole }
+  songs: Song['id'][]
+  songNotes: { [songId: Song['id']]: string }
+  note: string
+}
+
+export function convertToFirebaseService(service: Service): FirebaseService {
+  const { dateTime, ...restOfService } = service
+  return {
+    ...restOfService,
+    timestamp: Timestamp.fromDate(dateTime.toJSDate()),
+  }
+}
+
+export function serviceFromSnapshot(snapshot: DocumentSnapshot<DocumentData>): Service {
+  const { ...docData } = snapshot.data() as FirebaseService
+  return {
+    ...docData,
+    id: snapshot.id,
+    dateTime: DateTime.fromJSDate(docData.timestamp.toDate()),
+  }
 }

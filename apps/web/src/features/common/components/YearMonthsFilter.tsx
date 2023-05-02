@@ -8,14 +8,13 @@ import { monthFormatter } from '../pages/helper/MonthFormatter'
 interface Props {
   selectedYear: number
   thisYear: number
-  thisMonth: number
   months: [number, number]
   onChangeYear(year: number): void
   onChangeMonths(months: [number, number]): void
 }
 
 export default function YearMonthsFilter(props: Props) {
-  const { selectedYear, thisYear, thisMonth, months, onChangeYear, onChangeMonths } = props
+  const { selectedYear, thisYear, months, onChangeYear, onChangeMonths } = props
 
   const firstDate = useMemo(() => {
     return new Date(`${selectedYear}-${_.padStart(months[0].toString(), 2, '0')}-01`)

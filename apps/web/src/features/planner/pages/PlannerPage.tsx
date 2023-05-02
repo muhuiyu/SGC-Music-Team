@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { withRequireAuth } from '../../../api/auth/Auth'
+import { withRequireAuth } from '../../../api/auth/RequireAuth'
 import useAllServices from '../../../api/providers/useAllServices'
 import useAllUsers from '../../../api/providers/useAllUsers'
 import useCurrentUser from '../../../api/providers/useCurrentUser'

@@ -1,15 +1,16 @@
-import { useQuery } from '@tanstack/react-query'
 import classNames from 'classnames'
+import { auth, getUserProfile, signInWithGoogle } from '../../../api/providers/FirebaseProvider'
+
+import { useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { useNavigate } from 'react-router-dom'
-import { auth, getUserProfile, signInWithGoogle } from '../../../api/providers/FirebaseProvider'
-
+import { pageInfo } from '../../../models/common/AppPage'
 import { logoImageUrl } from '../../common/assets/AppImages'
 
 export default function LoginPage() {
-  const [user, loading, error] = useAuthState(auth)
   const navigate = useNavigate()
+  const [user, loading, error] = useAuthState(auth)
 
   const { data: fetchedUserData, isFetching: isFetchingUser } = useQuery({
     queryKey: ['userProfile', user?.uid ?? ''],
@@ -48,11 +49,20 @@ export default function LoginPage() {
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
           <div className="bg-white px-4 py-8 shadow sm:rounded-lg sm:px-10">
             <button
-              type="submit"
+              type="button"
               className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               onClick={signInWithGoogle}
             >
-              Continue with Google
+              Login with Google
+            </button>
+            <button
+              type="button"
+              className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              onClick={() => {
+                navigate(pageInfo.signup.href)
+              }}
+            >
+              Sign up
             </button>
           </div>
         </div>
@@ -63,6 +73,7 @@ export default function LoginPage() {
         className={classNames(
           'absolute inset-0 bg-white bg-opacity-80 flex justify-center items-center',
           { hidden: !loading && !isFetchingUser },
+          // { hidden: !isFetching },
         )}
       >
         <span className="text-2xl">Loading&hellip;</span>

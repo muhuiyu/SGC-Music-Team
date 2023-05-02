@@ -1,8 +1,9 @@
+import { withRequireAuth } from '../../../api/auth/RequireAuth'
 import useCurrentUser from '../../../api/providers/useCurrentUser'
 import NavBar from '../../../components/NavBar'
 import SideBar from '../../../components/SideBar'
 
-export default function CalendarPage() {
+const CalendarPage = () => {
   const { currentUser } = useCurrentUser()
   return (
     <div className="flex flex-row flex-1 h-full">
@@ -20,3 +21,5 @@ export default function CalendarPage() {
     </div>
   )
 }
+
+export default withRequireAuth(CalendarPage)

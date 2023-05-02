@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { withRequireAuth } from '../../../api/auth/RequireAuth'
 import useAllServices from '../../../api/providers/useAllServices'
 import useCurrentUser from '../../../api/providers/useCurrentUser'
 import NavBar from '../../../components/NavBar'
@@ -10,12 +11,12 @@ import ServiceEmptyView from '../components/ServiceEmptyView'
 import ServiceListTable from '../components/ServiceListTable'
 
 const thisYear = new Date().getFullYear()
-const thisMonth = new Date().getMonth()
+const thisMonth = new Date().getMonth() + 1
 
-export default function ServiceListPage() {
+const ServiceListPage = () => {
   const [selectedYear, setYear] = useState(thisYear)
   const [months, setMonths] = useState<[number, number]>(
-    new Date().getMonth() % 2 ? [thisMonth, thisMonth + 1] : [thisMonth - 1, thisMonth],
+    thisMonth % 2 ? [thisMonth, thisMonth + 1] : [thisMonth - 1, thisMonth],
   )
   const { currentUser } = useCurrentUser()
 
@@ -43,7 +44,6 @@ export default function ServiceListPage() {
         <YearMonthsFilter
           selectedYear={selectedYear}
           thisYear={thisYear}
-          thisMonth={thisMonth}
           months={months}
           onChangeYear={(year) => setYear(year)}
           onChangeMonths={(months) => setMonths(months)}
@@ -51,14 +51,10 @@ export default function ServiceListPage() {
         <TableHeader
           title="Services"
           isSearchable={false}
-          buttonText="Add service"
-          onClickButton={function (): void {
-            throw new Error('Function not implemented.')
-          }}
+          buttonText={services.length === 0 ? '' : 'Add service'}
+          onClickButton={() => {}}
           searchQuery={''}
-          setSearchQuery={function (searchQuery: string): void {
-            throw new Error('Function not implemented.')
-          }}
+          setSearchQuery={() => {}}
         />
         {/* planner view */}
         {services.length === 0 ? (
@@ -70,3 +66,4 @@ export default function ServiceListPage() {
     </div>
   )
 }
+export default withRequireAuth(ServiceListPage)

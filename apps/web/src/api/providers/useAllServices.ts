@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
+  Timestamp,
   addDoc,
   and,
   collection,
@@ -13,18 +14,31 @@ import {
 import _ from 'lodash'
 import { DateTime } from 'luxon'
 import { useCallback, useMemo } from 'react'
-import { FirebaseService } from '../../FirebaseConfig'
-import Service, { HourMinute } from '../../models/service/Service'
+import Service, {
+  FirebaseService,
+  HourMinute,
+  serviceFromSnapshot,
+} from '../../models/service/Service'
 import { servicesQueryKey, servicesReference } from '../constants/FirebaseKeys'
-import { db, serviceFromSnapshot } from './FirebaseProvider'
+import { db } from './FirebaseProvider'
 
-export interface ServiceFilter {
+export interface ServiceYearMonths {
   year: number
   startMonth: number
   endMonth: number
 }
 
-export default function useAllServices(filter: ServiceFilter, serviceTime: HourMinute) {
+export function getCurrentServiceYearMonths(): ServiceYearMonths {
+  const today = new Date()
+  const currentMonth = today.getMonth() + 1
+  return {
+    year: today.getFullYear(),
+    startMonth: currentMonth % 2 ? currentMonth : currentMonth - 1,
+    endMonth: currentMonth % 2 ? currentMonth + 1 : currentMonth,
+  }
+}
+
+export default function useAllServices(filter: ServiceYearMonths, serviceTime: HourMinute) {
   const { data: services, isFetching } = useQuery({
     queryKey: [servicesQueryKey, filter.year, filter.startMonth, filter.endMonth],
     queryFn: async () => {
@@ -66,7 +80,7 @@ export default function useAllServices(filter: ServiceFilter, serviceTime: HourM
     [mutation],
   )
 
-  // add
+  // add service
   const addMutation = useMutation({
     mutationFn: async ({ details }: { details: Omit<Service, 'id'> }) => {
       return await addDoc(collection(db, servicesReference), details)
@@ -88,10 +102,9 @@ export default function useAllServices(filter: ServiceFilter, serviceTime: HourM
     mutationFn: async () => {
       const promises = allSundays.map(async (sunday) => {
         const newService: FirebaseService = {
-          id: '',
           year: sunday.year,
           month: sunday.month,
-          dateTime: sunday.toISO() ?? '',
+          timestamp: Timestamp.fromDate(sunday.toJSDate()),
           topic: '',
           lead: '',
           assignments: {},

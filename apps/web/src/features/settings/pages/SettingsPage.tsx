@@ -7,6 +7,7 @@ import {
   SignalIcon,
 } from '@heroicons/react/24/outline'
 import { useState } from 'react'
+import { withRequireAuth } from '../../../api/auth/RequireAuth'
 import useCurrentUser from '../../../api/providers/useCurrentUser'
 import NavBar from '../../../components/NavBar'
 import SideBar from '../../../components/SideBar'
@@ -27,7 +28,7 @@ const teams = [
   { id: 3, name: 'Tailwind Labs', href: '#', initial: 'T', current: false },
 ]
 
-export default function SettingsPage() {
+const SettingsPage = () => {
   const { currentUser } = useCurrentUser()
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
@@ -47,6 +48,11 @@ export default function SettingsPage() {
             onClickButton={function (): void {
               throw new Error('Function not implemented.')
             }}
+            isSearchable={false}
+            searchQuery={''}
+            setSearchQuery={function (searchQuery: string): void {
+              throw new Error('Function not implemented.')
+            }}
           />
 
           <SettingsForm />
@@ -55,3 +61,4 @@ export default function SettingsPage() {
     </>
   )
 }
+export default withRequireAuth(SettingsPage)

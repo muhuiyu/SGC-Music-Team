@@ -1,41 +1,39 @@
 import { useState } from 'react'
-import { withRequireAuth } from '../../../api/auth/Auth'
+import { withRequireAuth } from '../../../api/auth/RequireAuth'
 import useAllAvailability from '../../../api/providers/useAllAvailability'
-import useAllServices from '../../../api/providers/useAllServices'
+import useAllServices, { getCurrentServiceYearMonths } from '../../../api/providers/useAllServices'
 import useCurrentUser from '../../../api/providers/useCurrentUser'
 import NavBar from '../../../components/NavBar'
 import SideBar from '../../../components/SideBar'
 import { Availability } from '../../../models/service/Availability'
 import { morningServiceTime } from '../../../models/service/Service'
 import AvailabilitySurveyModal from '../components/AvailabilitySurveyModal'
-
-// use current year and next month
-const thisYear = new Date().getFullYear()
-// const thisMonth = new Date().getMonth()
-const thisMonth = 5
+import CalendarView from '../components/CalendarView'
 
 const DashboardPage = () => {
   const [isShowingAvailabilitySurveryModal, setShowingAvailabilitySurveryModal] = useState(true)
   // for testing, later we will connect to useNotifications
 
+  console.log(getCurrentServiceYearMonths())
+
   const { allServiceDates, isFetching } = useAllServices(
-    {
-      year: 2023,
-      startMonth: 3,
-      endMonth: 4,
-    },
+    getCurrentServiceYearMonths(),
     morningServiceTime,
   )
 
   const { currentUser } = useCurrentUser()
   const { availabilities, addAvailability, isLoading } = useAllAvailability(
-    currentUser?.id ?? '',
+    currentUser?.id ?? null,
     allServiceDates,
   )
 
-  const onSubmitAvailabilitySurvey = (response: Availability[]) => {
-    addAvailability(response)
-    console.log(response)
+  const onSubmitAvailabilitySurvey = (responses: Availability[]) => {
+    const updatedResponses = responses.map((response) => ({
+      dateTime: response.dateTime,
+      availabilityState:
+        response.availabilityState == 'unknown' ? 'no' : response.availabilityState,
+    }))
+    addAvailability(updatedResponses)
   }
   const onDismissAvailabilitySurvey = () => {
     // todo
@@ -53,16 +51,19 @@ const DashboardPage = () => {
       <main className="p-8 flex flex-col flex-1">
         {/* Navbar */}
         <NavBar currentPage="dashboard" user={currentUser} />
-        <AvailabilitySurveyModal
-          {...{
-            isShowingAvailabilitySurveryModal,
-            isFetching: isLoading,
-            serviceDateTimes: allServiceDates,
-            responses: availabilities,
-            onSubmit: onSubmitAvailabilitySurvey,
-            onDismiss: onDismissAvailabilitySurvey,
-          }}
-        />
+        <div className="flex flex-row justify-between">
+          <AvailabilitySurveyModal
+            {...{
+              isShowingAvailabilitySurveryModal,
+              isFetching: isLoading,
+              serviceDateTimes: allServiceDates,
+              responses: availabilities,
+              onSubmit: onSubmitAvailabilitySurvey,
+              onDismiss: onDismissAvailabilitySurvey,
+            }}
+          />
+          <CalendarView />
+        </div>
       </main>
     </div>
   )

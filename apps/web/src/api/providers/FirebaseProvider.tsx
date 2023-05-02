@@ -7,18 +7,20 @@ import {
   signOut,
 } from 'firebase/auth'
 import { DocumentData, DocumentSnapshot, doc, getDoc, getFirestore } from 'firebase/firestore'
-import { DateTime } from 'luxon'
-import { firebaseConfig } from '../../FirebaseConfig'
-import {
-  Availability,
-  FirebaseAvailability,
-  convertFromFirebaseAvailability,
-} from '../../models/service/Availability'
-import Service from '../../models/service/Service'
+
 import { Song } from '../../models/song/Song'
 import { SongTag } from '../../models/song/SongTag'
 import User, { Permission, UserRole } from '../../models/user/User'
 import { usersReference } from '../constants/FirebaseKeys'
+
+const firebaseConfig = {
+  apiKey: 'AIzaSyBW830MCh3XcxkCM7qVSi1xukbZHqb9ZA4',
+  authDomain: 'music-team-roster.firebaseapp.com',
+  projectId: 'music-team-roster',
+  storageBucket: 'music-team-roster.appspot.com',
+  messagingSenderId: '949364282512',
+  appId: '1:949364282512:web:ec4582017533fe1d1d3415',
+}
 
 // Set up
 export const app = initializeApp(firebaseConfig)
@@ -54,34 +56,6 @@ export function songFromSnapshot(snapshot: DocumentSnapshot<DocumentData>): Song
     ...docData,
     id: snapshot.id,
   }
-}
-
-// service
-interface RawService {
-  id: string
-  year: number
-  month: number
-  dateTime: string
-  topic: string
-  lead: User['id'] | undefined
-  assignments: { [userId: User['id']]: UserRole }
-  songs: Song['id'][]
-  songNotes: { [songId: Song['id']]: string }
-  note: string
-}
-
-export function serviceFromSnapshot(snapshot: DocumentSnapshot<DocumentData>): Service {
-  const { ...docData } = snapshot.data() as RawService
-  return {
-    ...docData,
-    id: snapshot.id,
-    dateTime: DateTime.fromISO(docData['dateTime']),
-  }
-}
-
-export function availabilityFromSnapshot(snapshot: DocumentSnapshot<DocumentData>): Availability {
-  const { ...docData } = snapshot.data() as FirebaseAvailability
-  return convertFromFirebaseAvailability(docData)
 }
 
 // export const auth = firebase.auth()

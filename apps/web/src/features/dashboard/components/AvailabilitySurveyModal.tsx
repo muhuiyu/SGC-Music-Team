@@ -2,7 +2,7 @@ import { XMarkIcon } from '@heroicons/react/20/solid'
 import classNames from 'classnames'
 import produce from 'immer'
 import { DateTime } from 'luxon'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Availability, AvailabilityState } from '../../../models/service/Availability'
 import { getFormattedLocalString } from '../../../models/service/Service'
 import Spinner from '../../common/components/Spinner'
@@ -24,19 +24,30 @@ export default function AvailabilitySurveyModal({
   onDismiss,
   className,
 }: Props) {
-  const [currentResponses, setCurrentResponses] = useState<Availability[]>(responses)
+  const [editedResponses, setEditedResponses] = useState<{ [key: string]: Availability }>({})
+
+  const currentResponses = useMemo(() => {
+    return responses.map((response) => {
+      const isoString = response.dateTime.toISO()
+      if (!isoString || !editedResponses[isoString]) {
+        return response
+      }
+      return { ...response, ...editedResponses[isoString] }
+    })
+  }, [responses, editedResponses])
 
   const onChangeAvailability = (dateTime: DateTime, value: AvailabilityState) => {
-    // todo
-    const index = currentResponses.findIndex((e) => e.dateTime == dateTime)
-    setCurrentResponses(
+    const isoString = dateTime.toISO()
+    if (!isoString) return
+    setEditedResponses(
       produce((draft) => {
-        draft[index] = { dateTime: dateTime, isAvailable: value }
+        draft[isoString] = {
+          ...(draft[isoString] ?? {}),
+          availabilityState: value,
+        }
       }),
     )
   }
-
-  // console.log(responses)
 
   return (
     <div
@@ -73,14 +84,17 @@ export default function AvailabilitySurveyModal({
                 type="button"
                 className={classNames(
                   'py-2.5 px-5 mr-2 mb-2 text-sm font-medium rounded-lg ',
-                  response.isAvailable == 'yes'
+                  response.availabilityState == 'yes'
                     ? 'text-white bg-blue-700 border border-blue-800 hover:bg-blue-800 '
                     : 'text-gray-900 bg-white border border-gray-200 hover:bg-gray-100 hover:text-blue-700 ',
                 )}
                 onClick={() => {
-                  if (response.isAvailable === 'no' || response.isAvailable === 'unknown')
+                  if (
+                    response.availabilityState === 'no' ||
+                    response.availabilityState === 'unknown'
+                  )
                     onChangeAvailability(response.dateTime, 'yes')
-                  else if (response.isAvailable === 'yes')
+                  else if (response.availabilityState === 'yes')
                     onChangeAvailability(response.dateTime, 'no')
                 }}
               >
