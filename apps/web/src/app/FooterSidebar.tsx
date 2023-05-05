@@ -1,4 +1,6 @@
-export default function FooterBar() {
+import CopyrightNotice from '../components/CopyrightNotice'
+
+export default function FooterSideBar() {
   return (
     <>
       <div className="p-4 my-6 mx-4 bg-white rounded-lg shadow md:flex md:items-center md:justify-between md:p-6 xl:p-8">
@@ -73,13 +75,7 @@ export default function FooterBar() {
           </a>
         </div>
       </div>
-      <p className="my-10 text-sm text-center text-gray-500">
-        &copy; 2023 - {new Date().getFullYear()} —
-        <a href="https://flowbite.com/" className="hover:underline" target="_blank">
-          muhuiyu.grace@gmail.com
-        </a>
-        . All rights reserved.
-      </p>
+      <CopyrightNotice />
     </>
   )
 }

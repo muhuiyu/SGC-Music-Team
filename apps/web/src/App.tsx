@@ -12,8 +12,14 @@ import SettingsPage from './features/settings/pages/SettingsPage'
 import SignUpPage from './features/signup/pages/SignUpPage'
 import SongsPage from './features/songs/pages/SongsPage'
 import { pageInfo } from './models/common/AppPage'
+import TestPage from './modules/TestPage'
 
 const router = createBrowserRouter([
+  {
+    path: '/test',
+    Component: () => <TestPage />,
+    errorElement: <ErrorPage />,
+  },
   {
     path: pageInfo.login.href,
     element: <LoginPage />,

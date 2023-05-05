@@ -1,8 +1,8 @@
 import useCurrentUser from '../api/providers/useCurrentUser'
 import { AppPage } from '../models/common/AppPage'
-import FooterBar from './FooterBar'
-import NavigationBar from './NavigationBar'
-import SideBar from './SideBar'
+import FooterSideBar from './FooterSidebar'
+import NavBar from './NavBar'
+import SideBar from './UpdatedSideBar'
 
 interface Props {
   currentPage: AppPage
@@ -12,16 +12,19 @@ interface Props {
 export default function LayoutCommon({ currentPage, mainContent }: Props) {
   const { currentUser: user } = useCurrentUser()
   return (
-    <div className="p-8 flex flex-col">
-      <NavigationBar {...{ currentPage, user }} />
-      <div className="flex flex-row flex-1 h-full overflow-x-scroll">
-        <SideBar currentPage={currentPage} onUpdateSelection={() => {}} />
-        <main className="p-8 flex flex-col flex-1">
-          <div className="flex overflow-hidden">
-            <div className="relative w-full h-full overflow-y-auto min-h-screen">{mainContent}</div>
-          </div>
-          <FooterBar />
-        </main>
+    <div className="flex flex-col bg-gray-50 justify-start">
+      <NavBar currentPage={currentPage} user={user} />
+      <div className="flex pt-20 fixed">
+        <SideBar
+          currentPage={'dashboard'}
+          onUpdateSelection={function (selected: boolean): void {
+            throw new Error('Function not implemented.')
+          }}
+        />
+        <div className="fixed w-full h-full overflow-hidden overflow-y-auto bg-gray-50 lg:ml-64">
+          {mainContent}
+          <FooterSideBar />
+        </div>
       </div>
     </div>
   )
