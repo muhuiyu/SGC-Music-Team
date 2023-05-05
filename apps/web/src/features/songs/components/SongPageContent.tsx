@@ -1,18 +1,15 @@
 import classNames from 'classnames'
 import _ from 'lodash'
 import { useEffect, useMemo, useState } from 'react'
-import { withRequireAuth } from '../../../api/auth/RequireAuth'
 import useAllSongs from '../../../api/providers/useAllSongs'
 import useCurrentUser from '../../../api/providers/useCurrentUser'
-import NavigationBar from '../../../app/NavigationBar'
-import SideBar from '../../../app/SideBar'
 import TableHeader from '../../../components/TableHeader'
 import { Song, emptySong } from '../../../models/song/Song'
 import NavigationPagination from '../../common/components/NavigationPagination'
 import AddSongModal from '../components/AddSongModal'
 import SongListTable from '../components/SongListTable'
 
-const SongsPage = () => {
+export default function SongPageContent() {
   const [isShowingAddSongModal, setShowingAddSongModal] = useState(false)
   const [isShowingEditSongModal, setShowingEditSongModal] = useState(false)
   const [currentEditingSong, setCurrentEditingSong] = useState<Song | null>(null)
@@ -58,33 +55,24 @@ const SongsPage = () => {
   }
 
   return (
-    <>
+    <div className="m-1">
       <div className="flex flex-row flex-1 h-full">
-        <SideBar
-          currentPage="songs"
-          onUpdateSelection={function (selected: boolean): void {
-            throw new Error('Function not implemented.')
+        <TableHeader
+          isSearchable={true}
+          title="Songs"
+          buttonText="Add song"
+          searchPlaceholder="Search song name, author..."
+          {...{ searchQuery, setSearchQuery }}
+          onClickButton={() => {
+            setCurrentEditingSong(emptySong)
+            setShowingAddSongModal(true)
           }}
         />
-        <main className="p-8 flex flex-col flex-1">
-          <NavigationBar currentPage="songs" user={currentUser} />
-          <TableHeader
-            isSearchable={true}
-            title="Songs"
-            buttonText="Add song"
-            searchPlaceholder="Search song name, author..."
-            {...{ searchQuery, setSearchQuery }}
-            onClickButton={() => {
-              setCurrentEditingSong(emptySong)
-              setShowingAddSongModal(true)
-            }}
-          />
-          <SongListTable
-            {...{ updateSong, isLoading, orderBy, setOrderBy, onRequestEdit }}
-            songs={filteredData}
-          />
-          <NavigationPagination />
-        </main>
+        <SongListTable
+          {...{ updateSong, isLoading, orderBy, setOrderBy, onRequestEdit }}
+          songs={filteredData}
+        />
+        <NavigationPagination />
       </div>
       {/* add song */}
       <div
@@ -129,7 +117,6 @@ const SongsPage = () => {
           }}
         />
       </div>
-    </>
+    </div>
   )
 }
-export default withRequireAuth(SongsPage)

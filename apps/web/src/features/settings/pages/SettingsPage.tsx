@@ -9,8 +9,8 @@ import {
 import { useState } from 'react'
 import { withRequireAuth } from '../../../api/auth/RequireAuth'
 import useCurrentUser from '../../../api/providers/useCurrentUser'
-import NavBar from '../../../components/NavBar'
-import SideBar from '../../../components/SideBar'
+import NavigationBar from '../../../app/NavigationBar'
+import SideBar from '../../../app/SideBar'
 import TableHeader from '../../../components/TableHeader'
 import SettingsForm from '../components/SettingsForm'
 
@@ -42,7 +42,7 @@ const SettingsPage = () => {
           }}
         />
         <main className="p-8 flex flex-col flex-1">
-          <NavBar currentPage="settings" user={currentUser} />
+          <NavigationBar currentPage="settings" user={currentUser} />
           <TableHeader
             title="Settings"
             onClickButton={function (): void {

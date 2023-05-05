@@ -43,12 +43,14 @@ export default function MemberListTable({ users, updateUser, isLoading }: Props)
                 </div>
               )}
               <table className="min-w-full divide-y divide-gray-300">
+                {/* table header */}
                 <thead className="bg-gray-50">
                   <tr>
-                    <th scope="col" className="relative px-7 sm:w-12 sm:px-6">
+                    <th scope="col" className="relative px-4">
                       <input
                         type="checkbox"
-                        className="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                        className="w-4 h-4 border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-indigo-300"
+                        // className="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-gray-300  focus:ring-indigo-600"
                         checked={areAllUsersSelected}
                         onChange={(e) => {
                           if (e.target.checked) {
@@ -61,29 +63,35 @@ export default function MemberListTable({ users, updateUser, isLoading }: Props)
                     </th>
                     <th
                       scope="col"
-                      className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                      className="p-4 text-xs font-medium text-left text-gray-500 uppercase"
                     >
                       Name
                     </th>
                     <th
                       scope="col"
-                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      className="p-4 text-xs font-medium text-left text-gray-500 uppercase"
                     >
                       Role
                     </th>
                     <th
                       scope="col"
-                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      className="p-4 text-xs font-medium text-left text-gray-500 uppercase"
                     >
                       Email
                     </th>
                     <th
                       scope="col"
-                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      className="p-4 text-xs font-medium text-left text-gray-500 uppercase"
                     >
                       Phone number
                     </th>
-                    <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
+                    <th
+                      scope="col"
+                      className="p-4 text-xs font-medium text-left text-gray-500 uppercase"
+                    >
+                      In Singpaore
+                    </th>
+                    <th scope="col" className="py-3.5 pl-3 pr-4 items-end">
                       <span className="sr-only">Edit</span>
                     </th>
                   </tr>
@@ -93,7 +101,7 @@ export default function MemberListTable({ users, updateUser, isLoading }: Props)
                     <MemberListRow
                       key={user.id}
                       user={user}
-                      editing={user.id === editingUserId}
+                      // editing={user.id === editingUserId}
                       selected={selectedUserIds.includes(user.id)}
                       onUpdateSelection={(selected) => {
                         setSelectedUserIds(
@@ -107,11 +115,11 @@ export default function MemberListTable({ users, updateUser, isLoading }: Props)
                         )
                       }}
                       onRequestEdit={() => setEditingUserId(user.id)}
-                      onCommitEdit={(details) => {
-                        updateUser(user.id, details)
-                        setEditingUserId(null)
-                      }}
-                      onCancelEdit={() => setEditingUserId(null)}
+                      // onCommitEdit={(details) => {
+                      //   updateUser(user.id, details)
+                      //   setEditingUserId(null)
+                      // }}
+                      // onCancelEdit={() => setEditingUserId(null)}
                     />
                   ))}
                 </tbody>

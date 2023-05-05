@@ -52,5 +52,6 @@ export default interface User {
   permissions?: Permission[]
   availableRoles: UserRole[]
   isLead: boolean
+  isInSingapore: boolean
   imageUrlString?: string
 }

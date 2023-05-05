@@ -2,8 +2,8 @@ import { useState } from 'react'
 import { withRequireAuth } from '../../../api/auth/RequireAuth'
 import useAllServices from '../../../api/providers/useAllServices'
 import useCurrentUser from '../../../api/providers/useCurrentUser'
-import NavBar from '../../../components/NavBar'
-import SideBar from '../../../components/SideBar'
+import NavigationBar from '../../../app/NavigationBar'
+import SideBar from '../../../app/SideBar'
 import TableHeader from '../../../components/TableHeader'
 import { morningServiceTime } from '../../../models/service/Service'
 import YearMonthsFilter from '../../common/components/YearMonthsFilter'
@@ -40,7 +40,7 @@ const ServiceListPage = () => {
         }}
       />
       <main className="p-8 flex flex-col flex-1 overflow-x-clip">
-        <NavBar currentPage="serviceList" user={currentUser} />
+        <NavigationBar currentPage="serviceList" user={currentUser} />
         <YearMonthsFilter
           selectedYear={selectedYear}
           thisYear={thisYear}

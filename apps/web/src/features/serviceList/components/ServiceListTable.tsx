@@ -55,6 +55,7 @@ export default function ServiceListTable({ services, updateService, isLoading }:
                   </div>
                 )}
                 <table className="min-w-full divide-y divide-gray-300">
+                  {/* table header */}
                   <thead className="bg-gray-50">
                     <tr>
                       <th scope="col" className="relative px-7 sm:w-12 sm:px-6">
@@ -76,7 +77,7 @@ export default function ServiceListTable({ services, updateService, isLoading }:
                           key={header.key}
                           scope="col"
                           className="py-3.5 pl-4 pr-3 sm:pl-6
-                            text-left text-sm font-semibold text-gray-900"
+                            text-left text-xs font-medium text-gray-500 uppercase"
                         >
                           {header.name}
                         </th>

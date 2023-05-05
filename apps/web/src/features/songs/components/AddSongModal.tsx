@@ -32,7 +32,7 @@ export default function AddSongModal({
     [song, editingSong],
   )
 
-  const clearresolvedSong = () => {
+  const clearResolvedSong = () => {
     updateSongDetail('name', '')
     updateSongDetail('version', '')
     updateSongDetail('sheetUrlString', '')
@@ -76,7 +76,7 @@ export default function AddSongModal({
             width={24}
             height={24}
             onClick={() => {
-              clearresolvedSong()
+              clearResolvedSong()
               onDismiss()
             }}
           />
@@ -204,7 +204,7 @@ export default function AddSongModal({
                 type="reset"
                 className="w-1/2 text-black bg-gray-100 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                 onClick={() => {
-                  clearresolvedSong()
+                  clearResolvedSong()
                   onDismiss()
                 }}
               >
@@ -221,7 +221,7 @@ export default function AddSongModal({
                   } else {
                     onSaveSong(resolvedSong)
                   }
-                  clearresolvedSong()
+                  clearResolvedSong()
                 }}
                 disabled={!areDetailsValid}
               >

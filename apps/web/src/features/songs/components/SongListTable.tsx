@@ -108,13 +108,11 @@ export default function SongListTable({
                           }}
                         />
                       </th>
+                      {/* table header */}
                       {headers.map((header) => (
                         <th
                           scope="col"
-                          className={classNames(
-                            header.key === 'name' ? 'py-3.5 pl-4 pr-3 sm:pl-6' : 'px-3 py-3.5',
-                            'text-left text-sm font-semibold text-gray-900',
-                          )}
+                          className="p-4 text-left text-xs font-medium text-gray-500 uppercase"
                         >
                           <button
                             className="group inline-flex"

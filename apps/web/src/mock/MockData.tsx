@@ -164,6 +164,7 @@ export const users: User[] = [
     email: 'muyuhello@gmail.com',
     phoneNumber: '89516033',
     permissions: [],
+    isInSingapore: true,
     availableRoles: ['drums', 'bass'],
     imageUrlString:
       'https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
@@ -176,6 +177,7 @@ export const users: User[] = [
     phoneNumber: '89516033',
     permissions: [],
     availableRoles: ['drums', 'bass'],
+    isInSingapore: false,
     imageUrlString:
       'https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
     isLead: true,
@@ -186,6 +188,7 @@ export const users: User[] = [
     email: 'muyuhello@gmail.com',
     phoneNumber: '89516033',
     permissions: [],
+    isInSingapore: true,
     availableRoles: ['drums', 'bass'],
     imageUrlString:
       'https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
@@ -198,6 +201,7 @@ export const users: User[] = [
     phoneNumber: '89516033',
     permissions: [],
     availableRoles: ['drums', 'piano'],
+    isInSingapore: true,
     imageUrlString:
       'https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
     isLead: false,
@@ -209,6 +213,7 @@ export const users: User[] = [
     phoneNumber: '89516033',
     permissions: [],
     availableRoles: ['guitar', 'bass'],
+    isInSingapore: false,
     imageUrlString:
       'https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
     isLead: true,
@@ -220,6 +225,7 @@ export const users: User[] = [
     phoneNumber: '89516033',
     permissions: [],
     availableRoles: ['vocal'],
+    isInSingapore: true,
     imageUrlString:
       'https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
     isLead: true,
@@ -230,6 +236,7 @@ export const users: User[] = [
     email: 'muyuhello@gmail.com',
     phoneNumber: '89516033',
     permissions: [],
+    isInSingapore: true,
     availableRoles: ['piano', 'vocal'],
     imageUrlString:
       'https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',

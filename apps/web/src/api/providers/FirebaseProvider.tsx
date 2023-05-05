@@ -79,6 +79,7 @@ interface RawUser {
   permissions: Permission[]
   phoneNumber: string
   availableRoles: UserRole[]
+  isInSingapore: boolean
   userId: User['id']
 }
 

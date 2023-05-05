@@ -1,7 +1,7 @@
 import { withRequireAuth } from '../../../api/auth/RequireAuth'
 import useCurrentUser from '../../../api/providers/useCurrentUser'
-import NavBar from '../../../components/NavBar'
-import SideBar from '../../../components/SideBar'
+import NavigationBar from '../../../app/NavigationBar'
+import SideBar from '../../../app/SideBar'
 
 const CalendarPage = () => {
   const { currentUser } = useCurrentUser()
@@ -16,7 +16,7 @@ const CalendarPage = () => {
       />
       <main className="p-8 flex flex-col flex-1">
         {/* Navbar */}
-        <NavBar currentPage="calendar" user={currentUser} />
+        <NavigationBar currentPage="calendar" user={currentUser} />
       </main>
     </div>
   )

@@ -3,8 +3,8 @@ import { useMemo, useState } from 'react'
 import { withRequireAuth } from '../../../api/auth/RequireAuth'
 import useAllUsers from '../../../api/providers/useAllUsers'
 import useCurrentUser from '../../../api/providers/useCurrentUser'
-import NavBar from '../../../components/NavBar'
-import SideBar from '../../../components/SideBar'
+import NavigationBar from '../../../app/NavigationBar'
+import SideBar from '../../../app/SideBar'
 import TableHeader from '../../../components/TableHeader'
 import MemberListTable from '../components/MemberListTable'
 
@@ -36,7 +36,7 @@ const MembersPage = () => {
           }}
         />
         <main className="p-8 flex flex-col flex-1">
-          <NavBar currentPage="members" user={currentUser} />
+          <NavigationBar currentPage="members" user={currentUser} />
           <TableHeader
             isSearchable={true}
             title="Members"
@@ -47,6 +47,7 @@ const MembersPage = () => {
             {...{ searchQuery, setSearchQuery }}
           />
           {/* table */}
+          {/* <UserTable {...{ updateUser, isLoading }} users={filteredData} /> */}
           <MemberListTable {...{ updateUser, isLoading }} users={filteredData} />
         </main>
       </div>

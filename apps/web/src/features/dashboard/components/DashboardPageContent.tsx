@@ -1,16 +1,13 @@
 import { useState } from 'react'
-import { withRequireAuth } from '../../../api/auth/RequireAuth'
 import useAllAvailability from '../../../api/providers/useAllAvailability'
 import useAllServices, { getCurrentServiceYearMonths } from '../../../api/providers/useAllServices'
 import useCurrentUser from '../../../api/providers/useCurrentUser'
-import NavigationBar from '../../../app/NavigationBar'
-import SideBar from '../../../app/SideBar'
 import { Availability } from '../../../models/service/Availability'
 import { morningServiceTime } from '../../../models/service/Service'
-import AvailabilitySurveyModal from '../components/AvailabilitySurveyModal'
-import CalendarView from '../components/CalendarView'
+import AvailabilitySurveyModal from './AvailabilitySurveyModal'
+import CalendarView from './CalendarView'
 
-const DashboardPage = () => {
+export default function DashboardPageContent() {
   const [isShowingAvailabilitySurveryModal, setShowingAvailabilitySurveryModal] = useState(true)
   // for testing, later we will connect to useNotifications
 
@@ -41,32 +38,18 @@ const DashboardPage = () => {
   }
 
   return (
-    <div className="flex flex-row flex-1 h-full">
-      <SideBar
-        currentPage="dashboard"
-        onUpdateSelection={function (selected: boolean): void {
-          throw new Error('Function not implemented.')
+    <div className="m-1 flex flex-row justify-between">
+      <AvailabilitySurveyModal
+        {...{
+          isShowingAvailabilitySurveryModal,
+          isFetching: isLoading,
+          serviceDateTimes: allServiceDates,
+          responses: availabilities,
+          onSubmit: onSubmitAvailabilitySurvey,
+          onDismiss: onDismissAvailabilitySurvey,
         }}
       />
-      <main className="p-8 flex flex-col flex-1">
-        {/* Navbar */}
-        <NavigationBar currentPage="dashboard" user={currentUser} />
-        <div className="flex flex-row justify-between">
-          <AvailabilitySurveyModal
-            {...{
-              isShowingAvailabilitySurveryModal,
-              isFetching: isLoading,
-              serviceDateTimes: allServiceDates,
-              responses: availabilities,
-              onSubmit: onSubmitAvailabilitySurvey,
-              onDismiss: onDismissAvailabilitySurvey,
-            }}
-          />
-          <CalendarView />
-        </div>
-      </main>
+      <CalendarView />
     </div>
   )
 }
-
-export default withRequireAuth(DashboardPage)

@@ -3,8 +3,8 @@ import { withRequireAuth } from '../../../api/auth/RequireAuth'
 import useAllServices from '../../../api/providers/useAllServices'
 import useAllUsers from '../../../api/providers/useAllUsers'
 import useCurrentUser from '../../../api/providers/useCurrentUser'
-import NavBar from '../../../components/NavBar'
-import SideBar from '../../../components/SideBar'
+import NavigationBar from '../../../app/NavigationBar'
+import SideBar from '../../../app/SideBar'
 import { morningServiceTime } from '../../../models/service/Service'
 import YearMonthsFilter from '../../common/components/YearMonthsFilter'
 import PlannerEmptyView from '../components/PlannerEmptyView'
@@ -40,7 +40,7 @@ const PlannerPage = () => {
         }}
       />
       <main className="p-8 flex flex-col flex-1 overflow-x-clip">
-        <NavBar currentPage="planner" user={currentUser} />
+        <NavigationBar currentPage="planner" user={currentUser} />
         <YearMonthsFilter
           selectedYear={selectedYear}
           thisYear={thisYear}

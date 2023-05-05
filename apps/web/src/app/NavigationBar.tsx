@@ -15,7 +15,7 @@ interface Props {
   user: User | null | undefined
 }
 
-export default function NavBar({ currentPage, user }: Props) {
+export default function NavigationBar({ currentPage, user }: Props) {
   return (
     <div className="flex flex-row justify-between items-center pb-10">
       <div className="sm:flex-auto">
