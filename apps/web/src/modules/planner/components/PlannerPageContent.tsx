@@ -25,7 +25,7 @@ export default function PlannerPageContent() {
   )
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 h-full">
       <YearMonthsFilter
         selectedYear={selectedYear}
         thisYear={thisYear}

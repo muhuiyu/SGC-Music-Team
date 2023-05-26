@@ -1,5 +1,6 @@
 import classNames from 'classnames'
 import { useEffect, useState } from 'react'
+import { logout } from '../api/providers/FirebaseProvider'
 import SearchInput from '../components/SearchInput'
 import { AppPage } from '../models/common/AppPage'
 import User from '../models/user/User'
@@ -309,19 +310,29 @@ export default function NavBar({ currentPage, user }: Props) {
     )
   }
 
+  function handleLogout() {
+    logout()
+  }
+
   const UserDropdown = () => {
     const items = [
       {
         name: 'Dashboard',
         textStyle: 'block px-4 py-2 text-gray-700 text-sm hover:bg-gray-100',
+        href: '/dashboard',
+        isLogout: false,
       },
       {
         name: 'Settings',
         textStyle: 'block px-4 py-2 text-gray-700 text-sm hover:bg-gray-100',
+        href: '/settings',
+        isLogout: false,
       },
       {
         name: 'Sign out',
-        textStyle: 'block px-4 py-2 text-red-500 text-sm hover:bg-gray-100',
+        textStyle: 'block px-4 py-2 text-red-500 text-sm hover:bg-gray-100 w-full text-left',
+        href: '/login',
+        isLogout: true,
       },
     ]
     return (
@@ -340,11 +351,17 @@ export default function NavBar({ currentPage, user }: Props) {
           </p>
         </div>
         <ul className="py-1" role="none">
-          {items.map((item) => (
+          {items.map((item, index) => (
             <li>
-              <a href="#" className={item.textStyle} role="menuitem">
-                {item.name}
-              </a>
+              {item.isLogout ? (
+                <button onClick={handleLogout} className={item.textStyle}>
+                  {item.name}
+                </button>
+              ) : (
+                <a href={item.href} className={item.textStyle} role="menuitem">
+                  {item.name}
+                </a>
+              )}
             </li>
           ))}
         </ul>
