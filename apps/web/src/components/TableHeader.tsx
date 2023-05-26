@@ -1,38 +1,17 @@
-import SearchBar from '../features/common/components/SearchBar'
-
 interface Props {
   title: string
   buttonText?: string
-  searchPlaceholder?: string
-  isSearchable: boolean
-  searchQuery: string
-  setSearchQuery(searchQuery: string): void
+  filterElement?: JSX.Element
+  searchElement?: JSX.Element
   onClickButton(): void
 }
 
 export default function TableHeader(props: Props) {
-  const {
-    title,
-    buttonText,
-    isSearchable,
-    searchPlaceholder,
-    searchQuery,
-    setSearchQuery,
-    onClickButton,
-  } = props
+  const { buttonText, onClickButton, filterElement, searchElement } = props
   return (
     <div className="sm:flex sm:items-center">
-      <div className="sm:flex-auto">
-        {isSearchable && (
-          <SearchBar
-            className="w-1/2"
-            placeholder={searchPlaceholder ?? ''}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e)}
-          />
-        )}
-      </div>
-
+      {filterElement && <div className="sm:flex-auto">{filterElement}</div>}
+      {searchElement && <div className="sm:flex-auto">{searchElement}</div>}
       <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
         {buttonText && (
           <button

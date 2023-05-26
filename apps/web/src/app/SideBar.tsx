@@ -1,8 +1,8 @@
 import { Disclosure } from '@headlessui/react'
 import { ChevronRightIcon } from '@heroicons/react/20/solid'
 import classNames from 'classnames'
-import { logoImageUrl } from '../features/common/assets/AppImages'
 import { AppPage, AppPageInfo, navigationPages, pageInfo } from '../models/common/AppPage'
+import { logoImageUrl } from '../modules/common/assets/AppImages'
 
 interface NavigationItem extends AppPageInfo {
   current: boolean

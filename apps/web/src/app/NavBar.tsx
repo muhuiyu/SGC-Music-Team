@@ -1,9 +1,9 @@
 import classNames from 'classnames'
 import { useEffect, useState } from 'react'
 import SearchInput from '../components/SearchInput'
-import { logoImageUrl } from '../features/common/assets/AppImages'
 import { AppPage } from '../models/common/AppPage'
 import User from '../models/user/User'
+import { logoImageUrl } from '../modules/common/assets/AppImages'
 
 interface Props {
   currentPage: AppPage

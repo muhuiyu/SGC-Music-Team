@@ -74,3 +74,16 @@ export function serviceFromSnapshot(snapshot: DocumentSnapshot<DocumentData>): S
     dateTime: DateTime.fromJSDate(docData.timestamp.toDate()),
   }
 }
+
+export const emptyService: Service = {
+  id: '',
+  year: 0,
+  month: 0,
+  dateTime: DateTime.now(),
+  topic: '',
+  lead: undefined,
+  assignments: {},
+  songs: [],
+  songNotes: {},
+  note: '',
+}
