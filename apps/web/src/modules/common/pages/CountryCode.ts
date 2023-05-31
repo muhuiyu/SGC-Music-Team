@@ -1211,6 +1211,6 @@ const countryCodes = [
   },
 ]
 
-export const singaporeCountryCode = 'SG'
+export const singaporeCountryDialCode = '+65'
 
 export default countryCodes

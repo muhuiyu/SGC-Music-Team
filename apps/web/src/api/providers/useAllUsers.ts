@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { collection, doc, getDocs, orderBy, query, updateDoc } from 'firebase/firestore'
+import { collection, doc, getDocs, orderBy, query, setDoc, updateDoc } from 'firebase/firestore'
 import { useCallback } from 'react'
 import User from '../../models/user/User'
 import { usersQueryKey, usersReference } from '../constants/FirebaseKeys'
@@ -16,7 +16,23 @@ export default function useAllUsers() {
   })
 
   const queryClient = useQueryClient()
-  const mutation = useMutation({
+  const addMutation = useMutation({
+    mutationFn: ({ user }: { user: User }) => {
+      return setDoc(doc(db, usersReference, user.id), user)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries([usersQueryKey])
+    },
+  })
+
+  const addUser = useCallback(
+    (user: User) => {
+      addMutation.mutate({ user })
+    },
+    [addMutation],
+  )
+
+  const updateMutation = useMutation({
     mutationFn: ({ userId, details }: { userId: User['id']; details: Partial<User> }) => {
       return updateDoc(doc(db, usersReference, userId), details)
     },
@@ -27,14 +43,15 @@ export default function useAllUsers() {
 
   const updateUser = useCallback(
     (userId: User['id'], details: Partial<User>) => {
-      mutation.mutate({ userId, details })
+      updateMutation.mutate({ userId, details })
     },
-    [mutation],
+    [updateMutation],
   )
 
   return {
     users: users ?? [],
     isLoading: isFetching,
+    addUser,
     updateUser,
   }
 }

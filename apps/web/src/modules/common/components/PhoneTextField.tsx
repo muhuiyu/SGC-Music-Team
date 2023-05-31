@@ -1,21 +1,30 @@
-import countryCodes, { singaporeCountryCode } from '../pages/CountryCode'
+import countryCodes, { singaporeCountryDialCode } from '../pages/CountryCode'
 
-export default function PhoneTextField() {
+interface Props {
+  setCountryCode(value: string): void
+  setPhoneNumber(value: string): void
+}
+
+export default function PhoneTextField({ setCountryCode, setPhoneNumber }: Props) {
   return (
-    <div className="flex flex-row">
+    <div className="flex flex-row gap-4">
       <div className="col-span-2 col-start-1">
-        <label htmlFor="city" className="block text-sm font-medium leading-6 text-gray-900">
+        <label htmlFor="country" className="block text-sm font-medium leading-6 text-gray-900">
           Country
         </label>
         <div className="mt-2">
           <select
             id="countryCode"
             name="countryCode"
-            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
-            defaultValue={singaporeCountryCode}
+            className="block w-full rounded-md border-0 px-2 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+            defaultValue={singaporeCountryDialCode}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+              console.log(e.target.value)
+              setCountryCode(e.target.value)
+            }}
           >
             {countryCodes.map((value) => (
-              <option value={value.code}>
+              <option value={value.dial_code}>
                 {value.name} {value.dial_code}
               </option>
             ))}
@@ -23,17 +32,22 @@ export default function PhoneTextField() {
         </div>
       </div>
       <div className="col-span-6">
-        <label htmlFor="region" className="block text-sm font-medium leading-6 text-gray-900">
+        <label htmlFor="phoneNumber" className="block text-sm font-medium leading-6 text-gray-900">
           Phone number
         </label>
         <div className="mt-2">
           <input
             type="tel"
-            name="region"
-            id="region"
-            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            name="phoneNumber"
+            id="phoneNumber"
+            className="block w-full rounded-md border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            pattern="\d{2,4}-?\d{2,4}"
+            onChange={(e) => {
+              setPhoneNumber(e.target.value)
+            }}
           />
-          <span className="">not correct</span>
+          {/* Todo: Add phone number validation */}
+          {/* <span className="text-red-500 text-sm">The number is invalid.</span> */}
         </div>
       </div>
     </div>

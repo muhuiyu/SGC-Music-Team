@@ -3,7 +3,7 @@ import {
   User as FirebaseUser,
   GoogleAuthProvider,
   getAuth,
-  signInWithRedirect,
+  signInWithPopup,
   signOut,
 } from 'firebase/auth'
 import { DocumentData, DocumentSnapshot, doc, getDoc, getFirestore } from 'firebase/firestore'
@@ -30,7 +30,7 @@ export const db = getFirestore(app)
 
 // Sign in
 export const signInWithGoogle = async () => {
-  const result = await signInWithRedirect(auth, googleProvider)
+  const result = await signInWithPopup(auth, googleProvider)
   console.log(result)
 }
 // Sign out
@@ -75,8 +75,10 @@ export function songFromSnapshot(snapshot: DocumentSnapshot<DocumentData>): Song
 interface RawUser {
   email: string
   isLead: boolean
-  name: string
+  firstName: string
+  lastName: String
   permissions: Permission[]
+  countryCode: string
   phoneNumber: string
   availableRoles: UserRole[]
   isInSingapore: boolean

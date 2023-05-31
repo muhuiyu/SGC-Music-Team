@@ -5,7 +5,6 @@ import { useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { useNavigate } from 'react-router-dom'
-import { pageInfo } from '../../../models/common/AppPage'
 import { logoImageUrl } from '../../common/assets/AppImages'
 
 export default function LoginPage() {
@@ -53,16 +52,7 @@ export default function LoginPage() {
               className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               onClick={signInWithGoogle}
             >
-              Login with Google
-            </button>
-            <button
-              type="button"
-              className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              onClick={() => {
-                navigate(pageInfo.signup.href)
-              }}
-            >
-              Sign up
+              Continue with Google
             </button>
           </div>
         </div>

@@ -46,8 +46,10 @@ export const roleInfo: Record<
 
 export default interface User {
   id: string
-  name: string
+  firstName: string
+  lastName: String
   email: string
+  countryCode: string
   phoneNumber: string
   permissions?: Permission[]
   availableRoles: UserRole[]

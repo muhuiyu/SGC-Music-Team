@@ -14,7 +14,9 @@ export default function PlannerUserList(props: Props) {
             <div className="flex flex-row">
               <img className="h-10 w-10 rounded-full" src={item.imageUrlString ?? ''} alt="" />
               <div className="ml-3">
-                <p className="text-sm font-medium text-gray-900">{item.name}</p>
+                <p className="text-sm font-medium text-gray-900">
+                  {item.firstName} {item.lastName}
+                </p>
                 <p className="text-sm text-gray-500">{item.availableRoles.join(', ')}</p>
               </div>
             </div>
