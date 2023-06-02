@@ -9,7 +9,7 @@ export default function useAllUsers() {
   const { data: users, isFetching } = useQuery({
     queryKey: [usersQueryKey],
     queryFn: async () => {
-      const nextQuery = query(collection(db, usersReference), orderBy('name'))
+      const nextQuery = query(collection(db, usersReference), orderBy('lastName'))
       const querySnapshot = await getDocs(nextQuery)
       return querySnapshot.docs.map(userFromSnapshot)
     },

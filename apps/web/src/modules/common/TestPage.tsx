@@ -1,9 +1,9 @@
 import { withRequireAuth } from '../../api/auth/RequireAuth'
 import LayoutCommon from '../../app/LayoutCommon'
-import MembersPageContent from '../members/components/MembersPageContent'
+import UsersPageContent from '../users/components/UsersPageContent'
 
 const TestPage = () => {
-  return <LayoutCommon currentPage={'members'} mainContent={MembersPageContent()} />
+  return <LayoutCommon currentPage={'users'} mainContent={UsersPageContent()} />
 }
 
 export default withRequireAuth(TestPage)

@@ -4,16 +4,15 @@ import _ from 'lodash'
 import { useMemo, useState } from 'react'
 import User from '../../../models/user/User'
 import Spinner from '../../common/components/Spinner'
-import MemberListRow from './MemberListRow'
+import UserListRow from './UserListRow'
 
 interface Props {
   users: User[]
-  updateUser(userId: User['id'], details: Partial<User>): void
   isLoading: boolean
+  onRequestEdit(user: User): void
 }
 
-export default function MemberListTable({ users, updateUser, isLoading }: Props) {
-  const [editingUserId, setEditingUserId] = useState<User['id'] | null>(null)
+export default function UserListTable({ users, onRequestEdit, isLoading }: Props) {
   const [selectedUserIds, setSelectedUserIds] = useState<User['id'][]>([])
 
   const areAllUsersSelected = useMemo(() => {
@@ -98,10 +97,9 @@ export default function MemberListTable({ users, updateUser, isLoading }: Props)
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white">
                   {users.map((user, index) => (
-                    <MemberListRow
+                    <UserListRow
                       key={user.id}
                       user={user}
-                      // editing={user.id === editingUserId}
                       selected={selectedUserIds.includes(user.id)}
                       onUpdateSelection={(selected) => {
                         setSelectedUserIds(
@@ -114,12 +112,7 @@ export default function MemberListTable({ users, updateUser, isLoading }: Props)
                           }),
                         )
                       }}
-                      onRequestEdit={() => setEditingUserId(user.id)}
-                      // onCommitEdit={(details) => {
-                      //   updateUser(user.id, details)
-                      //   setEditingUserId(null)
-                      // }}
-                      // onCancelEdit={() => setEditingUserId(null)}
+                      onRequestEdit={() => onRequestEdit(user)}
                     />
                   ))}
                 </tbody>

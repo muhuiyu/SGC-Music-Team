@@ -7,15 +7,10 @@ import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import { auth, getUserProfile, logout } from '../../../api/providers/FirebaseProvider'
 import useAllUsers from '../../../api/providers/useAllUsers'
-import User, { UserRole, allRoles, roleInfo } from '../../../models/user/User'
+import User, { UserRole, allRoles, musicLeadOptions, roleInfo } from '../../../models/user/User'
 import { logoImageUrl } from '../../common/assets/AppImages'
 import PhoneTextField from '../../common/components/PhoneTextField'
 import { singaporeCountryDialCode } from '../../common/pages/CountryCode'
-
-const musicLeadOptions = [
-  { id: 'yes', title: 'yes', value: true },
-  { id: 'no', title: 'no', value: false },
-]
 
 const labelStyle = 'block text-sm font-medium leading-6 text-gray-900'
 
@@ -218,7 +213,7 @@ const SignUpPage = () => {
 
             {/* Phone */}
             <div className="col-span-full">
-              <PhoneTextField {...{ setCountryCode, setPhoneNumber }} />
+              <PhoneTextField {...{ countryCode, phoneNumber, setCountryCode, setPhoneNumber }} />
             </div>
 
             {/* <div className="border-b border-gray-900/10 pb-12 pt-12">
@@ -353,36 +348,38 @@ const SignUpPage = () => {
 
           <div className="mt-10 space-y-10 col-span-full">
             <fieldset>
-              <label htmlFor="photo" className={labelStyle}>
+              <label htmlFor="role" className={labelStyle}>
                 What roles would you like to do?
               </label>
-              <div className="mt-4 divide-gray-200">
-                {allRoles.map((role, index) => (
-                  <div key={index} className="relative flex items-center py-4">
-                    <input
-                      id="orange-checkbox"
-                      type="checkbox"
-                      name={roleInfo[role].name}
-                      className="w-4 h-4 bg-gray-100 border-gray-300 rounded focus:ring-2"
-                      checked={selectedRoles.includes(role)}
-                      onClick={(_) => {
-                        if (selectedRoles.includes(role)) {
-                          setSelectedRoles(
-                            selectedRoles.filter((selectedRole) => selectedRole !== role),
-                          )
-                        } else {
-                          setSelectedRoles([...selectedRoles, role])
-                        }
-                      }}
-                    />
-                    <label
-                      htmlFor="orange-checkbox"
-                      className="ml-2 text-sm font-medium text-gray-900"
-                    >
-                      {roleInfo[role].name}
-                    </label>
-                  </div>
-                ))}
+              <div className="flex flex-row gap-6">
+                <div className="mt-4 divide-gray-200">
+                  {allRoles.map((role, index) => (
+                    <div key={index} className="relative flex items-center py-4">
+                      <input
+                        id="orange-checkbox"
+                        type="checkbox"
+                        name={roleInfo[role].name}
+                        className="w-4 h-4 bg-gray-100 border-gray-300 rounded focus:ring-2"
+                        checked={selectedRoles.includes(role)}
+                        onClick={(_) => {
+                          if (selectedRoles.includes(role)) {
+                            setSelectedRoles(
+                              selectedRoles.filter((selectedRole) => selectedRole !== role),
+                            )
+                          } else {
+                            setSelectedRoles([...selectedRoles, role])
+                          }
+                        }}
+                      />
+                      <label
+                        htmlFor="orange-checkbox"
+                        className="ml-2 text-sm font-medium text-gray-900"
+                      >
+                        {roleInfo[role].name}
+                      </label>
+                    </div>
+                  ))}
+                </div>
               </div>
             </fieldset>
           </div>

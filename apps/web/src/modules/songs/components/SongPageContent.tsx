@@ -77,7 +77,7 @@ export default function SongPageContent() {
           }}
         />
         <SongListTable
-          {...{ updateSong, isLoading, orderBy, setOrderBy, onRequestEdit }}
+          {...{ isLoading, orderBy, setOrderBy, onRequestEdit }}
           songs={filteredData}
         />
         <NavigationPagination />

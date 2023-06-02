@@ -1,11 +1,19 @@
-import countryCodes, { singaporeCountryDialCode } from '../pages/CountryCode'
+import countryCodes from '../pages/CountryCode'
 
 interface Props {
+  countryCode: string
+  phoneNumber: string
   setCountryCode(value: string): void
   setPhoneNumber(value: string): void
 }
 
-export default function PhoneTextField({ setCountryCode, setPhoneNumber }: Props) {
+export default function PhoneTextField({
+  countryCode,
+  phoneNumber,
+  setCountryCode,
+  setPhoneNumber,
+}: Props) {
+  console.log(countryCode)
   return (
     <div className="flex flex-row gap-4">
       <div className="col-span-2 col-start-1">
@@ -17,7 +25,7 @@ export default function PhoneTextField({ setCountryCode, setPhoneNumber }: Props
             id="countryCode"
             name="countryCode"
             className="block w-full rounded-md border-0 px-2 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
-            defaultValue={singaporeCountryDialCode}
+            defaultValue={countryCode}
             onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
               console.log(e.target.value)
               setCountryCode(e.target.value)
@@ -42,6 +50,7 @@ export default function PhoneTextField({ setCountryCode, setPhoneNumber }: Props
             id="phoneNumber"
             className="block w-full rounded-md border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             pattern="\d{2,4}-?\d{2,4}"
+            defaultValue={phoneNumber}
             onChange={(e) => {
               setPhoneNumber(e.target.value)
             }}

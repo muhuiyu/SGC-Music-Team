@@ -47,7 +47,7 @@ export const roleInfo: Record<
 export default interface User {
   id: string
   firstName: string
-  lastName: String
+  lastName: string
   email: string
   countryCode: string
   phoneNumber: string
@@ -57,3 +57,20 @@ export default interface User {
   isInSingapore: boolean
   imageUrlString?: string
 }
+
+export const emptyUser: User = {
+  id: '',
+  firstName: '',
+  lastName: '',
+  email: '',
+  countryCode: '',
+  phoneNumber: '',
+  availableRoles: [],
+  isLead: false,
+  isInSingapore: false,
+}
+
+export const musicLeadOptions = [
+  { id: 'yes', title: 'yes', value: true },
+  { id: 'no', title: 'no', value: false },
+]

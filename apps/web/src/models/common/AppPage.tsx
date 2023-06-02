@@ -13,7 +13,7 @@ export const navigationPages: AppPage[] = [
   'dashboard',
   'calendar',
   'planner',
-  'members',
+  'users',
   'songs',
   'serviceList',
 ]
@@ -22,7 +22,7 @@ export const allAppPages: AppPage[] = [
   'dashboard',
   'calendar',
   'planner',
-  'members',
+  'users',
   'songs',
   'settings',
   'serviceList',
@@ -34,7 +34,7 @@ export type AppPage =
   | 'dashboard'
   | 'planner'
   | 'calendar'
-  | 'members'
+  | 'users'
   | 'songs'
   | 'settings'
   | 'serviceList'
@@ -63,10 +63,10 @@ export const pageInfo: Record<AppPage, AppPageInfo> = {
     icon: CalendarIcon,
     href: '/calendar',
   },
-  members: {
-    name: 'Members',
+  users: {
+    name: 'Users',
     icon: UsersIcon,
-    href: '/members',
+    href: '/users',
   },
   songs: {
     name: 'Songs',

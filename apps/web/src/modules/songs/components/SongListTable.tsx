@@ -9,7 +9,6 @@ import SongListRow from './SongListRow'
 
 interface Props {
   songs: Song[]
-  updateSong(songId: Song['id'], details: Partial<Song>): void
   orderBy: 'name' | 'tempo' | 'version' | 'key'
   setOrderBy(order: 'name' | 'tempo' | 'version' | 'key'): void
   isLoading: boolean

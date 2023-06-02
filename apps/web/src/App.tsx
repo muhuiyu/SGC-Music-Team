@@ -2,17 +2,17 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { AuthProvider } from './api/auth/AuthProvider'
 import { pageInfo } from './models/common/AppPage'
+import LoginPage from './modules/authentication/pages/LoginPage'
 import CalendarPage from './modules/calendar/pages/CalendarPage'
 import TestPage from './modules/common/TestPage'
 import ErrorPage from './modules/common/pages/ErrorPage'
 import DashboardPage from './modules/dashboard/pages/DashboardPage'
-import LoginPage from './modules/authentication/pages/LoginPage'
-import MembersPage from './modules/members/pages/MembersPage'
 import PlannerPage from './modules/planner/pages/PlannerPage'
 import ServiceListPage from './modules/serviceList/pages/ServiceListPage'
 import SettingsPage from './modules/settings/pages/SettingsPage'
 import SignUpPage from './modules/signup/pages/SignUpPage'
 import SongsPage from './modules/songs/pages/SongsPage'
+import UsersPage from './modules/users/pages/UsersPage'
 
 const router = createBrowserRouter([
   {
@@ -51,8 +51,8 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
   {
-    path: pageInfo.members.href,
-    Component: () => <MembersPage />,
+    path: pageInfo.users.href,
+    Component: () => <UsersPage />,
     errorElement: <ErrorPage />,
   },
   {

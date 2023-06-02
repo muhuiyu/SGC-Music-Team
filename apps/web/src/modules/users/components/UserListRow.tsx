@@ -4,10 +4,10 @@ interface Props {
   user: User
   selected?: boolean
   onUpdateSelection(selected: boolean): void
-  onRequestEdit(): void
+  onRequestEdit(user: User): void
 }
 
-export default function MemberListRow(props: Props) {
+export default function UserListRow(props: Props) {
   const { user, selected = false, onUpdateSelection, onRequestEdit } = props
 
   return (
@@ -21,7 +21,9 @@ export default function MemberListRow(props: Props) {
           onChange={(e) => onUpdateSelection(e.target.checked)}
         />
       </td>
-      <td className="whitespace-nowrap px-4 py-4 text-sm font-medium text-gray-900">{user.name}</td>
+      <td className="whitespace-nowrap px-4 py-4 text-sm font-medium text-gray-900">
+        {user.firstName} {user.lastName}
+      </td>
       <td className="whitespace-nowrap px-3 py-4 text-sm flex flex-row gap-1">
         {user.availableRoles.map((role) => (
           <span
@@ -54,11 +56,11 @@ export default function MemberListRow(props: Props) {
       <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
         <a
           onClick={() => {
-            onRequestEdit()
+            onRequestEdit(user)
           }}
           className="text-primary hover:text-indigo-900"
         >
-          Edit<span className="sr-only">, {user.name}</span>
+          Edit
         </a>
       </td>
     </tr>
