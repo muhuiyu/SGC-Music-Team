@@ -2,7 +2,7 @@ import { XMarkIcon } from '@heroicons/react/20/solid'
 import classNames from 'classnames'
 import produce from 'immer'
 import _ from 'lodash'
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import User, { UserRole, allRoles, musicLeadOptions, roleInfo } from '../../../models/user/User'
 import PhoneTextField from '../../common/components/PhoneTextField'
 
@@ -31,8 +31,15 @@ export default function EditUserModal({
     [user, editingUser],
   )
 
+  useEffect(() => {
+    if (isShowingEditUserModal) {
+      return
+    }
+    setEditingUser({})
+  }, [isShowingEditUserModal])
+
   const clearResolvedUser = () => {
-    setEditingUser(user)
+    setEditingUser({})
   }
 
   const updateUserDetail = <K extends keyof User>(key: K, value: User[K]) => {
@@ -101,7 +108,7 @@ export default function EditUserModal({
                   name="firstName"
                   id="firstName"
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                  placeholder="e.g. Alive"
+                  placeholder="Enter first name"
                   required
                   value={resolvedUser.firstName}
                   onChange={onChangeUserDetail('firstName')}
@@ -117,7 +124,7 @@ export default function EditUserModal({
                   name="lastName"
                   id="lastName"
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                  placeholder="e.g. Alive"
+                  placeholder="Enter last name"
                   required
                   value={resolvedUser.lastName}
                   onChange={onChangeUserDetail('lastName')}
@@ -134,7 +141,7 @@ export default function EditUserModal({
                 name="email"
                 id="email"
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                placeholder="e.g. Alive"
+                placeholder="Enter email"
                 required
                 value={resolvedUser.email}
                 onChange={onChangeUserDetail('email')}

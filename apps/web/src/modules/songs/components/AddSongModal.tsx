@@ -2,7 +2,7 @@ import { XMarkIcon } from '@heroicons/react/20/solid'
 import classNames from 'classnames'
 import produce from 'immer'
 import _ from 'lodash'
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { allKeys, keyInfo } from '../../../models/song/Key'
 import { Song } from '../../../models/song/Song'
 
@@ -32,8 +32,15 @@ export default function AddSongModal({
     [song, editingSong],
   )
 
+  useEffect(() => {
+    if (isShowingAddSongModal) {
+      return
+    }
+    setEditingSong({})
+  }, [isShowingAddSongModal])
+
   const clearResolvedSong = () => {
-    setEditingSong(song)
+    setEditingSong({})
   }
 
   const updateSongDetail = <K extends keyof Song>(key: K, value: Song[K]) => {
@@ -57,7 +64,7 @@ export default function AddSongModal({
   return (
     <div
       className={classNames(
-        'relative w-full max-w-lg max-h-full',
+        'relative w-full max-w-2xl max-h-full',
         {
           hidden: !isShowingAddSongModal,
         },
