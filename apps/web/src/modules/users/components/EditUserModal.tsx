@@ -149,8 +149,8 @@ export default function EditUserModal({
             </div>
             {/* Phone */}
             <PhoneTextField
-              countryCode={user.countryCode}
-              phoneNumber={user.phoneNumber}
+              countryCode={resolvedUser.countryCode}
+              phoneNumber={resolvedUser.phoneNumber}
               setCountryCode={(value) => updateUserDetail('countryCode', value)}
               setPhoneNumber={(value) => updateUserDetail('phoneNumber', value)}
             />

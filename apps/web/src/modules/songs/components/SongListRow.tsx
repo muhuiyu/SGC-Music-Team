@@ -1,6 +1,8 @@
 import { LinkOutlined, YouTube } from '@material-ui/icons'
+import classNames from 'classnames'
 import _ from 'lodash'
 import { Song } from '../../../models/song/Song'
+import { songTagInfo } from '../../../models/song/SongTag'
 
 interface Props {
   song: Song
@@ -23,7 +25,18 @@ export default function SongListRow(props: Props) {
           onChange={(e) => onUpdateSelection(e.target.checked)}
         />
       </td>
-      <td className="whitespace-nowrap px-4 py-4 text-sm font-medium text-gray-900">{song.name}</td>
+      <td className="whitespace-nowrap px-4 py-4">
+        <div className="flex flex-col">
+          <span className="text-sm font-medium text-gray-900">{song.name}</span>
+          <div className={classNames('flex flex-row', song.tags.length === 0 ? '' : 'pt-1')}>
+            {song.tags.map((tag) => (
+              <span className="bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
+                {songTagInfo[tag].name}
+              </span>
+            ))}
+          </div>
+        </div>
+      </td>
       <td className="whitespace-nowrap px-4 py-4 text-sm text-gray-500">{song.version}</td>
       <td className="whitespace-nowrap px-4 py-4 text-sm text-gray-500">{song.key}</td>
       <td className="whitespace-nowrap px-4 py-4 text-sm text-gray-500">
@@ -50,7 +63,7 @@ export default function SongListRow(props: Props) {
           }}
           className="text-primary hover:text-indigo-900"
         >
-          Edit<span className="sr-only">, {song.name}</span>
+          Edit
         </a>
       </td>
     </tr>

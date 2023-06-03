@@ -5,6 +5,8 @@ import _ from 'lodash'
 import React, { useEffect, useMemo, useState } from 'react'
 import { allKeys, keyInfo } from '../../../models/song/Key'
 import { Song } from '../../../models/song/Song'
+import { SongTag } from '../../../models/song/SongTag'
+import SongTagInput from './SongTagInput'
 
 interface Props {
   isShowingAddSongModal: boolean
@@ -56,6 +58,10 @@ export default function AddSongModal({
     (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => {
       updateSongDetail(key, e.target.value as Song[K])
     }
+
+  const onChangeTags = (tags: SongTag[]) => {
+    updateSongDetail('tags', tags)
+  }
 
   const areDetailsValid = useMemo(() => {
     return !_.isEmpty(resolvedSong.name)
@@ -202,6 +208,21 @@ export default function AddSongModal({
                 />
               </div>
             </div>
+            {/* tags */}
+            <div>
+              <label htmlFor="tags" className="block mb-2 text-sm font-medium text-gray-900 ">
+                Tags
+              </label>
+              <SongTagInput
+                selectedTags={resolvedSong.tags}
+                onTagAdd={(tag) => {
+                  onChangeTags([...resolvedSong.tags, tag])
+                }}
+                onTagRemove={(tag) => {
+                  onChangeTags(resolvedSong.tags.filter((t) => t !== tag))
+                }}
+              />
+            </div>
             <div className="flex justify-between gap-4 pt-8">
               <button
                 type="reset"
@@ -228,7 +249,7 @@ export default function AddSongModal({
                 }}
                 disabled={!areDetailsValid}
               >
-                Add Song
+                {song.id === '' ? 'Add' : 'Save'}
               </button>
             </div>
           </form>

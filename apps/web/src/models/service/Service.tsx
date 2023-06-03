@@ -36,7 +36,7 @@ export default interface Service {
 
 export const getFormattedLocalString = (
   dateTime: DateTime,
-  dateFormat: string = 'MMM dd yyyy, HH:mm',
+  dateFormat: string = 'MMM dd yyyy, HH:mm a',
 ) => {
   return dateTime.toFormat(dateFormat)
 }

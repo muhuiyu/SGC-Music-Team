@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import useAllServices from '../../../api/providers/useAllServices'
 import useCurrentUser from '../../../api/providers/useCurrentUser'
 import TableHeader from '../../../components/TableHeader'
@@ -28,6 +28,21 @@ export default function ServiceListPageContent() {
       morningServiceTime,
     )
 
+  useEffect(() => {
+    function handleEscapeKey(event: KeyboardEvent) {
+      if (event.code === 'Escape') {
+        setShowingAddServiceModal(false)
+      }
+    }
+    document.addEventListener('keydown', handleEscapeKey)
+    return () => document.removeEventListener('keydown', handleEscapeKey)
+  }, [])
+
+  function onRequestEdit(service: Service) {
+    setCurrentEditingService(service)
+    setShowingAddServiceModal(true)
+  }
+
   const filter = (
     <YearMonthsFilter
       selectedYear={selectedYear}
@@ -52,7 +67,7 @@ export default function ServiceListPageContent() {
       {services.length === 0 ? (
         <ServiceEmptyView {...{ populateDefaultServices, allSundays }} />
       ) : (
-        <ServiceListTable {...{ services, updateService, isLoading }} />
+        <ServiceListTable {...{ services, onRequestEdit, isLoading }} />
       )}
       <div
         className={classNames(

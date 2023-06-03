@@ -10,6 +10,7 @@ import { DocumentData, DocumentSnapshot, doc, getDoc, getFirestore } from 'fireb
 
 import { Song } from '../../models/song/Song'
 import { SongTag } from '../../models/song/SongTag'
+import { MusicianGroup } from '../../models/user/MusicianGroup'
 import User, { Permission, UserRole } from '../../models/user/User'
 import { usersReference } from '../constants/FirebaseKeys'
 
@@ -76,13 +77,14 @@ interface RawUser {
   email: string
   isLead: boolean
   firstName: string
-  lastName: String
+  lastName: string
   permissions: Permission[]
   countryCode: string
   phoneNumber: string
   availableRoles: UserRole[]
   isInSingapore: boolean
   userId: User['id']
+  musicianGroups: MusicianGroup[]
 }
 
 export function userFromSnapshot(snapshot: DocumentSnapshot<DocumentData>): User {

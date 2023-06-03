@@ -2,7 +2,7 @@ import { XMarkIcon } from '@heroicons/react/20/solid'
 import classNames from 'classnames'
 import produce from 'immer'
 import _ from 'lodash'
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import Service from '../../../models/service/Service'
 
 interface Props {
@@ -32,8 +32,15 @@ export default function AddServiceModal({
   )
 
   const clearResolvedService = () => {
-    setEditingService(service)
+    setEditingService({})
   }
+
+  useEffect(() => {
+    if (isShowingAddServiceModal) {
+      return
+    }
+    setEditingService({})
+  }, [isShowingAddServiceModal])
 
   const updateServiceDetail = <K extends keyof Service>(key: K, value: Service[K]) => {
     setEditingService(
@@ -85,7 +92,7 @@ export default function AddServiceModal({
           <form className="space-y-6 text-left pt-6" action="#">
             {/* Date */}
             <div>
-              <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 ">
+              <label htmlFor="date" className="block mb-2 text-sm font-medium text-gray-900 ">
                 Date
               </label>
               <input
@@ -97,6 +104,22 @@ export default function AddServiceModal({
                 required
                 value={resolvedService.dateTime.toISODate() ?? ''}
                 onChange={onChangeServiceDetail('dateTime')}
+              />
+            </div>
+            {/* Time */}
+            <div>
+              <label htmlFor="time" className="block mb-2 text-sm font-medium text-gray-900 ">
+                Date
+              </label>
+              <input
+                type="time"
+                name="time"
+                id="time"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                placeholder="e.g. Alive"
+                required
+                value={resolvedService.dateTime.toFormat('HH:mm') ?? ''}
+                // onChange={onChangeServiceDetail('dateTime')}
               />
             </div>
             {/* topic */}
@@ -142,7 +165,7 @@ export default function AddServiceModal({
                 }}
                 disabled={!areDetailsValid}
               >
-                Add Song
+                {service.id === '' ? 'Add' : 'Save'}
               </button>
             </div>
           </form>

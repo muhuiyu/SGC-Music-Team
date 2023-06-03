@@ -1,3 +1,5 @@
+import { MusicianGroup } from './MusicianGroup'
+
 export type Permission = 'editMembers' | 'editPlanner'
 export type UserRole = 'piano' | 'drums' | 'pa' | 'guitar' | 'bass' | 'vocal'
 export const allRoles: UserRole[] = ['piano', 'drums', 'pa', 'guitar', 'bass', 'vocal']
@@ -56,6 +58,7 @@ export default interface User {
   isLead: boolean
   isInSingapore: boolean
   imageUrlString?: string
+  musicianGroups: MusicianGroup[]
 }
 
 export const emptyUser: User = {
@@ -68,6 +71,7 @@ export const emptyUser: User = {
   availableRoles: [],
   isLead: false,
   isInSingapore: false,
+  musicianGroups: [],
 }
 
 export const musicLeadOptions = [

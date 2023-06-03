@@ -12,7 +12,6 @@ import SongListTable from './SongListTable'
 
 export default function SongPageContent() {
   const [isShowingAddSongModal, setShowingAddSongModal] = useState(false)
-  const [isShowingEditSongModal, setShowingEditSongModal] = useState(false)
   const [currentEditingSong, setCurrentEditingSong] = useState<Song | null>(null)
   const [orderBy, setOrderBy] = useState<'name' | 'key' | 'tempo' | 'version'>('name')
 
@@ -42,7 +41,6 @@ export default function SongPageContent() {
     function handleEscapeKey(event: KeyboardEvent) {
       if (event.code === 'Escape') {
         setShowingAddSongModal(false)
-        setShowingEditSongModal(false)
       }
     }
 
@@ -52,7 +50,7 @@ export default function SongPageContent() {
 
   function onRequestEdit(song: Song) {
     setCurrentEditingSong(song)
-    setShowingEditSongModal(true)
+    setShowingAddSongModal(true)
   }
 
   const searchBar = (
@@ -92,35 +90,17 @@ export default function SongPageContent() {
         <AddSongModal
           {...{ isShowingAddSongModal }}
           song={currentEditingSong ?? emptySong}
-          onSaveSong={() => {}}
+          onSaveSong={(song) => {
+            updateSong(song.id, song)
+            setShowingAddSongModal(false)
+          }}
           onAddSong={(songDetails) => {
             addSong(songDetails)
             setShowingAddSongModal(false)
           }}
           onDismiss={() => {
             setShowingAddSongModal(false)
-            setShowingEditSongModal(false)
-            setCurrentEditingSong(null)
-          }}
-        />
-      </div>
-      {/* edit song */}
-      <div
-        className={classNames(
-          'fixed z-50 overflow-x-hidden overflow-y-auto h-full inset-0 flex bg-black bg-opacity-30 justify-center items-center',
-          { hidden: !isShowingEditSongModal },
-        )}
-      >
-        <AddSongModal
-          {...{ isShowingAddSongModal: isShowingEditSongModal }}
-          song={currentEditingSong ?? emptySong}
-          onSaveSong={(song) => {
-            updateSong(song.id, song)
-          }}
-          onAddSong={() => {}}
-          onDismiss={() => {
-            setShowingAddSongModal(false)
-            setShowingEditSongModal(false)
+
             setCurrentEditingSong(null)
           }}
         />

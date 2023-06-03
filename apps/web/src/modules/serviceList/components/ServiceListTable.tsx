@@ -8,23 +8,22 @@ import ServiceListRow from './ServiceListRow'
 
 interface Props {
   services: Service[]
-  updateService(serviceId: Service['id'], details: Partial<Service>): void
   isLoading: boolean
+  onRequestEdit(service: Service): void
 }
 
 const headers = [
   {
-    name: 'Topic',
-    key: 'topic',
-  },
-  {
     name: 'Date',
     key: 'date',
   },
+  {
+    name: 'Topic',
+    key: 'topic',
+  },
 ]
 
-export default function ServiceListTable({ services, updateService, isLoading }: Props) {
-  const [editingServiceId, setEditingServiceId] = useState<Service['id'] | null>(null)
+export default function ServiceListTable({ services, onRequestEdit, isLoading }: Props) {
   const [selectedServiceIds, setSelectedServiceIds] = useState<Service['id'][]>([])
 
   const areAllServicesSelected = useMemo(() => {
@@ -93,7 +92,6 @@ export default function ServiceListTable({ services, updateService, isLoading }:
                       <ServiceListRow
                         key={service.id}
                         service={service}
-                        editing={service.id === editingServiceId}
                         selected={selectedServiceIds.includes(service.id)}
                         onUpdateSelection={(selected) => {
                           setSelectedServiceIds(
@@ -106,12 +104,7 @@ export default function ServiceListTable({ services, updateService, isLoading }:
                             }),
                           )
                         }}
-                        onRequestEdit={() => setEditingServiceId(service.id)}
-                        onCommitEdit={(details) => {
-                          updateService(service.id, details)
-                          setEditingServiceId(null)
-                        }}
-                        onCancelEdit={() => setEditingServiceId(null)}
+                        onRequestEdit={() => onRequestEdit(service)}
                       />
                     ))}
                   </tbody>
