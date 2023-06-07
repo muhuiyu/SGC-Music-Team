@@ -1,4 +1,5 @@
 import classNames from 'classnames'
+import _ from 'lodash'
 import { useEffect, useState } from 'react'
 import useAllServices from '../../../api/providers/useAllServices'
 import useCurrentUser from '../../../api/providers/useCurrentUser'
@@ -56,7 +57,7 @@ export default function ServiceListPageContent() {
     <div className="flex flex-col gap-4">
       <TableHeader
         title="Services"
-        buttonText={services.length === 0 ? '' : 'Add service'}
+        buttonText={_.isEmpty(services) ? '' : 'Add service'}
         onClickButton={() => {
           setCurrentEditingService(emptyService)
           setShowingAddServiceModal(true)
@@ -64,7 +65,7 @@ export default function ServiceListPageContent() {
         filterElement={filter}
       />
       {/* planner view */}
-      {services.length === 0 ? (
+      {_.isEmpty(services) ? (
         <ServiceEmptyView {...{ populateDefaultServices, allSundays }} />
       ) : (
         <ServiceListTable {...{ services, onRequestEdit, isLoading }} />

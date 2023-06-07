@@ -3,7 +3,7 @@ import { AppPage } from '../models/common/AppPage'
 import FooterSideBar from './FooterSidebar'
 import NavBar from './NavBar'
 import PageHeader from './PageHeader'
-import SideBar from './UpdatedSideBar'
+import SideBar from './SideBar'
 
 interface Props {
   currentPage: AppPage

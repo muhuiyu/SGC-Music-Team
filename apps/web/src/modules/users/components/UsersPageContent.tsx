@@ -70,7 +70,7 @@ export default function UsersPageContent() {
       <div className="flex flex-col gap-4">
         <TableHeader
           title="Users"
-          searchElement={searchBar}
+          filterElement={searchBar}
           onClickButton={() => {}}
           {...{ searchQuery, setSearchQuery }}
         />

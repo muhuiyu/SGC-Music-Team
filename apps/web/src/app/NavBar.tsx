@@ -136,7 +136,7 @@ export default function NavBar({ currentPage, user }: Props) {
             <div className="flex-shrink-0">
               <img
                 className="rounded-full w-11 h-11"
-                src="assets/images/users/bonnie-green.png"
+                // src="assets/images/users/bonnie-green.png"
                 alt="Jese image"
               />
               <div className="absolute flex items-center justify-center w-5 h-5 ml-6 -mt-5 border border-white rounded-full bg-primary-700 ">
@@ -163,7 +163,7 @@ export default function NavBar({ currentPage, user }: Props) {
             <div className="flex-shrink-0">
               <img
                 className="rounded-full w-11 h-11"
-                src="assets/images/users/jese-leos.png"
+                // src="assets/images/users/jese-leos.png"
                 alt="Jese image"
               />
               <div className="absolute flex items-center justify-center w-5 h-5 ml-6 -mt-5 bg-gray-900 border border-white rounded-full ">
@@ -189,7 +189,7 @@ export default function NavBar({ currentPage, user }: Props) {
             <div className="flex-shrink-0">
               <img
                 className="rounded-full w-11 h-11"
-                src="assets/images/users/joseph-mcfall.png"
+                // src="assets/images/users/joseph-mcfall.png"
                 alt="Joseph image"
               />
               <div className="absolute flex items-center justify-center w-5 h-5 ml-6 -mt-5 bg-red-600 border border-white rounded-full ">
@@ -220,7 +220,7 @@ export default function NavBar({ currentPage, user }: Props) {
             <div className="flex-shrink-0">
               <img
                 className="rounded-full w-11 h-11"
-                src="assets/images/users/leslie-livingston.png"
+                // src="assets/images/users/leslie-livingston.png"
                 alt="Leslie image"
               />
               <div className="absolute flex items-center justify-center w-5 h-5 ml-6 -mt-5 bg-green-400 border border-white rounded-full ">
@@ -252,7 +252,7 @@ export default function NavBar({ currentPage, user }: Props) {
             <div className="flex-shrink-0">
               <img
                 className="rounded-full w-11 h-11"
-                src="assets/images/users/robert-brown.png"
+                // src="assets/images/users/robert-brown.png"
                 alt="Robert image"
               />
               <div className="absolute flex items-center justify-center w-5 h-5 ml-6 -mt-5 bg-purple-500 border border-white rounded-full ">
@@ -344,7 +344,7 @@ export default function NavBar({ currentPage, user }: Props) {
       >
         <div className="px-4 py-3" role="none">
           <p className="text-sm text-gray-900" role="none">
-            {user?.name}
+            {user?.firstName}
           </p>
           <p className="text-sm font-medium text-gray-900 truncate" role="none">
             {user?.email}

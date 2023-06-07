@@ -9,10 +9,6 @@ import {
 import { useState } from 'react'
 import { withRequireAuth } from '../../../api/auth/RequireAuth'
 import useCurrentUser from '../../../api/providers/useCurrentUser'
-import NavigationBar from '../../../app/NavigationBar'
-import SideBar from '../../../app/SideBar'
-import TableHeader from '../../../components/TableHeader'
-import SettingsForm from '../components/SettingsForm'
 
 const navigation = [
   { name: 'Projects', href: '#', icon: FolderIcon, current: false },
@@ -34,7 +30,7 @@ const SettingsPage = () => {
 
   return (
     <>
-      <div className="flex flex-row flex-1 h-full">
+      {/* <div className="flex flex-row flex-1 h-full">
         <SideBar
           currentPage="settings"
           onUpdateSelection={function (selected: boolean): void {
@@ -57,7 +53,7 @@ const SettingsPage = () => {
 
           <SettingsForm />
         </main>
-      </div>
+      </div> */}
     </>
   )
 }

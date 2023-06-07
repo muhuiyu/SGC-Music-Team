@@ -2,16 +2,14 @@ interface Props {
   title: string
   buttonText?: string
   filterElement?: JSX.Element
-  searchElement?: JSX.Element
   onClickButton(): void
 }
 
 export default function TableHeader(props: Props) {
-  const { buttonText, onClickButton, filterElement, searchElement } = props
+  const { buttonText, onClickButton, filterElement } = props
   return (
     <div className="sm:flex sm:items-center">
       {filterElement && <div className="sm:flex-auto">{filterElement}</div>}
-      {searchElement && <div className="sm:flex-auto">{searchElement}</div>}
       <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
         {buttonText && (
           <button

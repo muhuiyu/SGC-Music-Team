@@ -1,13 +1,16 @@
 import classNames from 'classnames'
 import _ from 'lodash'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import useAllSongs from '../../../api/providers/useAllSongs'
 import useCurrentUser from '../../../api/providers/useCurrentUser'
 import TableHeader from '../../../components/TableHeader'
 import { Song, emptySong } from '../../../models/song/Song'
+import { SongTag } from '../../../models/song/SongTag'
 import NavigationPagination from '../../common/components/NavigationPagination'
 import SearchBar from '../../common/components/SearchBar'
 import AddSongModal from './AddSongModal'
+import SongFilterButton from './SongFilterButton'
+import SongFilterPanel from './SongFilterPanel'
 import SongListTable from './SongListTable'
 
 export default function SongPageContent() {
@@ -22,30 +25,52 @@ export default function SongPageContent() {
     order: orderBy,
   })
 
+  // filter (currently filtered by tags only)
+  const [filters, setFilters] = useState<SongTag[]>([])
+  const [isShowingFilterPanel, setShowingFilterPanel] = useState(false)
+  const filterPanelRef = useRef<HTMLDivElement>(null)
+  const isFiltering = !_.isEmpty(filters)
+
   // search
   const [searchQuery, setSearchQuery] = useState('')
   const filteredData = useMemo(() => {
-    if (_.isEmpty(searchQuery)) {
-      return songs
+    var filteredSongs = songs
+    if (!_.isEmpty(searchQuery)) {
+      const lowercasedQuery = searchQuery.toLowerCase()
+      filteredSongs = filteredSongs.filter((song) => {
+        return (
+          song.name.toLowerCase().includes(lowercasedQuery) ||
+          song.version.toLowerCase().includes(lowercasedQuery)
+        )
+      })
     }
-    const lowercasedQuery = searchQuery.toLowerCase()
-    return songs.filter((song) => {
-      return (
-        song.name.toLowerCase().includes(lowercasedQuery) ||
-        song.version.toLowerCase().includes(lowercasedQuery)
-      )
-    })
-  }, [songs, searchQuery])
+    if (isFiltering) {
+      filteredSongs = filteredSongs.filter((song) => song.tags.some((tag) => filters.includes(tag)))
+    }
+    return filteredSongs
+  }, [songs, searchQuery, filters])
 
   useEffect(() => {
     function handleEscapeKey(event: KeyboardEvent) {
       if (event.code === 'Escape') {
         setShowingAddSongModal(false)
+        setShowingFilterPanel(false)
+      }
+    }
+    function handleClickOutside(event: MouseEvent) {
+      const target = event.target as HTMLElement
+      if (!filterPanelRef.current?.contains(target) && !filterButtonRef.current?.contains(target)) {
+        setShowingFilterPanel(false)
       }
     }
 
     document.addEventListener('keydown', handleEscapeKey)
-    return () => document.removeEventListener('keydown', handleEscapeKey)
+    document.addEventListener('mousedown', handleClickOutside)
+
+    return () => {
+      document.removeEventListener('keydown', handleEscapeKey)
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
   }, [])
 
   function onRequestEdit(song: Song) {
@@ -53,13 +78,54 @@ export default function SongPageContent() {
     setShowingAddSongModal(true)
   }
 
-  const searchBar = (
-    <SearchBar
-      className="w-1/3"
-      placeholder="Search song name, author..."
-      value={searchQuery}
-      onChange={(e) => setSearchQuery(e)}
-    />
+  // Filter
+  const filterButtonRef = useRef<HTMLButtonElement>(null)
+  const [filterButtonPosition, setFilterButtonPosition] = useState<{ top: number; left: number }>({
+    top: 0,
+    left: 0,
+  })
+  const updateButtonPosition = () => {
+    if (filterButtonRef.current) {
+      const rect = filterButtonRef.current.getBoundingClientRect()
+      setFilterButtonPosition({
+        top: rect.bottom + window.pageYOffset,
+        left: rect.left + window.pageXOffset,
+      })
+    }
+  }
+  function handleFilterButtonClick() {
+    setShowingFilterPanel((prev) => !prev)
+    if (!isShowingFilterPanel) {
+      updateButtonPosition()
+    }
+  }
+  function onTagAdd(tag: SongTag) {
+    setFilters([...filters, tag])
+  }
+  function onTagRemove(tag: SongTag) {
+    setFilters(filters.filter((t) => t !== tag))
+  }
+  function onAllTagsRemove() {
+    setFilters([])
+  }
+
+  const searchBarAndFilter = (
+    <div className="flex gap-2">
+      <SearchBar
+        className="w-1/3"
+        placeholder="Search song name, author..."
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e)}
+      />
+      <SongFilterButton
+        {...{
+          isFiltering,
+          filters,
+          ref: filterButtonRef,
+          onClick: handleFilterButtonClick,
+        }}
+      />
+    </div>
   )
 
   return (
@@ -68,7 +134,7 @@ export default function SongPageContent() {
         <TableHeader
           title="Songs"
           buttonText="Add song"
-          searchElement={searchBar}
+          filterElement={searchBarAndFilter}
           onClickButton={() => {
             setCurrentEditingSong(emptySong)
             setShowingAddSongModal(true)
@@ -105,6 +171,19 @@ export default function SongPageContent() {
           }}
         />
       </div>
+      {isShowingFilterPanel && (
+        <SongFilterPanel
+          {...{
+            isShowingFilterPanel,
+            forwardedRef: filterPanelRef,
+            filterButtonPosition,
+            filters,
+            onTagAdd,
+            onTagRemove,
+            onAllTagsRemove,
+          }}
+        />
+      )}
     </>
   )
 }
