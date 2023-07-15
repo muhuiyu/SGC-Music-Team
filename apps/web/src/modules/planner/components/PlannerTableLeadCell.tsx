@@ -38,7 +38,7 @@ export default function PlannerTableLeadCell(props: Props) {
         }
         onClick={() => (currentUser ? undefined : isEditing ? onEndEditing() : onStartEditing())}
       >
-        {currentUser ? currentUser.name : 'Add user'}
+        {currentUser ? currentUser.firstName + ' ' + currentUser.lastName : 'Choose user'}
         {currentUser ? (
           <XMarkIcon
             width={18}
@@ -75,9 +75,9 @@ export default function PlannerTableLeadCell(props: Props) {
                 <img
                   className="w-6 h-6 mr-2 rounded-full"
                   src={user.imageUrlString}
-                  alt={user.name + ' image'}
+                  alt={user.firstName + ' ' + user.lastName + ' image'}
                 />
-                {user.name}
+                {user.firstName + ' ' + user.lastName}
               </button>
             </li>
           ))}

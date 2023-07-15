@@ -39,9 +39,7 @@ export default function PlannerTable({ users, services, isLoading }: Props) {
             </thead>
             <tbody className="divide-y divide-gray-200 bg-white">
               <tr className="divide-x">
-                <td className="whitespace-nowrap px-5 py-5 text-sm font-bold sm:pl-0">
-                  Music team lead
-                </td>
+                <td className="whitespace-nowrap px-4 py-5 text-sm font-bold">Music team lead</td>
                 {services.map((service) => (
                   <PlannerTableLeadCell
                     users={users}
