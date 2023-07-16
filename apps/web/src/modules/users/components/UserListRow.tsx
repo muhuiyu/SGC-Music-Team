@@ -27,6 +27,7 @@ export default function UserListRow(props: Props) {
       <td className="whitespace-nowrap px-3 py-4 text-sm flex flex-row gap-1">
         {user.availableRoles.map((role) => (
           <span
+            key={role}
             className="inline-flex rounded-full px-2 text-xs font-medium leading-5 items-center"
             style={{
               backgroundColor: roleInfo[role].colorCode,

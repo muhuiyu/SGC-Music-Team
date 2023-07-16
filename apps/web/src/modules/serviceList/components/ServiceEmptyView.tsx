@@ -31,7 +31,9 @@ export default function ServiceEmptyView({ allSundays: sundays, populateDefaultS
       <p className="mt-1 pt-4 text-sm text-gray-500">This will generate services on</p>
       <ul className="py-4 text-sm text-gray-500">
         {sundays.map((sunday) => (
-          <li className="py-1">{getFormattedLocalString(sunday)}</li>
+          <li key={sunday.toISODate()} className="py-1">
+            {getFormattedLocalString(sunday)}
+          </li>
         ))}
       </ul>
       <div className="mt-6">

@@ -1,6 +1,6 @@
 import { PlusIcon, XMarkIcon } from '@heroicons/react/20/solid'
 import classNames from 'classnames'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Service from '../../../models/service/Service'
 import User from '../../../models/user/User'
 
@@ -10,11 +10,34 @@ interface Props {
   isEditing: boolean
   onStartEditing(): void
   onEndEditing(): void
+  onChangeLead(userId: User['id'] | undefined): void
 }
 
 export default function PlannerTableLeadCell(props: Props) {
-  const { users, service, isEditing, onStartEditing, onEndEditing } = props
-  const [currentUser, setCurrentUser] = useState<User | undefined>(undefined)
+  const { users, service, isEditing, onStartEditing, onEndEditing, onChangeLead } = props
+  const [currentUser, setCurrentUser] = useState<User | undefined>(
+    users.filter((e) => e.id === service.lead)[0],
+  )
+  const dropdownRef = useRef<HTMLUListElement>(null)
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        onEndEditing()
+      }
+    }
+
+    document.addEventListener('click', handleClickOutside)
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside)
+    }
+  }, [onEndEditing])
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation()
+    isEditing ? onEndEditing() : onStartEditing()
+  }
 
   return (
     <td className="relative whitespace-nowrap px-5 py-5 text-right text-sm font-medium">
@@ -36,7 +59,7 @@ export default function PlannerTableLeadCell(props: Props) {
                 borderStyle: 'dashed',
               }
         }
-        onClick={() => (currentUser ? undefined : isEditing ? onEndEditing() : onStartEditing())}
+        onClick={handleClick}
       >
         {currentUser ? currentUser.firstName + ' ' + currentUser.lastName : 'Choose user'}
         {currentUser ? (
@@ -45,6 +68,7 @@ export default function PlannerTableLeadCell(props: Props) {
             onClick={() => {
               setCurrentUser(undefined)
               onEndEditing()
+              onChangeLead(undefined)
             }}
           />
         ) : (
@@ -60,16 +84,18 @@ export default function PlannerTableLeadCell(props: Props) {
         )}
       >
         <ul
+          ref={dropdownRef}
           className="h-48 py-2 overflow-y-auto text-gray-700 dark:text-gray-200"
           aria-labelledby="dropdownUsersButton"
         >
           {users.map((user) => (
-            <li>
+            <li key={user.id}>
               <button
                 className="flex w-full items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                 onClick={() => {
                   setCurrentUser(user)
                   onEndEditing()
+                  onChangeLead(user.id)
                 }}
               >
                 <img

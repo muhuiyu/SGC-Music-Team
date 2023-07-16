@@ -20,6 +20,11 @@ export interface HourMinute {
   minute: number
 }
 
+export const hourMinuteToString = (hourMinute: HourMinute): string => {
+  const time = DateTime.fromObject({ hour: hourMinute.hour, minute: hourMinute.minute })
+  return time.toFormat('HH:mm a')
+}
+
 // service id = date & time
 export default interface Service {
   id: string
@@ -41,8 +46,22 @@ export const getFormattedLocalString = (
   return dateTime.toFormat(dateFormat)
 }
 
+export const getFormattedLocalTimeString = (dateTime: DateTime, dateFormat: string = 'HH:mm a') => {
+  return dateTime.toFormat(dateFormat)
+}
+
 export const serviceComparator = (a: Service, b: Service) => {
   return a.dateTime < b.dateTime
+}
+
+export const isUserOnDuty = (service: Service, userId: User['id']) => {
+  if (service.lead === userId) {
+    return true
+  }
+  if (userId in service.assignments) {
+    return true
+  }
+  return false
 }
 
 // service

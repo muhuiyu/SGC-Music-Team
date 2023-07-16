@@ -5,6 +5,7 @@ import {
   and,
   collection,
   doc,
+  getDoc,
   getDocs,
   or,
   query,
@@ -21,6 +22,7 @@ import Service, {
 } from '../../models/service/Service'
 import { servicesQueryKey, servicesReference } from '../constants/FirebaseKeys'
 import { db } from './FirebaseProvider'
+import User, { UserRole } from '../../models/user/User'
 
 export interface ServiceYearMonths {
   year: number
@@ -38,6 +40,7 @@ export function getCurrentServiceYearMonths(): ServiceYearMonths {
   }
 }
 
+// todo: add service time
 export default function useAllServices(filter: ServiceYearMonths, serviceTime: HourMinute) {
   const { data: services, isFetching } = useQuery({
     queryKey: [servicesQueryKey, filter.year, filter.startMonth, filter.endMonth],
@@ -56,46 +59,6 @@ export default function useAllServices(filter: ServiceYearMonths, serviceTime: H
   })
 
   const queryClient = useQueryClient()
-
-  // update
-  const mutation = useMutation({
-    mutationFn: ({
-      serviceId,
-      details,
-    }: {
-      serviceId: Service['id']
-      details: Partial<Service>
-    }) => {
-      return updateDoc(doc(db, servicesReference, serviceId), details)
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries([servicesQueryKey])
-    },
-  })
-
-  const updateService = useCallback(
-    (serviceId: Service['id'], details: Partial<Service>) => {
-      mutation.mutate({ serviceId, details })
-    },
-    [mutation],
-  )
-
-  // add service
-  const addMutation = useMutation({
-    mutationFn: async ({ details }: { details: Omit<Service, 'id'> }) => {
-      return await addDoc(collection(db, servicesReference), details)
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries([servicesQueryKey])
-    },
-  })
-
-  const addService = useCallback(
-    (details: Service) => {
-      addMutation.mutate({ details })
-    },
-    [addMutation],
-  )
 
   // populate default services
   const populateDefaultServicesMutation = useMutation({
@@ -153,8 +116,6 @@ export default function useAllServices(filter: ServiceYearMonths, serviceTime: H
     isFetching,
     services: services ?? [],
     isLoading: isFetching,
-    updateService,
-    addService,
     populateDefaultServices,
     allSundays,
     allServiceDates,

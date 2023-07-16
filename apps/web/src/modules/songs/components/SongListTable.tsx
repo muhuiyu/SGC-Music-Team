@@ -110,6 +110,7 @@ export default function SongListTable({
                       {/* table header */}
                       {headers.map((header) => (
                         <th
+                          key={header.key}
                           scope="col"
                           className="p-4 text-left text-xs font-medium text-gray-500 uppercase"
                         >

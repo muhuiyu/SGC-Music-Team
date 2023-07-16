@@ -4,27 +4,36 @@ import useAllAvailability from '../../../api/providers/useAllAvailability'
 import useAllServices, { getCurrentServiceYearMonths } from '../../../api/providers/useAllServices'
 import useCurrentUser from '../../../api/providers/useCurrentUser'
 import { Availability } from '../../../models/service/Availability'
-import { morningServiceTime } from '../../../models/service/Service'
+import Service, { isUserOnDuty, morningServiceTime } from '../../../models/service/Service'
 import AvailabilitySurveyModal from './AvailabilitySurveyModal'
 import CalendarView from './CalendarView'
 import UpcomingServicesView from './UpcomingServicesView'
+import useAllUsers from '../../../api/providers/useAllUsers'
+import useAllSongs from '../../../api/providers/useAllSongs'
 
 export default function DashboardPageContent() {
   const [isShowingAvailabilitySurveryModal, setShowingAvailabilitySurveryModal] = useState(false)
   // for testing, later we will connect to useNotifications
 
-  console.log(getCurrentServiceYearMonths())
-
-  const { allServiceDates, isFetching, services } = useAllServices(
+  const { allServiceDates, services } = useAllServices(
     getCurrentServiceYearMonths(),
     morningServiceTime,
   )
+
+  const { users, isLoading: isGetAllUsersLoading } = useAllUsers()
+  const { songs, generateSongDictionary } = useAllSongs({
+    order: 'name',
+  })
 
   const { currentUser } = useCurrentUser()
   const { availabilities, addAvailability, isLoading } = useAllAvailability(
     currentUser?.id ?? null,
     allServiceDates,
   )
+
+  const getUpcomingServices = () => {
+    return services.filter((service) => isUserOnDuty(service, currentUser?.id ?? ''))
+  }
 
   const onSubmitAvailabilitySurvey = (responses: Availability[]) => {
     const updatedResponses = responses.map((response) => ({
@@ -39,11 +48,22 @@ export default function DashboardPageContent() {
     console.log('dismiss')
   }
 
+  const onClickView = (service: Service) => {
+    // todo
+  }
+
   return (
     <>
-      <div className="flex flex-row gap-4">
-        <UpcomingServicesView {...{ services }} />
-        <CalendarView />
+      <div className="flex flex-row gap-4 pr-4">
+        <UpcomingServicesView
+          {...{
+            services: getUpcomingServices(),
+            users,
+            songDictionary: generateSongDictionary(),
+            onClickView,
+          }}
+        />
+        <CalendarView {...{ services }} />
       </div>
       {/* availability modal */}
       <div

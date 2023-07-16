@@ -1,7 +1,7 @@
 import classNames from 'classnames'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Service from '../../../models/service/Service'
-import User from '../../../models/user/User'
+import User, { UserRole } from '../../../models/user/User'
 import Spinner from '../../common/components/Spinner'
 import PlannerTableCell from './PlannerTableCell'
 import PlannerTableLeadCell from './PlannerTableLeadCell'
@@ -11,13 +11,36 @@ interface Props {
   users: User[]
   services: Service[]
   isLoading: boolean
+  onChangeUserAssignment(
+    serviceId: Service['id'],
+    userId: User['id'],
+    role: UserRole | undefined,
+  ): void
+  onChangeLead(serviceId: Service['id'], userId: User['id'] | undefined): void
 }
 
-export default function PlannerTable({ users, services, isLoading }: Props) {
+export default function PlannerTable({
+  users,
+  services,
+  isLoading,
+  onChangeUserAssignment,
+  onChangeLead: onChangeServiceLead,
+}: Props) {
   const [editingLeadService, setEditingLeadService] = useState<Service['id'] | null>(null)
   const [editingUserService, setEditingUserService] = useState<
     [userId: User['id'], serviceId: Service['id']] | null
   >(null)
+
+  useEffect(() => {
+    function handleEscapeKey(event: KeyboardEvent) {
+      if (event.code === 'Escape') {
+        setEditingLeadService(null)
+        setEditingUserService(null)
+      }
+    }
+    document.addEventListener('keydown', handleEscapeKey)
+    return () => document.removeEventListener('keydown', handleEscapeKey)
+  })
 
   return (
     <div className="mt-8 flow-root overflow-x-scroll overflow-y-scroll h-[900px]">
@@ -26,9 +49,11 @@ export default function PlannerTable({ users, services, isLoading }: Props) {
           <table className="min-w-full divide-y divide-gray-300">
             <thead>
               <tr className="divide-x">
+                {/* empty leading cell */}
                 <th></th>
                 {services.map((item) => (
                   <th
+                    key={item.id}
                     scope="col"
                     className="px-5 py-5 text-left text-sm font-semibold text-gray-900 w-[500px]"
                   >
@@ -42,6 +67,7 @@ export default function PlannerTable({ users, services, isLoading }: Props) {
                 <td className="whitespace-nowrap px-4 py-5 text-sm font-bold">Music team lead</td>
                 {services.map((service) => (
                   <PlannerTableLeadCell
+                    key={service.id}
                     users={users}
                     service={service}
                     isEditing={
@@ -62,6 +88,9 @@ export default function PlannerTable({ users, services, isLoading }: Props) {
                         }
                       })
                     }}
+                    onChangeLead={(userId) => {
+                      onChangeServiceLead(service.id, userId)
+                    }}
                   />
                 ))}
                 <td className="whitespace-nowrap px-5 py-5 text-sm font-bold">Music team lead</td>
@@ -75,6 +104,7 @@ export default function PlannerTable({ users, services, isLoading }: Props) {
                   <PlannerTableUserCell user={user} shouldAddLeftPadding={false} />
                   {services.map((service) => (
                     <PlannerTableCell
+                      key={service.id}
                       service={service}
                       user={users[index]}
                       isEditing={
@@ -94,6 +124,9 @@ export default function PlannerTable({ users, services, isLoading }: Props) {
                             return prev
                           }
                         })
+                      }}
+                      onRoleChange={(newRole) => {
+                        onChangeUserAssignment(service.id, user.id, newRole)
                       }}
                     />
                   ))}

@@ -30,7 +30,7 @@ export default function PhoneTextField({
             }}
           >
             {countryCodes.map((value) => (
-              <option value={value.dial_code}>
+              <option key={value.dial_code} value={value.dial_code}>
                 {value.name} {value.dial_code}
               </option>
             ))}
