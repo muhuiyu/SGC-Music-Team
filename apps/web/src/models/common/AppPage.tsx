@@ -5,6 +5,7 @@ import {
   ListBulletIcon,
   QuestionMarkCircleIcon,
   TableCellsIcon,
+  UserIcon,
   UsersIcon,
   WrenchIcon,
 } from '@heroicons/react/20/solid'
@@ -23,7 +24,9 @@ export const allAppPages: AppPage[] = [
   'calendar',
   'planner',
   'users',
+  'userDetail',
   'songs',
+  'songDetail',
   'settings',
   'serviceList',
   'login',
@@ -36,12 +39,14 @@ export type AppPage =
   | 'planner'
   | 'calendar'
   | 'users'
+  | 'userDetail'
   | 'songs'
+  | 'songDetail'
   | 'settings'
   | 'serviceList'
+  | 'serviceDetail'
   | 'login'
   | 'signup'
-  | 'serviceDetail'
 
 export interface AppPageInfo {
   name: string
@@ -75,11 +80,23 @@ export const pageInfo: Record<AppPage, AppPageInfo> = {
     href: '/users',
     isBackButtonAvailable: false,
   },
+  userDetail: {
+    name: 'User Details',
+    icon: UserIcon,
+    href: '/user',
+    isBackButtonAvailable: true,
+  },
   songs: {
     name: 'Songs',
     icon: DocumentDuplicateIcon,
     href: '/songs',
     isBackButtonAvailable: false,
+  },
+  songDetail: {
+    name: 'Song Details',
+    icon: DocumentDuplicateIcon,
+    href: '/song',
+    isBackButtonAvailable: true,
   },
   settings: {
     name: 'Settings',
@@ -102,7 +119,7 @@ export const pageInfo: Record<AppPage, AppPageInfo> = {
   serviceDetail: {
     name: 'Service Details',
     icon: ListBulletIcon,
-    href: '/serviceDetails',
+    href: '/service',
     isBackButtonAvailable: true,
   },
   signup: {

@@ -1,7 +1,9 @@
 import classNames from 'classnames'
 import { useState } from 'react'
 import useAllAvailability from '../../../api/providers/useAllAvailability'
-import useAllServices, { getCurrentServiceYearMonths } from '../../../api/providers/useAllServices'
+import useAllServicesWithFilter, {
+  getCurrentServiceYearMonths,
+} from '../../../api/providers/useAllServicesWithFilter'
 import useCurrentUser from '../../../api/providers/useCurrentUser'
 import { Availability } from '../../../models/service/Availability'
 import Service, { isUserOnDuty, morningServiceTime } from '../../../models/service/Service'
@@ -17,7 +19,7 @@ export default function DashboardPageContent() {
   const [isShowingAvailabilitySurveryModal, setShowingAvailabilitySurveryModal] = useState(false)
   // for testing, later we will connect to useNotifications
 
-  const { allServiceDates, services } = useAllServices(
+  const { allServiceDates, services } = useAllServicesWithFilter(
     getCurrentServiceYearMonths(),
     morningServiceTime,
   )

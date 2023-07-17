@@ -67,7 +67,7 @@ export default function ServiceDetailPageContent({ serviceId }: Props) {
   return (
     <>
       <div className="flex flex-row gap-4 pr-4">
-        <div className="w-full">
+        <div className="w-full mt-4">
           <div className="">
             <h3 className="text-base font-semibold leading-7 text-gray-900 px-10">
               {getServiceDateString()}
@@ -127,6 +127,7 @@ export default function ServiceDetailPageContent({ serviceId }: Props) {
                       </a>
                     </div>
                   </li>
+                  {/* todo: add upload button */}
                   <li className="flex items-center justify-between py-4 pl-4 pr-5 text-sm leading-6">
                     <div className="flex w-0 flex-1 items-center">
                       <PaperClipIcon className="h-5 w-5 flex-shrink-0 text-gray-400" />

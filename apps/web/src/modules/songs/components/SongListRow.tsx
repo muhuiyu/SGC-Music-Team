@@ -3,19 +3,21 @@ import classNames from 'classnames'
 import _ from 'lodash'
 import { Song } from '../../../models/song/Song'
 import { songTagInfo } from '../../../models/song/SongTag'
+import { MouseEventHandler } from 'react'
 
 interface Props {
   song: Song
   selected?: boolean
   onUpdateSelection(selected: boolean): void
   onRequestEdit(): void
+  onClick?: MouseEventHandler | undefined
 }
 
 export default function SongListRow(props: Props) {
-  const { song, selected = false, onUpdateSelection, onRequestEdit } = props
+  const { song, selected = false, onUpdateSelection, onRequestEdit, onClick } = props
 
   return (
-    <tr key={song.id}>
+    <tr key={song.id} onClick={onClick}>
       <td className="relative px-7 sm:w-12 sm:px-6">
         <input
           type="checkbox"

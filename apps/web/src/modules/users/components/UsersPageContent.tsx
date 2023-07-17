@@ -47,23 +47,18 @@ export default function UsersPageContent() {
   )
 
   // Editing
-  const [isShowingEditUserModal, setShowingEditUserModal] = useState(false)
-  const [currentEditingUser, setCurrentEditingUser] = useState<User | null>(null)
+  // const [isShowingEditUserModal, setShowingEditUserModal] = useState(false)
+  // const [currentEditingUser, setCurrentEditingUser] = useState<User | null>(null)
 
-  function onRequestEdit(user: User) {
-    setCurrentEditingUser(user)
-    setShowingEditUserModal(true)
-  }
-
-  useEffect(() => {
-    function handleEscapeKey(event: KeyboardEvent) {
-      if (event.code === 'Escape') {
-        setShowingEditUserModal(false)
-      }
-    }
-    document.addEventListener('keydown', handleEscapeKey)
-    return () => document.removeEventListener('keydown', handleEscapeKey)
-  }, [])
+  // useEffect(() => {
+  //   function handleEscapeKey(event: KeyboardEvent) {
+  //     if (event.code === 'Escape') {
+  //       setShowingEditUserModal(false)
+  //     }
+  //   }
+  //   document.addEventListener('keydown', handleEscapeKey)
+  //   return () => document.removeEventListener('keydown', handleEscapeKey)
+  // }, [])
 
   return (
     <>
@@ -74,10 +69,10 @@ export default function UsersPageContent() {
           onClickButton={() => {}}
           {...{ searchQuery, setSearchQuery }}
         />
-        <UserListTable {...{ updateUser, isLoading, onRequestEdit }} users={filteredData} />
+        <UserListTable {...{ updateUser, isLoading }} users={filteredData} />
       </div>
       {/* edit user */}
-      <div
+      {/* <div
         className={classNames(
           'fixed z-50 overflow-x-hidden overflow-y-auto h-full inset-0 flex bg-black bg-opacity-30 justify-center items-center',
           { hidden: !isShowingEditUserModal },
@@ -94,7 +89,7 @@ export default function UsersPageContent() {
             setCurrentEditingUser(null)
           }}
         />
-      </div>
+      </div> */}
     </>
   )
 }

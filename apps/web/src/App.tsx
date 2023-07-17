@@ -13,6 +13,8 @@ import SignUpPage from './modules/signup/pages/SignUpPage'
 import SongsPage from './modules/songs/pages/SongsPage'
 import UsersPage from './modules/users/pages/UsersPage'
 import ServiceDetailsPage from './modules/dashboard/pages/ServiceDetailPage'
+import SongDetailPage from './modules/songs/pages/SongDetailPage'
+import UserDetailPage from './modules/users/pages/UserDetailPage'
 
 const router = createBrowserRouter([
   {
@@ -46,8 +48,18 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
   {
+    path: `${pageInfo.songDetail.href}/:id`,
+    Component: () => <SongDetailPage />,
+    errorElement: <ErrorPage />,
+  },
+  {
     path: pageInfo.users.href,
     Component: () => <UsersPage />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: `${pageInfo.userDetail.href}/:id`,
+    Component: () => <UserDetailPage />,
     errorElement: <ErrorPage />,
   },
   {
