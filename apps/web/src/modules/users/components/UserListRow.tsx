@@ -27,7 +27,8 @@ export default function UserListRow(props: Props) {
       <td className="whitespace-nowrap px-3 py-4 text-sm flex flex-row gap-1">
         {user.availableRoles.map((role) => (
           <span
-            className="inline-flex rounded-full px-2 text-xs font-medium leading-5"
+            key={role}
+            className="inline-flex rounded-full px-2 text-xs font-medium leading-5 items-center"
             style={{
               backgroundColor: roleInfo[role].colorCode,
               color: roleInfo[role].textColorCode,
@@ -37,13 +38,13 @@ export default function UserListRow(props: Props) {
           </span>
         ))}
       </td>
-      <td className="whitespace-nowrap px-3 py-4 text-sm font-medium text-gray-900">
+      <td className="whitespace-nowrap px-4 py-4 text-sm font-medium text-gray-900">
         {user.email}
       </td>
-      <td className="whitespace-nowrap px-3 py-4 text-sm font-medium text-gray-900">
-        {user.phoneNumber}
+      <td className="whitespace-nowrap px-4 py-4 text-sm font-medium text-gray-900">
+        {user.countryCode} {user.phoneNumber}
       </td>
-      <td className="whitespace-nowrap px-3 py-4 text-sm font-medium text-gray-900">
+      <td className="whitespace-nowrap px-4 py-4 text-sm font-medium text-gray-900">
         <div className="flex items-center">
           {user.isInSingapore ? (
             <div className="h-2.5 w-2.5 rounded-full bg-green-400 mr-2" />

@@ -201,7 +201,7 @@ export default function EditUserModal({
                       id={option.id}
                       name="notification-method"
                       type="radio"
-                      defaultChecked={!option.value}
+                      checked={option.value === resolvedUser.isLead}
                       className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
                       onChange={(e) => {
                         if (e.target.value && option.title == 'yes') {

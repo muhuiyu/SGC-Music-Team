@@ -88,7 +88,7 @@ export default function ServiceListTable({ services, onRequestEdit, isLoading }:
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 bg-white">
-                    {services.map((service, index) => (
+                    {services.map((service) => (
                       <ServiceListRow
                         key={service.id}
                         service={service}

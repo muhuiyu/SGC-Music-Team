@@ -30,7 +30,10 @@ export default function SongListRow(props: Props) {
           <span className="text-sm font-medium text-gray-900">{song.name}</span>
           <div className={classNames('flex flex-row', _.isEmpty(song.tags) ? '' : 'pt-1')}>
             {song.tags.map((tag) => (
-              <span className="bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
+              <span
+                key={tag}
+                className="bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded"
+              >
                 {songTagInfo[tag].name}
               </span>
             ))}

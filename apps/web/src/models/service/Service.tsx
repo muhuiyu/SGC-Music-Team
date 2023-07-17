@@ -2,6 +2,7 @@ import { DocumentData, DocumentSnapshot, Timestamp } from 'firebase/firestore'
 import { DateTime } from 'luxon'
 import { Song } from '../song/Song'
 import User, { UserRole } from '../user/User'
+import { ServiceSong } from '../song/ServiceSong'
 
 // 10:15
 export const morningServiceTime: HourMinute = {
@@ -20,6 +21,11 @@ export interface HourMinute {
   minute: number
 }
 
+export const hourMinuteToString = (hourMinute: HourMinute): string => {
+  const time = DateTime.fromObject({ hour: hourMinute.hour, minute: hourMinute.minute })
+  return time.toFormat('HH:mm a')
+}
+
 // service id = date & time
 export default interface Service {
   id: string
@@ -29,7 +35,7 @@ export default interface Service {
   topic: string
   lead: User['id'] | undefined
   assignments: { [userId: User['id']]: UserRole }
-  songs: Song['id'][]
+  songs: ServiceSong[]
   songNotes: { [songId: Song['id']]: string }
   note: string
 }
@@ -41,8 +47,22 @@ export const getFormattedLocalString = (
   return dateTime.toFormat(dateFormat)
 }
 
+export const getFormattedLocalTimeString = (dateTime: DateTime, dateFormat: string = 'HH:mm a') => {
+  return dateTime.toFormat(dateFormat)
+}
+
 export const serviceComparator = (a: Service, b: Service) => {
   return a.dateTime < b.dateTime
+}
+
+export const isUserOnDuty = (service: Service, userId: User['id']) => {
+  if (service.lead === userId) {
+    return true
+  }
+  if (userId in service.assignments) {
+    return true
+  }
+  return false
 }
 
 // service
@@ -53,7 +73,7 @@ export interface FirebaseService {
   topic: string
   lead: User['id'] | undefined
   assignments: { [userId: User['id']]: UserRole }
-  songs: Song['id'][]
+  songs: ServiceSong[]
   songNotes: { [songId: Song['id']]: string }
   note: string
 }
