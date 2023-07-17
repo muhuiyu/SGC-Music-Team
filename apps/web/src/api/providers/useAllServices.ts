@@ -1,28 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import {
-  Timestamp,
-  addDoc,
-  and,
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  or,
-  query,
-  updateDoc,
-  where,
-} from 'firebase/firestore'
+import { Timestamp, addDoc, and, collection, getDocs, or, query, where } from 'firebase/firestore'
 import _ from 'lodash'
 import { DateTime } from 'luxon'
 import { useCallback, useMemo } from 'react'
-import Service, {
-  FirebaseService,
-  HourMinute,
-  serviceFromSnapshot,
-} from '../../models/service/Service'
+import { FirebaseService, HourMinute, serviceFromSnapshot } from '../../models/service/Service'
 import { servicesQueryKey, servicesReference } from '../constants/FirebaseKeys'
 import { db } from './FirebaseProvider'
-import User, { UserRole } from '../../models/user/User'
 
 export interface ServiceYearMonths {
   year: number

@@ -2,6 +2,7 @@ import { DocumentData, DocumentSnapshot, Timestamp } from 'firebase/firestore'
 import { DateTime } from 'luxon'
 import { Song } from '../song/Song'
 import User, { UserRole } from '../user/User'
+import { ServiceSong } from '../song/ServiceSong'
 
 // 10:15
 export const morningServiceTime: HourMinute = {
@@ -34,7 +35,7 @@ export default interface Service {
   topic: string
   lead: User['id'] | undefined
   assignments: { [userId: User['id']]: UserRole }
-  songs: Song['id'][]
+  songs: ServiceSong[]
   songNotes: { [songId: Song['id']]: string }
   note: string
 }
@@ -72,7 +73,7 @@ export interface FirebaseService {
   topic: string
   lead: User['id'] | undefined
   assignments: { [userId: User['id']]: UserRole }
-  songs: Song['id'][]
+  songs: ServiceSong[]
   songNotes: { [songId: Song['id']]: string }
   note: string
 }

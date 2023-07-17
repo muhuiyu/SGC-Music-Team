@@ -9,7 +9,7 @@ import PlannerEmptyView from './PlannerEmptyView'
 import PlannerTable from './PlannerTable'
 
 import User, { UserRole } from '../../../models/user/User'
-import useService from '../../../api/providers/useService'
+import useUpdateService from '../../../api/providers/useUpdateService'
 
 export default function PlannerPageContent() {
   const { users, isLoading: isGetAllUsersLoading } = useAllUsers()
@@ -28,7 +28,7 @@ export default function PlannerPageContent() {
     time,
   )
 
-  const { updateServiceUserAssignment, updateServiceLead } = useService()
+  const { updateServiceUserAssignment, updateServiceLead } = useUpdateService()
 
   const onChangeUserAssignment = (
     serviceId: Service['id'],

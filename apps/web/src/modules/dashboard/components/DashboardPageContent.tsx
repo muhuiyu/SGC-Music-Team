@@ -10,6 +10,8 @@ import CalendarView from './CalendarView'
 import UpcomingServicesView from './UpcomingServicesView'
 import useAllUsers from '../../../api/providers/useAllUsers'
 import useAllSongs from '../../../api/providers/useAllSongs'
+import { useNavigate } from 'react-router-dom'
+import { pageInfo } from '../../../models/common/AppPage'
 
 export default function DashboardPageContent() {
   const [isShowingAvailabilitySurveryModal, setShowingAvailabilitySurveryModal] = useState(false)
@@ -48,8 +50,9 @@ export default function DashboardPageContent() {
     console.log('dismiss')
   }
 
-  const onClickView = (service: Service) => {
-    // todo
+  const navigate = useNavigate()
+  const onClickView = (serviceId: Service['id']) => {
+    navigate(`${pageInfo.serviceDetail.href}/${serviceId}`)
   }
 
   return (
