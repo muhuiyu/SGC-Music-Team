@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import useAllServices from '../../../api/providers/useAllServices'
+import useAllServicesWithFilter from '../../../api/providers/useAllServicesWithFilter'
 import useAllUsers from '../../../api/providers/useAllUsers'
 import useCurrentUser from '../../../api/providers/useCurrentUser'
 import { getCurrentMonths, thisYear } from '../../../helpers/DateHelpers'
@@ -19,7 +19,7 @@ export default function PlannerPageContent() {
   const [months, setMonths] = useState<[number, number]>(getCurrentMonths())
 
   const [time, setTime] = useState<HourMinute>(morningServiceTime)
-  const { services } = useAllServices(
+  const { services } = useAllServicesWithFilter(
     {
       year: selectedYear,
       startMonth: months[0],

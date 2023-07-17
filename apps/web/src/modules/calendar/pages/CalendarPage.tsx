@@ -3,7 +3,7 @@ import LayoutCommon from '../../../app/LayoutCommon'
 import CalenderPageContent from '../components/CalenderPageContent'
 
 const CalendarPage = () => {
-  return <LayoutCommon currentPage={'calendar'} mainContent={CalenderPageContent()} />
+  return <LayoutCommon currentPage={'calendar'} mainContent={<CalenderPageContent />} />
 }
 
 export default withRequireAuth(CalendarPage)

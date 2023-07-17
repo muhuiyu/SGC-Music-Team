@@ -5,19 +5,25 @@ import { useMemo, useState } from 'react'
 import User from '../../../models/user/User'
 import Spinner from '../../common/components/Spinner'
 import UserListRow from './UserListRow'
+import { useNavigate } from 'react-router-dom'
+import { pageInfo } from '../../../models/common/AppPage'
 
 interface Props {
   users: User[]
   isLoading: boolean
-  onRequestEdit(user: User): void
 }
 
-export default function UserListTable({ users, onRequestEdit, isLoading }: Props) {
+export default function UserListTable({ users, isLoading }: Props) {
   const [selectedUserIds, setSelectedUserIds] = useState<User['id'][]>([])
 
   const areAllUsersSelected = useMemo(() => {
     return _.isEmpty(_.difference(_.map(users, 'id'), selectedUserIds))
   }, [selectedUserIds, users])
+
+  const navigate = useNavigate()
+  const navigateToDetailPage = (UserId: User['id']) => {
+    navigate(`${pageInfo.userDetail.href}/${UserId}`)
+  }
 
   return (
     <div className="flow-root">
@@ -112,7 +118,9 @@ export default function UserListTable({ users, onRequestEdit, isLoading }: Props
                           }),
                         )
                       }}
-                      onRequestEdit={() => onRequestEdit(user)}
+                      onClick={() => {
+                        navigateToDetailPage(user.id)
+                      }}
                     />
                   ))}
                 </tbody>

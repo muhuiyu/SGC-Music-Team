@@ -3,7 +3,7 @@ import LayoutCommon from '../../../app/LayoutCommon'
 import UsersPageContent from '../components/UsersPageContent'
 
 const UsersPage = () => {
-  return <LayoutCommon currentPage={'users'} mainContent={UsersPageContent()} />
+  return <LayoutCommon currentPage={'users'} mainContent={<UsersPageContent />} />
 }
 
 export default withRequireAuth(UsersPage)

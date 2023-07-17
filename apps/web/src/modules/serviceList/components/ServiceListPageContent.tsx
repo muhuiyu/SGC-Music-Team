@@ -1,7 +1,7 @@
 import classNames from 'classnames'
 import _ from 'lodash'
 import { useEffect, useState } from 'react'
-import useAllServices from '../../../api/providers/useAllServices'
+import useAllServicesWithFilter from '../../../api/providers/useAllServicesWithFilter'
 import useCurrentUser from '../../../api/providers/useCurrentUser'
 import TableHeader from '../../../components/TableHeader'
 import { getCurrentMonths, thisYear } from '../../../helpers/DateHelpers'
@@ -24,7 +24,7 @@ export default function ServiceListPageContent() {
   const { currentUser } = useCurrentUser()
 
   // firebase
-  const { services, allSundays, populateDefaultServices, isLoading } = useAllServices(
+  const { services, allSundays, populateDefaultServices, isLoading } = useAllServicesWithFilter(
     {
       year: selectedYear,
       startMonth: months[0],
