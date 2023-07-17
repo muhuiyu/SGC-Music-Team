@@ -2,8 +2,9 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { collection, doc, getDocs, orderBy, query, setDoc, updateDoc } from 'firebase/firestore'
 import { useCallback } from 'react'
 import User from '../../models/user/User'
-import { usersQueryKey, usersReference } from '../constants/FirebaseKeys'
+import { userQueryKey, usersQueryKey, usersReference } from '../constants/FirebaseKeys'
 import { db, userFromSnapshot } from './FirebaseProvider'
+import { keyBy } from 'lodash'
 
 export default function useAllUsers() {
   const { data: users, isFetching } = useQuery({
@@ -14,6 +15,10 @@ export default function useAllUsers() {
       return querySnapshot.docs.map(userFromSnapshot)
     },
   })
+
+  const generateUserDictionary = (): { [id: User['id']]: User } => {
+    return keyBy(users, 'id')
+  }
 
   const queryClient = useQueryClient()
   const addMutation = useMutation({
@@ -38,6 +43,7 @@ export default function useAllUsers() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries([usersQueryKey])
+      queryClient.invalidateQueries([userQueryKey])
     },
   })
 
@@ -50,6 +56,7 @@ export default function useAllUsers() {
 
   return {
     users: users ?? [],
+    generateUserDictionary,
     isLoading: isFetching,
     addUser,
     updateUser,

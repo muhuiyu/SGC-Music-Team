@@ -5,6 +5,7 @@ import classNames from 'classnames'
 import { DateTime, Duration } from 'luxon'
 import { Fragment, useMemo, useState } from 'react'
 import { getMonthName } from '../../../helpers/DateHelpers'
+import Service from '../../../models/service/Service'
 
 const meetings = [
   {
@@ -26,7 +27,11 @@ const todayObject = DateTime.fromObject({
   day: today.getDay(),
 })
 
-export default function CalendarView() {
+interface Props {
+  services: Service[]
+}
+
+export default function CalendarView({ services }: Props) {
   const [displayingDate, setDisplayingDate] = useState<DateTime>(
     DateTime.fromObject({ year: today.getFullYear(), month: today.getMonth(), day: 1 }),
   )
@@ -136,7 +141,7 @@ export default function CalendarView() {
           </div>
         ))}
       </div>
-      <section className="mt-12">
+      {/* <section className="mt-12">
         <h2 className="text-base font-semibold leading-6 text-gray-900">
           Schedule for{' '}
           <time dateTime="2022-01-21">
@@ -212,7 +217,7 @@ export default function CalendarView() {
             </li>
           ))}
         </ol>
-      </section>
+      </section> */}
     </div>
   )
 }

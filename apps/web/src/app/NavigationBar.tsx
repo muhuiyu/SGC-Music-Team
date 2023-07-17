@@ -6,8 +6,8 @@ import { AppPage, pageInfo } from '../models/common/AppPage'
 import User from '../models/user/User'
 
 const items = [
-  { name: 'Account Settings', isDestructive: false, href: '/settings' },
-  { name: 'Logout', isDestructive: true, href: '/logout' },
+  { id: 'accountSettings', name: 'Account Settings', isDestructive: false, href: '/settings' },
+  { id: 'logOut', name: 'Logout', isDestructive: true, href: '/logout' },
 ]
 
 interface Props {
@@ -74,7 +74,7 @@ export default function NavigationBar({ currentPage, user }: Props) {
             <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
               <div className="py-1">
                 {items.map((item) => (
-                  <Menu.Item>
+                  <Menu.Item key={item.id}>
                     {({ active }) => (
                       <a
                         href={item.href}

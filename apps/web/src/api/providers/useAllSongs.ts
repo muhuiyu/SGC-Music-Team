@@ -4,6 +4,7 @@ import { useCallback } from 'react'
 import { Song } from '../../models/song/Song'
 import { songsQueryKey, songsReference } from '../constants/FirebaseKeys'
 import { db, songFromSnapshot } from './FirebaseProvider'
+import { keyBy } from 'lodash'
 
 export interface SongFilter {
   order: 'id' | 'version' | 'name' | 'key' | 'tempo'
@@ -20,6 +21,9 @@ export default function useAllSongs(filter: SongFilter) {
       return querySnapshot.docs.map(songFromSnapshot)
     },
   })
+  const generateSongDictionary = (): { [id: Song['id']]: Song } => {
+    return keyBy(songs, 'id')
+  }
 
   const queryClient = useQueryClient()
   const mutation = useMutation({
@@ -56,6 +60,7 @@ export default function useAllSongs(filter: SongFilter) {
   return {
     songs: songs ?? [],
     isLoading: isFetching,
+    generateSongDictionary,
     addSong,
     updateSong,
   }

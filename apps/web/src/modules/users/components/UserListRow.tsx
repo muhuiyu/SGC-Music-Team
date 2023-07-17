@@ -1,17 +1,19 @@
+import { MouseEventHandler } from 'react'
 import User, { roleInfo } from '../../../models/user/User'
 
 interface Props {
   user: User
   selected?: boolean
   onUpdateSelection(selected: boolean): void
-  onRequestEdit(user: User): void
+  onClick?: MouseEventHandler | undefined
 }
 
 export default function UserListRow(props: Props) {
-  const { user, selected = false, onUpdateSelection, onRequestEdit } = props
+  const { user, selected = false, onUpdateSelection, onClick } = props
+  console.log(user.id)
 
   return (
-    <tr key={user.email}>
+    <tr key={user.email} onClick={onClick}>
       <td className="relative px-7 sm:w-12 sm:px-6">
         <input
           type="checkbox"
@@ -27,6 +29,7 @@ export default function UserListRow(props: Props) {
       <td className="whitespace-nowrap px-3 py-4 text-sm flex flex-row gap-1">
         {user.availableRoles.map((role) => (
           <span
+            key={role}
             className="inline-flex rounded-full px-2 text-xs font-medium leading-5 items-center"
             style={{
               backgroundColor: roleInfo[role].colorCode,
@@ -52,16 +55,6 @@ export default function UserListRow(props: Props) {
           )}
           {user.isInSingapore ? 'yes' : 'no'}
         </div>
-      </td>
-      <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-        <a
-          onClick={() => {
-            onRequestEdit(user)
-          }}
-          className="text-primary hover:text-indigo-900"
-        >
-          Edit
-        </a>
       </td>
     </tr>
   )

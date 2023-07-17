@@ -4,7 +4,6 @@ import { AuthProvider } from './api/auth/AuthProvider'
 import { pageInfo } from './models/common/AppPage'
 import LoginPage from './modules/authentication/pages/LoginPage'
 import CalendarPage from './modules/calendar/pages/CalendarPage'
-import TestPage from './modules/common/TestPage'
 import ErrorPage from './modules/common/pages/ErrorPage'
 import DashboardPage from './modules/dashboard/pages/DashboardPage'
 import PlannerPage from './modules/planner/pages/PlannerPage'
@@ -13,13 +12,11 @@ import SettingsPage from './modules/settings/pages/SettingsPage'
 import SignUpPage from './modules/signup/pages/SignUpPage'
 import SongsPage from './modules/songs/pages/SongsPage'
 import UsersPage from './modules/users/pages/UsersPage'
+import ServiceDetailsPage from './modules/dashboard/pages/ServiceDetailPage'
+import SongDetailPage from './modules/songs/pages/SongDetailPage'
+import UserDetailPage from './modules/users/pages/UserDetailPage'
 
 const router = createBrowserRouter([
-  {
-    path: '/test',
-    Component: () => <TestPage />,
-    errorElement: <ErrorPage />,
-  },
   {
     path: pageInfo.login.href,
     element: <LoginPage />,
@@ -51,8 +48,18 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
   {
+    path: `${pageInfo.songDetail.href}/:id`,
+    Component: () => <SongDetailPage />,
+    errorElement: <ErrorPage />,
+  },
+  {
     path: pageInfo.users.href,
     Component: () => <UsersPage />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: `${pageInfo.userDetail.href}/:id`,
+    Component: () => <UserDetailPage />,
     errorElement: <ErrorPage />,
   },
   {
@@ -60,7 +67,11 @@ const router = createBrowserRouter([
     Component: () => <SettingsPage />,
     errorElement: <ErrorPage />,
   },
-
+  {
+    path: `${pageInfo.serviceDetail.href}/:id`,
+    Component: () => <ServiceDetailsPage />,
+    errorElement: <ErrorPage />,
+  },
   // TODO: define logout
   {
     path: pageInfo.serviceList.href,

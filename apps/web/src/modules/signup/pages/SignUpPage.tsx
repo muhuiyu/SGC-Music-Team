@@ -66,8 +66,9 @@ const SignUpPage = () => {
         phoneNumber: phoneNumber,
         availableRoles: selectedRoles,
         isLead: isLead,
-        isInSingapore: true, // TODO: add option and comment for this
-        imageUrlString: '', // TODO: add image file
+        isInSingapore: true,
+        imageUrlString: '',
+        musicianGroups: [],
       }
       addUser(signedUpUser)
     } else {

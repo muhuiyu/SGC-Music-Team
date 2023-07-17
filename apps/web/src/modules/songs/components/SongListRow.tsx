@@ -3,19 +3,21 @@ import classNames from 'classnames'
 import _ from 'lodash'
 import { Song } from '../../../models/song/Song'
 import { songTagInfo } from '../../../models/song/SongTag'
+import { MouseEventHandler } from 'react'
 
 interface Props {
   song: Song
   selected?: boolean
   onUpdateSelection(selected: boolean): void
   onRequestEdit(): void
+  onClick?: MouseEventHandler | undefined
 }
 
 export default function SongListRow(props: Props) {
-  const { song, selected = false, onUpdateSelection, onRequestEdit } = props
+  const { song, selected = false, onUpdateSelection, onRequestEdit, onClick } = props
 
   return (
-    <tr key={song.id}>
+    <tr key={song.id} onClick={onClick}>
       <td className="relative px-7 sm:w-12 sm:px-6">
         <input
           type="checkbox"
@@ -30,7 +32,10 @@ export default function SongListRow(props: Props) {
           <span className="text-sm font-medium text-gray-900">{song.name}</span>
           <div className={classNames('flex flex-row', _.isEmpty(song.tags) ? '' : 'pt-1')}>
             {song.tags.map((tag) => (
-              <span className="bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
+              <span
+                key={tag}
+                className="bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded"
+              >
                 {songTagInfo[tag].name}
               </span>
             ))}

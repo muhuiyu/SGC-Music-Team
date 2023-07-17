@@ -6,6 +6,8 @@ import { useMemo, useState } from 'react'
 import { Song } from '../../../models/song/Song'
 import Spinner from '../../common/components/Spinner'
 import SongListRow from './SongListRow'
+import { useNavigate } from 'react-router-dom'
+import { pageInfo } from '../../../models/common/AppPage'
 
 interface Props {
   songs: Song[]
@@ -67,6 +69,11 @@ export default function SongListTable({
     return _.isEmpty(_.difference(_.map(songs, 'id'), selectedSongIds))
   }, [selectedSongIds, songs])
 
+  const navigate = useNavigate()
+  const navigateToDetailPage = (songId: Song['id']) => {
+    navigate(`${pageInfo.songDetail.href}/${songId}`)
+  }
+
   return (
     <>
       <div className="flow-root">
@@ -110,6 +117,7 @@ export default function SongListTable({
                       {/* table header */}
                       {headers.map((header) => (
                         <th
+                          key={header.key}
                           scope="col"
                           className="p-4 text-left text-xs font-medium text-gray-500 uppercase"
                         >
@@ -157,6 +165,9 @@ export default function SongListTable({
                           )
                         }}
                         onRequestEdit={() => onRequestEdit(song)}
+                        onClick={() => {
+                          navigateToDetailPage(song.id)
+                        }}
                       />
                     ))}
                   </tbody>

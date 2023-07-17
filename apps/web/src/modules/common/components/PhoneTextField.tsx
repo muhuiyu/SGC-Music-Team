@@ -30,7 +30,7 @@ export default function PhoneTextField({
             }}
           >
             {countryCodes.map((value) => (
-              <option value={value.dial_code}>
+              <option key={value.code} value={value.dial_code}>
                 {value.name} {value.dial_code}
               </option>
             ))}
@@ -48,7 +48,7 @@ export default function PhoneTextField({
             id="phoneNumber"
             className="block w-full rounded-md border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             pattern="\d{2,4}-?\d{2,4}"
-            defaultValue={phoneNumber}
+            value={phoneNumber}
             onChange={(e) => {
               setPhoneNumber(e.target.value)
             }}

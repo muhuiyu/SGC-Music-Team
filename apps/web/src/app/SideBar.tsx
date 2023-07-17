@@ -82,9 +82,9 @@ export default function SideBar(props: Props) {
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
-                fill-rule="evenodd"
+                fillRule="evenodd"
                 d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                clip-rule="evenodd"
+                clipRule="evenodd"
               ></path>
             </svg>
           </div>
@@ -118,9 +118,9 @@ export default function SideBar(props: Props) {
           xmlns="http://www.w3.org/2000/svg"
         >
           <path
-            fill-rule="evenodd"
+            fillRule="evenodd"
             d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"
-            clip-rule="evenodd"
+            clipRule="evenodd"
           ></path>
         </svg>
       </a>
@@ -163,7 +163,7 @@ export default function SideBar(props: Props) {
           <path
             d="M0 450h7410m0 600H0m0 600h7410m0 600H0m0 600h7410m0 600H0"
             stroke="#fff"
-            stroke-width="300"
+            strokeWidth="300"
           ></path>
           <path fill="#3c3b6e" d="M0 0h2964v2100H0z"></path>
           <g fill="#fff">
@@ -218,8 +218,8 @@ export default function SideBar(props: Props) {
                   id="flag-icon-css-us"
                   viewBox="0 0 512 512"
                 >
-                  <g fill-rule="evenodd">
-                    <g stroke-width="1pt">
+                  <g fillRule="evenodd">
+                    <g strokeWidth="1pt">
                       <path
                         fill="#bd3d44"
                         d="M0 0h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0z"
@@ -277,7 +277,7 @@ export default function SideBar(props: Props) {
                   id="flag-icon-css-it"
                   viewBox="0 0 512 512"
                 >
-                  <g fill-rule="evenodd" stroke-width="1pt">
+                  <g fillRule="evenodd" strokeWidth="1pt">
                     <path fill="#fff" d="M0 0h512v512H0z"></path>
                     <path fill="#009246" d="M0 0h170.7v512H0z"></path>
                     <path fill="#ce2b37" d="M341.3 0H512v512H341.3z"></path>
@@ -419,10 +419,7 @@ export default function SideBar(props: Props) {
               </ul>
             </div>
           </div>
-          <div
-            className="border-t absolute bottom-0 left-0 justify-center hidden w-full p-4 space-x-4 bg-white lg:flex"
-            sidebar-bottom-menu
-          >
+          <div className="border-t absolute bottom-0 left-0 justify-center hidden w-full p-4 space-x-4 bg-white lg:flex">
             <SettingsButton />
             <LanguageButton />
           </div>

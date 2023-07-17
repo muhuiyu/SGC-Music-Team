@@ -52,9 +52,9 @@ export default function NavBar({ currentPage, user }: Props) {
           xmlns="http://www.w3.org/2000/svg"
         >
           <path
-            fill-rule="evenodd"
+            fillRule="evenodd"
             d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h6a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-            clip-rule="evenodd"
+            clipRule="evenodd"
           ></path>
         </svg>
         <svg
@@ -65,9 +65,9 @@ export default function NavBar({ currentPage, user }: Props) {
           xmlns="http://www.w3.org/2000/svg"
         >
           <path
-            fill-rule="evenodd"
+            fillRule="evenodd"
             d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-            clip-rule="evenodd"
+            clipRule="evenodd"
           ></path>
         </svg>
       </button>
@@ -90,9 +90,9 @@ export default function NavBar({ currentPage, user }: Props) {
           xmlns="http://www.w3.org/2000/svg"
         >
           <path
-            fill-rule="evenodd"
+            fillRule="evenodd"
             d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-            clip-rule="evenodd"
+            clipRule="evenodd"
           ></path>
         </svg>
       </button>
@@ -200,9 +200,9 @@ export default function NavBar({ currentPage, user }: Props) {
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
-                    fill-rule="evenodd"
+                    fillRule="evenodd"
                     d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
-                    clip-rule="evenodd"
+                    clipRule="evenodd"
                   ></path>
                 </svg>
               </div>
@@ -231,9 +231,9 @@ export default function NavBar({ currentPage, user }: Props) {
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
-                    fill-rule="evenodd"
+                    fillRule="evenodd"
                     d="M18 13V5a2 2 0 00-2-2H4a2 2 0 00-2 2v8a2 2 0 002 2h3l3 3 3-3h3a2 2 0 002-2zM5 7a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1zm1 3a1 1 0 100 2h3a1 1 0 100-2H6z"
-                    clip-rule="evenodd"
+                    clipRule="evenodd"
                   ></path>
                 </svg>
               </div>
@@ -283,9 +283,9 @@ export default function NavBar({ currentPage, user }: Props) {
             <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="">
               <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path>
               <path
-                fill-rule="evenodd"
+                fillRule="evenodd"
                 d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
-                clip-rule="evenodd"
+                clipRule="evenodd"
               ></path>
             </svg>
             View all
@@ -317,18 +317,21 @@ export default function NavBar({ currentPage, user }: Props) {
   const UserDropdown = () => {
     const items = [
       {
+        id: 'dashboard',
         name: 'Dashboard',
         textStyle: 'block px-4 py-2 text-gray-700 text-sm hover:bg-gray-100',
         href: '/dashboard',
         isLogout: false,
       },
       {
+        id: 'settings',
         name: 'Settings',
         textStyle: 'block px-4 py-2 text-gray-700 text-sm hover:bg-gray-100',
         href: '/settings',
         isLogout: false,
       },
       {
+        id: 'signOut',
         name: 'Sign out',
         textStyle: 'block px-4 py-2 text-red-500 text-sm hover:bg-gray-100 w-full text-left',
         href: '/login',
@@ -351,8 +354,8 @@ export default function NavBar({ currentPage, user }: Props) {
           </p>
         </div>
         <ul className="py-1" role="none">
-          {items.map((item, index) => (
-            <li>
+          {items.map((item) => (
+            <li key={item.id}>
               {item.isLogout ? (
                 <button onClick={handleLogout} className={item.textStyle}>
                   {item.name}

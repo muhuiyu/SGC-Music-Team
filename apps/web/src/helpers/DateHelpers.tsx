@@ -11,3 +11,8 @@ export const thisMonth = new Date().getMonth() + 1
 export function getCurrentMonths(): [number, number] {
   return thisMonth % 2 ? [thisMonth, thisMonth + 1] : [thisMonth - 1, thisMonth]
 }
+
+export const getMonthString = (monthNumber: number) => {
+  const dateTime = DateTime.local().set({ month: monthNumber })
+  return dateTime.toLocaleString({ month: 'long' })
+}
