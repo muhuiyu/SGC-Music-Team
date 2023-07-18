@@ -6,6 +6,7 @@ import { useEffect } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { useNavigate } from 'react-router-dom'
 import { logoImageUrl } from '../../common/assets/AppImages'
+import { signInWithGoogleSupa } from '../../../api/providers/SupabaseProvider'
 
 export default function LoginPage() {
   const navigate = useNavigate()
@@ -53,6 +54,13 @@ export default function LoginPage() {
               onClick={signInWithGoogle}
             >
               Continue with Google
+            </button>
+            <button
+              type="button"
+              className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              onClick={signInWithGoogleSupa}
+            >
+              Continue with Supabase
             </button>
           </div>
         </div>
