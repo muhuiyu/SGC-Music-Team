@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { withRequireAuth } from '../../../api/auth/RequireAuth'
 // import { sendEmailNotification } from '../../../api/functions'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import { auth, getUserProfile, logout } from '../../../api/providers/FirebaseProvider'
 import useAllUsers from '../../../api/providers/useAllUsers'
@@ -11,6 +11,7 @@ import User, { UserRole, allRoles, musicLeadOptions, roleInfo } from '../../../m
 import { logoImageUrl } from '../../common/assets/AppImages'
 import PhoneTextField from '../../common/components/PhoneTextField'
 import { singaporeCountryDialCode } from '../../common/pages/CountryCode'
+import { CSSProperties } from '@material-ui/core/styles/withStyles'
 
 const labelStyle = 'block text-sm font-medium leading-6 text-gray-900'
 
@@ -24,7 +25,6 @@ function handleCancel() {
 const SignUpPage = () => {
   // User data
   const [user, loading, error] = useAuthState(auth)
-  user?.displayName
   const [firstName, setFirstName] = useState(user?.displayName?.split(' ')[0] ?? '')
   const [lastName, setLastName] = useState(user?.displayName?.split(' ')[1] ?? '')
   const [email, setEmail] = useState(user?.email ?? '')
@@ -34,27 +34,31 @@ const SignUpPage = () => {
   const [isLead, setIsLead] = useState(false)
   const [isShowingEmailTextField, setShowingEmailTextField] = useState(false)
 
+  const [isLoading, setLoading] = useState(false)
+
   // Sign up and navigation
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
 
-  const { data: fetchedUserData, isFetching: isFetchingUser } = useQuery({
+  const { data: fetchedUserData, refetch } = useQuery({
     queryKey: ['userProfile', user?.uid ?? ''],
     queryFn: async () => (user ? getUserProfile(user.uid) : null),
     enabled: !!user?.uid,
+    onSuccess: (data) => {
+      setLoading(false)
+      if (user && typeof data !== 'undefined' && data !== null) {
+        navigate('/')
+      }
+    },
+    onError: () => {
+      setLoading(false)
+      alert('something wrong with your data, please check again')
+    },
   })
-
-  useEffect(() => {
-    if (loading || isFetchingUser) {
-      return
-    }
-    if (user && typeof fetchedUserData !== 'undefined' && fetchedUserData !== null) {
-      navigate('/')
-    }
-  }, [user, loading, fetchedUserData, isFetchingUser])
 
   // Submit
   const { addUser } = useAllUsers()
-  function handleSubmit() {
+  async function handleSubmit() {
     const id = user?.uid
     if (id && firstName !== '' && email !== '') {
       var signedUpUser: User = {
@@ -70,10 +74,34 @@ const SignUpPage = () => {
         imageUrlString: '',
         musicianGroups: [],
       }
-      addUser(signedUpUser)
+      setLoading(true)
+      try {
+        await addUser(signedUpUser)
+        invalidateAndRefetchUserData()
+      } catch (error) {
+        alert('something wrong with your data, please check again')
+        setLoading(false)
+      }
     } else {
       alert('something wrong with your data, please check again')
     }
+  }
+
+  async function invalidateAndRefetchUserData() {
+    await queryClient.invalidateQueries(['userProfile', user?.uid])
+    await refetchUserData()
+  }
+
+  async function refetchUserData() {
+    try {
+      await refetch()
+    } catch (error) {
+      console.log('error in refetch')
+    }
+  }
+
+  if (user === null || user === undefined) {
+    return null
   }
 
   return (
@@ -441,7 +469,7 @@ const SignUpPage = () => {
             Cancel
           </button>
           <button
-            // type="submit"
+            type="button"
             onClick={handleSubmit}
             className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
@@ -449,8 +477,37 @@ const SignUpPage = () => {
           </button>
         </div>
       </div>
+
+      {isLoading && (
+        <div style={maskStyle}>
+          <div style={spinnerStyle}></div>
+        </div>
+      )}
     </div>
   )
 }
 
 export default withRequireAuth(SignUpPage)
+
+const maskStyle: CSSProperties = {
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  width: '100%',
+  height: '100%',
+  zIndex: 9999,
+  backgroundColor: 'rgba(255, 255, 255, 0.6)',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+}
+
+const spinnerStyle: CSSProperties = {
+  display: 'inline-block',
+  width: '60px',
+  height: '60px',
+  borderTop: '5px solid #ccc',
+  borderRight: '5px solid transparent',
+  borderRadius: '50%',
+  animation: 'spin 1s linear infinite',
+}

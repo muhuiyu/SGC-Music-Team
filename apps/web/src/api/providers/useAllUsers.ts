@@ -31,8 +31,8 @@ export default function useAllUsers() {
   })
 
   const addUser = useCallback(
-    (user: User) => {
-      addMutation.mutate({ user })
+    async (user: User) => {
+      return addMutation.mutateAsync({ user })
     },
     [addMutation],
   )
