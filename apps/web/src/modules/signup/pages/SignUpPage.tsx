@@ -71,7 +71,7 @@ const SignUpPage = () => {
         availableRoles: selectedRoles,
         isLead: isLead,
         isInSingapore: true,
-        imageUrlString: '',
+        imageUrlString: user?.photoURL ?? '',
         musicianGroups: [],
       }
       setLoading(true)
@@ -390,13 +390,13 @@ const SignUpPage = () => {
                         name={roleInfo[role].name}
                         className="w-4 h-4 bg-gray-100 border-gray-300 rounded focus:ring-2"
                         checked={selectedRoles.includes(role)}
-                        onClick={(_) => {
-                          if (selectedRoles.includes(role)) {
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedRoles([...selectedRoles, role])
+                          } else {
                             setSelectedRoles(
                               selectedRoles.filter((selectedRole) => selectedRole !== role),
                             )
-                          } else {
-                            setSelectedRoles([...selectedRoles, role])
                           }
                         }}
                       />
