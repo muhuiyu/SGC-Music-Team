@@ -1,17 +1,21 @@
 import { useQuery } from '@tanstack/react-query'
-import { userQueryKey, usersReference } from '../constants/FirebaseKeys'
-import { doc, getDoc } from 'firebase/firestore'
-import { db, userFromSnapshot } from './FirebaseProvider'
+import { userQueryKey, usersReference } from '../constants/QueryKeys'
 import User from '../../models/user/User'
+import { supabase } from './SupabaseProvider'
+import _ from 'lodash'
+
+const hookName = 'useUser'
 
 export default function useUser(userId: User['id']) {
   const { data: user, isFetching } = useQuery({
     queryKey: [userQueryKey],
     queryFn: async () => {
-      const userDocRef = doc(db, usersReference, userId)
-      const querySnapshot = await getDoc(userDocRef)
-      const user = userFromSnapshot(querySnapshot)
-      return user
+      const { data, error } = await supabase.from(usersReference).select().eq('id', userId)
+      if (error) {
+        console.log(`Error: ${hookName} fetchUser `, error)
+      }
+      if (data === null || _.isEmpty(data)) return null
+      return data[0] as User
     },
   })
 

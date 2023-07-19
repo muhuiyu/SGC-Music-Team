@@ -1,35 +1,37 @@
 import classNames from 'classnames'
-import { auth, getUserProfile, signInWithGoogle } from '../../../api/providers/FirebaseProvider'
 
 import { useQuery } from '@tanstack/react-query'
-import { useEffect } from 'react'
-import { useAuthState } from 'react-firebase-hooks/auth'
+import { useContext, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { logoImageUrl } from '../../common/assets/AppImages'
-import { signInWithGoogleSupa } from '../../../api/providers/SupabaseProvider'
+import { getUserProfile } from '../../../api/providers/SupabaseProvider'
+import { AuthContext } from '../../../api/auth/AuthContext'
 
 export default function LoginPage() {
   const navigate = useNavigate()
-  const [user, loading, error] = useAuthState(auth)
+  const { user, signin } = useContext(AuthContext)
 
   const { data: fetchedUserData, isFetching: isFetchingUser } = useQuery({
-    queryKey: ['userProfile', user?.uid ?? ''],
-    queryFn: async () => (user ? getUserProfile(user.uid) : null),
-    enabled: !!user?.uid,
+    queryKey: ['userProfile', user?.id ?? ''],
+    queryFn: async () => (user ? getUserProfile(user.id) : null),
+    enabled: !!user?.id,
   })
 
   useEffect(() => {
-    if (loading || isFetchingUser) {
+    if (isFetchingUser) {
       return
     }
     if (user && typeof fetchedUserData !== 'undefined') {
+      console.log('fetched user')
       if (fetchedUserData === null) {
+        console.log('should move to signup')
         navigate('/signup')
       } else {
+        console.log('should move to login')
         navigate('/')
       }
     }
-  }, [user, loading, fetchedUserData, isFetchingUser])
+  }, [user, fetchedUserData, isFetchingUser])
 
   return (
     <>
@@ -51,16 +53,13 @@ export default function LoginPage() {
             <button
               type="button"
               className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              onClick={signInWithGoogle}
+              onClick={() => {
+                signin(() => {
+                  // todo
+                })
+              }}
             >
               Continue with Google
-            </button>
-            <button
-              type="button"
-              className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              onClick={signInWithGoogleSupa}
-            >
-              Continue with Supabase
             </button>
           </div>
         </div>
@@ -70,7 +69,7 @@ export default function LoginPage() {
       <div
         className={classNames(
           'absolute inset-0 bg-white bg-opacity-80 flex justify-center items-center',
-          { hidden: !loading && !isFetchingUser },
+          { hidden: !isFetchingUser },
           // { hidden: !isFetching },
         )}
       >

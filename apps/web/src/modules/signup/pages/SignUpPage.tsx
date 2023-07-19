@@ -1,33 +1,31 @@
 import classNames from 'classnames'
-import { useEffect, useState } from 'react'
-import { useAuthState } from 'react-firebase-hooks/auth'
+import { useContext, useState } from 'react'
 import { withRequireAuth } from '../../../api/auth/RequireAuth'
-// import { sendEmailNotification } from '../../../api/functions'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
-import { auth, getUserProfile, logout } from '../../../api/providers/FirebaseProvider'
 import useAllUsers from '../../../api/providers/useAllUsers'
 import User, { UserRole, allRoles, musicLeadOptions, roleInfo } from '../../../models/user/User'
 import { logoImageUrl } from '../../common/assets/AppImages'
 import PhoneTextField from '../../common/components/PhoneTextField'
 import { singaporeCountryDialCode } from '../../common/pages/CountryCode'
 import { CSSProperties } from '@material-ui/core/styles/withStyles'
+import { AuthContext } from '../../../api/auth/AuthContext'
+import { getUserProfile } from '../../../api/providers/SupabaseProvider'
 
 const labelStyle = 'block text-sm font-medium leading-6 text-gray-900'
 
 const textFieldStyle =
   'block w-full rounded-md border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
 
-function handleCancel() {
-  logout()
-}
-
 const SignUpPage = () => {
   // User data
-  const [user, loading, error] = useAuthState(auth)
-  const [firstName, setFirstName] = useState(user?.displayName?.split(' ')[0] ?? '')
-  const [lastName, setLastName] = useState(user?.displayName?.split(' ')[1] ?? '')
-  const [email, setEmail] = useState(user?.email ?? '')
+  const { user, signout } = useContext(AuthContext)
+  const userMetaData = user.user_metadata
+  console.log()
+
+  const [firstName, setFirstName] = useState(userMetaData.name.split(' ')[0] ?? '')
+  const [lastName, setLastName] = useState(userMetaData.name.split(' ')[1] ?? '')
+  const [email, setEmail] = useState(userMetaData.email ?? '')
   const [countryCode, setCountryCode] = useState(singaporeCountryDialCode)
   const [phoneNumber, setPhoneNumber] = useState('')
   const [selectedRoles, setSelectedRoles] = useState<UserRole[]>([])
@@ -41,9 +39,9 @@ const SignUpPage = () => {
   const queryClient = useQueryClient()
 
   const { data: fetchedUserData, refetch } = useQuery({
-    queryKey: ['userProfile', user?.uid ?? ''],
-    queryFn: async () => (user ? getUserProfile(user.uid) : null),
-    enabled: !!user?.uid,
+    queryKey: ['userProfile', user?.id ?? ''],
+    queryFn: async () => (user ? getUserProfile(user.id) : null),
+    enabled: !!user?.id,
     onSuccess: (data) => {
       setLoading(false)
       if (user && typeof data !== 'undefined' && data !== null) {
@@ -59,7 +57,7 @@ const SignUpPage = () => {
   // Submit
   const { addUser } = useAllUsers()
   async function handleSubmit() {
-    const id = user?.uid
+    const id = user?.id
     if (id && firstName !== '' && email !== '') {
       var signedUpUser: User = {
         id: id,
@@ -71,7 +69,7 @@ const SignUpPage = () => {
         availableRoles: selectedRoles,
         isLead: isLead,
         isInSingapore: true,
-        imageUrlString: user?.photoURL ?? '',
+        imageUrlString: userMetaData.avatar_url ?? '',
         musicianGroups: [],
       }
       setLoading(true)
@@ -87,8 +85,12 @@ const SignUpPage = () => {
     }
   }
 
+  function handleCancel() {
+    signout(() => {})
+  }
+
   async function invalidateAndRefetchUserData() {
-    await queryClient.invalidateQueries(['userProfile', user?.uid])
+    await queryClient.invalidateQueries(['userProfile', user?.id])
     await refetchUserData()
   }
 

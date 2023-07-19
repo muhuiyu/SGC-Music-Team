@@ -1,19 +1,20 @@
-import React, { ComponentProps, ComponentType } from 'react'
-import { useAuthState } from 'react-firebase-hooks/auth'
+import React, { ComponentProps, ComponentType, useContext } from 'react'
 import { Navigate, useLocation } from 'react-router-dom'
 import { pageInfo } from '../../models/common/AppPage'
-import { auth } from '../providers/FirebaseProvider'
+import { AuthContext } from './AuthContext'
 
 export function RequireAuth({ children }: { children: JSX.Element }) {
-  const [user, isLoading] = useAuthState(auth)
+  const { user } = useContext(AuthContext)
   let location = useLocation()
 
-  if (isLoading) {
-    return null
+  if (user === null) {
+    // User value is still being fetched, show loading state or spinner
+    return <div></div>
   }
   if (!user) {
     return <Navigate to={pageInfo.login.href} state={{ from: location }} replace />
   }
+
   return children
 }
 

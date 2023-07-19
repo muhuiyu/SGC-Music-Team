@@ -1,12 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Timestamp, addDoc, and, collection, getDocs, or, query, where } from 'firebase/firestore'
+import { Timestamp } from 'firebase/firestore'
 import _ from 'lodash'
 import { DateTime } from 'luxon'
 import { useCallback, useMemo } from 'react'
-import { FirebaseService, HourMinute, serviceFromSnapshot } from '../../models/service/Service'
-import { servicesQueryKey, servicesReference } from '../constants/FirebaseKeys'
-import { db } from './FirebaseProvider'
+import { HourMinute, SupabaseService, serviceFromSupabase } from '../../models/service/Service'
+import { servicesQueryKey, servicesReference } from '../constants/QueryKeys'
+import { supabase } from './SupabaseProvider'
+import { v4 as uuidv4 } from 'uuid'
 
+const hookName = 'useAllServicesWithFilter'
 export interface ServiceYearMonths {
   year: number
   startMonth: number
@@ -31,15 +33,17 @@ export default function useAllServicesWithFilter(
   const { data: services, isFetching } = useQuery({
     queryKey: [servicesQueryKey, filter.year, filter.startMonth, filter.endMonth],
     queryFn: async () => {
-      const nextQuery = query(
-        collection(db, servicesReference),
-        and(
-          where('year', '==', filter.year),
-          or(where('month', '==', filter.startMonth), where('month', '==', filter.endMonth)),
-        ),
-      )
-      const querySnapshot = await getDocs(nextQuery)
-      const services = querySnapshot.docs.map(serviceFromSnapshot)
+      const { data, error } = await supabase
+        .from(servicesReference)
+        .select()
+        .eq('year', filter.year)
+        .or(`month.eq.${filter.startMonth},month.eq.${filter.endMonth}`)
+
+      if (error) {
+        console.log(`Error: ${hookName} fetchServices `, error)
+      }
+      if (data === null || _.isEmpty(data)) return []
+      const services = data.map((entry) => serviceFromSupabase(entry))
       return _.sortBy(services, (a) => a.dateTime)
     },
   })
@@ -50,7 +54,8 @@ export default function useAllServicesWithFilter(
   const populateDefaultServicesMutation = useMutation({
     mutationFn: async () => {
       const promises = allSundays.map(async (sunday) => {
-        const newService: FirebaseService = {
+        const newService: SupabaseService = {
+          id: uuidv4(),
           year: sunday.year,
           month: sunday.month,
           timestamp: Timestamp.fromDate(sunday.toJSDate()),
@@ -58,10 +63,13 @@ export default function useAllServicesWithFilter(
           lead: '',
           assignments: {},
           songs: [],
-          songNotes: {},
           note: '',
         }
-        return addDoc(collection(db, servicesReference), newService)
+        const { error } = await supabase.from(servicesReference).insert(newService)
+        if (error) {
+          console.log(`Error: ${hookName} populateDefaultServices `, error)
+        }
+        return
       })
       return Promise.all(promises)
     },

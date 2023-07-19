@@ -1,8 +1,7 @@
-import { DocumentData, DocumentSnapshot, Timestamp } from 'firebase/firestore'
 import { DateTime } from 'luxon'
-import { Song } from '../song/Song'
 import User, { UserRole } from '../user/User'
 import { ServiceSong } from '../song/ServiceSong'
+import { Timestamp } from 'firebase/firestore'
 
 // 10:15
 export const morningServiceTime: HourMinute = {
@@ -36,7 +35,6 @@ export default interface Service {
   lead: User['id'] | undefined
   assignments: { [userId: User['id']]: UserRole }
   songs: ServiceSong[]
-  songNotes: { [songId: Song['id']]: string }
   note: string
 }
 
@@ -65,8 +63,14 @@ export const isUserOnDuty = (service: Service, userId: User['id']) => {
   return false
 }
 
-// service
-export interface FirebaseService {
+export interface ServiceYearMonths {
+  year: number
+  startMonth: number
+  endMonth: number
+}
+
+export interface SupabaseService {
+  id: string
   year: number
   month: number
   timestamp: Timestamp
@@ -74,11 +78,10 @@ export interface FirebaseService {
   lead: User['id'] | undefined
   assignments: { [userId: User['id']]: UserRole }
   songs: ServiceSong[]
-  songNotes: { [songId: Song['id']]: string }
   note: string
 }
 
-export function convertToFirebaseService(service: Service): FirebaseService {
+export function convertToSupabaseService(service: Service): SupabaseService {
   const { dateTime, ...restOfService } = service
   return {
     ...restOfService,
@@ -86,12 +89,10 @@ export function convertToFirebaseService(service: Service): FirebaseService {
   }
 }
 
-export function serviceFromSnapshot(snapshot: DocumentSnapshot<DocumentData>): Service {
-  const { ...docData } = snapshot.data() as FirebaseService
+export function serviceFromSupabase(data: SupabaseService): Service {
   return {
-    ...docData,
-    id: snapshot.id,
-    dateTime: DateTime.fromJSDate(docData.timestamp.toDate()),
+    ...data,
+    dateTime: DateTime.fromJSDate(data.timestamp.toDate()),
   }
 }
 
@@ -104,6 +105,5 @@ export const emptyService: Service = {
   lead: undefined,
   assignments: {},
   songs: [],
-  songNotes: {},
   note: '',
 }

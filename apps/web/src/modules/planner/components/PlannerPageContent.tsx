@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import useAllServicesWithFilter from '../../../api/providers/useAllServicesWithFilter'
 import useAllUsers from '../../../api/providers/useAllUsers'
 import useCurrentUser from '../../../api/providers/useCurrentUser'
@@ -8,7 +8,6 @@ import YearMonthsTimeFilter from '../../common/components/YearMonthsFilter'
 import PlannerEmptyView from './PlannerEmptyView'
 import PlannerTable from './PlannerTable'
 
-import User, { UserRole } from '../../../models/user/User'
 import useUpdateService from '../../../api/providers/useUpdateService'
 
 export default function PlannerPageContent() {
@@ -28,18 +27,10 @@ export default function PlannerPageContent() {
     time,
   )
 
-  const { updateServiceUserAssignment, updateServiceLead } = useUpdateService()
+  const { updateService } = useUpdateService()
 
-  const onChangeUserAssignment = (
-    serviceId: Service['id'],
-    userId: User['id'],
-    role: UserRole | undefined,
-  ) => {
-    updateServiceUserAssignment(serviceId, userId, role)
-  }
-
-  const onChangeLead = (serviceId: Service['id'], userId: User['id'] | undefined) => {
-    updateServiceLead(serviceId, userId)
+  const onUpdateService = (service: Service) => {
+    updateService(service.id, service)
   }
 
   return (
@@ -60,8 +51,7 @@ export default function PlannerPageContent() {
             users,
             isLoading: isGetAllUsersLoading,
             services,
-            onChangeUserAssignment,
-            onChangeLead,
+            onUpdateService,
           }}
         />
       ) : (

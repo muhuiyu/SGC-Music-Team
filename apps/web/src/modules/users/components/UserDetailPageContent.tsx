@@ -1,27 +1,28 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import useUser from '../../../api/providers/useUser'
 import User, { UserRole, allRoles, musicLeadOptions, roleInfo } from '../../../models/user/User'
-import produce from 'immer'
 import _ from 'lodash'
 import PhoneTextField from '../../common/components/PhoneTextField'
 import { singaporeCountryDialCode } from '../../common/pages/CountryCode'
 import classNames from 'classnames'
 import { MusicianGroup, allMusicianGroups } from '../../../models/user/MusicianGroup'
-import useAllUsers from '../../../api/providers/useAllUsers'
+import useUpdateUser from '../../../api/providers/useUpdateUser'
 
 interface Props {
   userId: User['id']
 }
 
-const labelStyle = 'block text-sm font-medium leading-6 text-gray-900'
+const labelStyle = 'block mb-2 text-sm font-medium text-gray-900'
 
 const textFieldStyle =
-  'block w-full rounded-md border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
+  'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'
 
 export default function UserDetailPageContent({ userId }: Props) {
   const { user } = useUser(userId)
-  const { updateUser } = useAllUsers()
+  const { updateUser } = useUpdateUser()
   const [isEditing, setIsEditing] = useState(false)
+
+  console.log(user)
 
   const [editingUser, setEditingUser] = useState<Partial<User>>({})
   const resolvedUser = useMemo(
@@ -130,17 +131,14 @@ export default function UserDetailPageContent({ userId }: Props) {
               <div className="flex flex-row gap-8 px-10">
                 {/* first name */}
                 <div className="flex-1">
-                  <label
-                    htmlFor="firstName"
-                    className="block mb-2 text-sm font-medium text-gray-900 "
-                  >
+                  <label htmlFor="firstName" className={labelStyle}>
                     First name
                   </label>
                   <input
                     type="text"
                     name="firstName"
                     id="firstName"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                    className={textFieldStyle}
                     placeholder="Enter first name"
                     required
                     value={resolvedUser.firstName}
@@ -149,17 +147,14 @@ export default function UserDetailPageContent({ userId }: Props) {
                 </div>
                 {/* last name */}
                 <div className="flex-1">
-                  <label
-                    htmlFor="lastName"
-                    className="block mb-2 text-sm font-medium text-gray-900 "
-                  >
+                  <label htmlFor="lastName" className={labelStyle}>
                     Last name
                   </label>
                   <input
                     type="text"
                     name="lastName"
                     id="lastName"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                    className={textFieldStyle}
                     placeholder="Enter first name"
                     required
                     value={resolvedUser.lastName}
@@ -170,14 +165,14 @@ export default function UserDetailPageContent({ userId }: Props) {
               <div className="flex flex-row gap-8 px-10">
                 {/* email */}
                 <div className="flex-1">
-                  <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 ">
+                  <label htmlFor="email" className={labelStyle}>
                     Email
                   </label>
                   <input
                     type="email"
                     name="email"
                     id="email"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                    className={textFieldStyle}
                     placeholder="Enter email"
                     required
                     value={resolvedUser.email}
@@ -198,7 +193,7 @@ export default function UserDetailPageContent({ userId }: Props) {
               <div className="flex flex-row gap-8 px-10">
                 {/* musician group */}
                 <div className="flex-1">
-                  <label htmlFor="role" className="block text-sm font-medium text-gray-900">
+                  <label htmlFor="role" className={labelStyle}>
                     Time
                   </label>
                   <div className="flex flex-row gap-6">
@@ -230,7 +225,7 @@ export default function UserDetailPageContent({ userId }: Props) {
                 </div>
                 {/* role */}
                 <div className="flex-1">
-                  <label htmlFor="role" className="block text-sm font-medium text-gray-900">
+                  <label htmlFor="role" className={labelStyle}>
                     Role
                   </label>
                   <div className="flex flex-row gap-6">

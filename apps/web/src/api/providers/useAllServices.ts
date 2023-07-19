@@ -1,18 +1,22 @@
 import { useQuery } from '@tanstack/react-query'
-import { collection, getDocs, orderBy, query } from 'firebase/firestore'
 import _ from 'lodash'
-import { serviceFromSnapshot } from '../../models/service/Service'
-import { servicesQueryKey, servicesReference } from '../constants/FirebaseKeys'
-import { db } from './FirebaseProvider'
+import { servicesQueryKey, servicesReference } from '../constants/QueryKeys'
+import { supabase } from './SupabaseProvider'
+import { serviceFromSupabase } from '../../models/service/Service'
+
+const hookName = 'useAllServices'
 
 // todo: add service time
 export default function useAllServices() {
   const { data: services, isFetching } = useQuery({
     queryKey: [servicesQueryKey],
     queryFn: async () => {
-      const nextQuery = query(collection(db, servicesReference))
-      const querySnapshot = await getDocs(nextQuery)
-      const services = querySnapshot.docs.map(serviceFromSnapshot)
+      const { data, error } = await supabase.from(servicesReference).select()
+      if (error) {
+        console.log(`Error: ${hookName} fetchServices `, error)
+      }
+      if (data === null || _.isEmpty(data)) return []
+      const services = data.map((entry) => serviceFromSupabase(entry))
       return _.sortBy(services, (a) => a.dateTime)
     },
   })

@@ -1,7 +1,7 @@
 import classNames from 'classnames'
 import { useEffect, useState } from 'react'
 import Service from '../../../models/service/Service'
-import User, { UserRole } from '../../../models/user/User'
+import User from '../../../models/user/User'
 import Spinner from '../../common/components/Spinner'
 import PlannerTableCell from './PlannerTableCell'
 import PlannerTableLeadCell from './PlannerTableLeadCell'
@@ -11,21 +11,10 @@ interface Props {
   users: User[]
   services: Service[]
   isLoading: boolean
-  onChangeUserAssignment(
-    serviceId: Service['id'],
-    userId: User['id'],
-    role: UserRole | undefined,
-  ): void
-  onChangeLead(serviceId: Service['id'], userId: User['id'] | undefined): void
+  onUpdateService(service: Service): void
 }
 
-export default function PlannerTable({
-  users,
-  services,
-  isLoading,
-  onChangeUserAssignment,
-  onChangeLead: onChangeServiceLead,
-}: Props) {
+export default function PlannerTable({ users, services, isLoading, onUpdateService }: Props) {
   const [editingLeadService, setEditingLeadService] = useState<Service['id'] | null>(null)
   const [editingUserService, setEditingUserService] = useState<
     [userId: User['id'], serviceId: Service['id']] | null
@@ -41,6 +30,17 @@ export default function PlannerTable({
     document.addEventListener('keydown', handleEscapeKey)
     return () => document.removeEventListener('keydown', handleEscapeKey)
   })
+
+  const getUpdatedServiceDetail = <K extends keyof Service>(
+    prevService: Service,
+    key: K,
+    value: Service[K] | ((prevValue: Service[K] | undefined) => Service[K]),
+  ) => {
+    return {
+      ...prevService,
+      [key]: typeof value === 'function' ? value(prevService[key]) : value,
+    }
+  }
 
   return (
     <div className="mt-8 flow-root overflow-x-scroll overflow-y-scroll h-[900px]">
@@ -89,7 +89,12 @@ export default function PlannerTable({
                       })
                     }}
                     onChangeLead={(userId) => {
-                      onChangeServiceLead(service.id, userId)
+                      const updatedService = getUpdatedServiceDetail(
+                        service,
+                        'lead',
+                        userId === undefined ? '' : userId,
+                      )
+                      onUpdateService(updatedService)
                     }}
                   />
                 ))}
@@ -126,7 +131,26 @@ export default function PlannerTable({
                         })
                       }}
                       onRoleChange={(newRole) => {
-                        onChangeUserAssignment(service.id, user.id, newRole)
+                        if (newRole === undefined) {
+                          const { [user.id]: _, ...updatedAssignments } = service.assignments
+                          const updatedService = getUpdatedServiceDetail(
+                            service,
+                            'assignments',
+                            updatedAssignments,
+                          )
+                          onUpdateService(updatedService)
+                        } else {
+                          const updatedAssignments = {
+                            ...service.assignments,
+                            [user.id]: newRole,
+                          }
+                          const updatedService = getUpdatedServiceDetail(
+                            service,
+                            'assignments',
+                            updatedAssignments,
+                          )
+                          onUpdateService(updatedService)
+                        }
                       }}
                     />
                   ))}

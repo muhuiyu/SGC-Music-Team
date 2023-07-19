@@ -29,7 +29,7 @@ export default function SongDetailPageContent({ songId }: Props) {
     }
   }
 
-  if (song === undefined) {
+  if (!song) {
     return null
   }
 

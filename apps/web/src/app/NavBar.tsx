@@ -1,10 +1,10 @@
 import classNames from 'classnames'
-import { useEffect, useState } from 'react'
-import { logout } from '../api/providers/FirebaseProvider'
+import { useContext, useEffect, useState } from 'react'
 import SearchInput from '../components/SearchInput'
 import { AppPage } from '../models/common/AppPage'
 import User from '../models/user/User'
 import { logoImageUrl } from '../modules/common/assets/AppImages'
+import { AuthContext } from '../api/auth/AuthContext'
 
 interface Props {
   currentPage: AppPage
@@ -12,6 +12,8 @@ interface Props {
 }
 
 export default function NavBar({ currentPage, user }: Props) {
+  const { signout } = useContext(AuthContext)
+
   const [isUserDropdownVisible, setUserDropdownVisible] = useState(false)
   const [isNotificationDropdownVisible, setNotificationDropdownVisible] = useState(false)
 
@@ -311,7 +313,9 @@ export default function NavBar({ currentPage, user }: Props) {
   }
 
   function handleLogout() {
-    logout()
+    signout(() => {
+      // todo
+    })
   }
 
   const UserDropdown = () => {

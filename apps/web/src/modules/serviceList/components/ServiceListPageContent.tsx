@@ -21,9 +21,7 @@ export default function ServiceListPageContent() {
   const [currentEditingService, setCurrentEditingService] = useState<Service | null>(null)
   const [months, setMonths] = useState<[number, number]>(getCurrentMonths())
   const [time, setTime] = useState<HourMinute>(morningServiceTime)
-  const { currentUser } = useCurrentUser()
 
-  // firebase
   const { services, allSundays, populateDefaultServices, isLoading } = useAllServicesWithFilter(
     {
       year: selectedYear,
