@@ -24,7 +24,6 @@ export default function SongPageContent() {
   })
 
   const { addSong } = useAddSong()
-  const { updateSong } = useUpdateSong()
 
   // filter (currently filtered by tags only)
   const [filters, setFilters] = useState<SongTag[]>([])
@@ -157,10 +156,6 @@ export default function SongPageContent() {
         <AddSongModal
           {...{ isShowingAddSongModal }}
           song={currentEditingSong ?? emptySong}
-          onSaveSong={(song) => {
-            updateSong(song.id, song)
-            setShowingAddSongModal(false)
-          }}
           onAddSong={(songDetails) => {
             addSong(songDetails)
             setShowingAddSongModal(false)

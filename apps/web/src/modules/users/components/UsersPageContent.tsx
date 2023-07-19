@@ -1,18 +1,12 @@
-import classNames from 'classnames'
 import _ from 'lodash'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import useAllUsers from '../../../api/providers/useAllUsers'
-import useCurrentUser from '../../../api/providers/useCurrentUser'
 import TableHeader from '../../../components/TableHeader'
-import User, { emptyUser } from '../../../models/user/User'
 import SearchBar from '../../common/components/SearchBar'
-import EditUserModal from './EditUserModal'
 import UserListTable from './UserListTable'
 
 export default function UsersPageContent() {
-  // User and search
-  const { users, updateUser, isLoading } = useAllUsers()
-  const { currentUser } = useCurrentUser()
+  const { users, isLoading } = useAllUsers()
   const [searchQuery, setSearchQuery] = useState('')
 
   const keyedUsers = useMemo(() => {
@@ -46,20 +40,6 @@ export default function UsersPageContent() {
     />
   )
 
-  // Editing
-  // const [isShowingEditUserModal, setShowingEditUserModal] = useState(false)
-  // const [currentEditingUser, setCurrentEditingUser] = useState<User | null>(null)
-
-  // useEffect(() => {
-  //   function handleEscapeKey(event: KeyboardEvent) {
-  //     if (event.code === 'Escape') {
-  //       setShowingEditUserModal(false)
-  //     }
-  //   }
-  //   document.addEventListener('keydown', handleEscapeKey)
-  //   return () => document.removeEventListener('keydown', handleEscapeKey)
-  // }, [])
-
   return (
     <>
       <div className="flex flex-col gap-4">
@@ -69,27 +49,8 @@ export default function UsersPageContent() {
           onClickButton={() => {}}
           {...{ searchQuery, setSearchQuery }}
         />
-        <UserListTable {...{ updateUser, isLoading }} users={filteredData} />
+        <UserListTable {...{ users: filteredData, isLoading }} />
       </div>
-      {/* edit user */}
-      {/* <div
-        className={classNames(
-          'fixed z-50 overflow-x-hidden overflow-y-auto h-full inset-0 flex bg-black bg-opacity-30 justify-center items-center',
-          { hidden: !isShowingEditUserModal },
-        )}
-      >
-        <EditUserModal
-          {...{ isShowingEditUserModal: isShowingEditUserModal }}
-          user={currentEditingUser ?? emptyUser}
-          onSaveUser={(user) => {
-            updateUser(user.id, user)
-          }}
-          onDismiss={() => {
-            setShowingEditUserModal(false)
-            setCurrentEditingUser(null)
-          }}
-        />
-      </div> */}
     </>
   )
 }

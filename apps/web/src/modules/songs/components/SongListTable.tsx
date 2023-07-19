@@ -14,7 +14,6 @@ interface Props {
   orderBy: 'name' | 'tempo' | 'version' | 'key'
   setOrderBy(order: 'name' | 'tempo' | 'version' | 'key'): void
   isLoading: boolean
-  onRequestEdit(song: Song): void
 }
 
 interface Header {
@@ -23,13 +22,7 @@ interface Header {
   order: 'name' | 'tempo' | 'version' | 'key'
 }
 
-export default function SongListTable({
-  songs,
-  orderBy,
-  setOrderBy,
-  isLoading,
-  onRequestEdit,
-}: Props) {
+export default function SongListTable({ songs, orderBy, setOrderBy, isLoading }: Props) {
   const [selectedSongIds, setSelectedSongIds] = useState<Song['id'][]>([])
 
   const headers: Header[] = [
@@ -141,14 +134,10 @@ export default function SongListTable({
                           </button>
                         </th>
                       ))}
-
-                      <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
-                        <span className="sr-only">Edit</span>
-                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 bg-white">
-                    {songs.map((song, index) => (
+                    {songs.map((song) => (
                       <SongListRow
                         key={song.id}
                         song={song}
@@ -164,7 +153,6 @@ export default function SongListTable({
                             }),
                           )
                         }}
-                        onRequestEdit={() => onRequestEdit(song)}
                         onClick={() => {
                           navigateToDetailPage(song.id)
                         }}

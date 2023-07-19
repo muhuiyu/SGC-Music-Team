@@ -8,9 +8,9 @@ import User, { UserRole, allRoles, musicLeadOptions, roleInfo } from '../../../m
 import { logoImageUrl } from '../../common/assets/AppImages'
 import PhoneTextField from '../../common/components/PhoneTextField'
 import { singaporeCountryDialCode } from '../../common/pages/CountryCode'
-import { CSSProperties } from '@material-ui/core/styles/withStyles'
 import { AuthContext } from '../../../api/auth/AuthContext'
 import { getUserProfile } from '../../../api/providers/SupabaseProvider'
+import MaskedSpinner from '../../common/components/MaskedSpinner'
 
 const labelStyle = 'block text-sm font-medium leading-6 text-gray-900'
 
@@ -480,36 +480,9 @@ const SignUpPage = () => {
         </div>
       </div>
 
-      {isLoading && (
-        <div style={maskStyle}>
-          <div style={spinnerStyle}></div>
-        </div>
-      )}
+      {isLoading && <MaskedSpinner />}
     </div>
   )
 }
 
 export default withRequireAuth(SignUpPage)
-
-const maskStyle: CSSProperties = {
-  position: 'fixed',
-  top: 0,
-  left: 0,
-  width: '100%',
-  height: '100%',
-  zIndex: 9999,
-  backgroundColor: 'rgba(255, 255, 255, 0.6)',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-}
-
-const spinnerStyle: CSSProperties = {
-  display: 'inline-block',
-  width: '60px',
-  height: '60px',
-  borderTop: '5px solid #ccc',
-  borderRight: '5px solid transparent',
-  borderRadius: '50%',
-  animation: 'spin 1s linear infinite',
-}

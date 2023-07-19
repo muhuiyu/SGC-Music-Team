@@ -11,7 +11,6 @@ import SongTagInput from './SongTagInput'
 interface Props {
   isShowingAddSongModal: boolean
   song: Song
-  onSaveSong(details: Song): void
   onAddSong(details: Omit<Song, 'id'>): void
   onDismiss(): void
   className?: string
@@ -20,7 +19,6 @@ interface Props {
 export default function AddSongModal({
   isShowingAddSongModal,
   song,
-  onSaveSong,
   onAddSong,
   onDismiss,
   className,
@@ -242,8 +240,6 @@ export default function AddSongModal({
                   e.stopPropagation()
                   if (resolvedSong.id === '') {
                     onAddSong(resolvedSong)
-                  } else {
-                    onSaveSong(resolvedSong)
                   }
                   clearResolvedSong()
                 }}

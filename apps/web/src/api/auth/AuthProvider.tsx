@@ -3,13 +3,14 @@ import React, { useState } from 'react'
 import { AuthContext } from './AuthContext'
 import { supabase } from '../providers/SupabaseProvider'
 import { QueryClient, useQuery } from '@tanstack/react-query'
+import { currentAuthQueryKey } from '../constants/QueryKeys'
 
 // Auth Provider
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   let [user, setUser] = useState<SupabaseUser | null>(null)
 
   const { data: sessionData } = useQuery({
-    queryKey: ['user'],
+    queryKey: [currentAuthQueryKey],
     queryFn: async () => {
       const { data: sessionData, error } = await supabase.auth.getSession()
       if (error) {
@@ -28,7 +29,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         provider: 'google',
       })
       .finally(() => {
-        queryClient.invalidateQueries(['user'])
+        queryClient.invalidateQueries([currentAuthQueryKey])
       })
   }
 

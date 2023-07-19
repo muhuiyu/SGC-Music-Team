@@ -10,7 +10,6 @@ interface Props {
 
 export default function UserListRow(props: Props) {
   const { user, selected = false, onUpdateSelection, onClick } = props
-  console.log(user.id)
 
   return (
     <tr key={user.email} onClick={onClick}>

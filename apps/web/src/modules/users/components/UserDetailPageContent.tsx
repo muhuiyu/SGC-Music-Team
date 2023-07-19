@@ -7,6 +7,7 @@ import { singaporeCountryDialCode } from '../../common/pages/CountryCode'
 import classNames from 'classnames'
 import { MusicianGroup, allMusicianGroups } from '../../../models/user/MusicianGroup'
 import useUpdateUser from '../../../api/providers/useUpdateUser'
+import Spinner from '../../common/components/Spinner'
 
 interface Props {
   userId: User['id']
@@ -18,22 +19,20 @@ const textFieldStyle =
   'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'
 
 export default function UserDetailPageContent({ userId }: Props) {
-  const { user } = useUser(userId)
+  const { userData, isFetching } = useUser(userId)
   const { updateUser } = useUpdateUser()
   const [isEditing, setIsEditing] = useState(false)
-
-  console.log(user)
 
   const [editingUser, setEditingUser] = useState<Partial<User>>({})
   const resolvedUser = useMemo(
     (): User | undefined =>
-      user
+      userData
         ? {
-            ...user,
+            ...userData,
             ...editingUser,
           }
         : undefined,
-    [user, editingUser],
+    [userData, editingUser],
   )
 
   const clearResolvedUser = () => {
@@ -46,7 +45,7 @@ export default function UserDetailPageContent({ userId }: Props) {
   ) => {
     setEditingUser((prevUser) => ({
       ...prevUser,
-      [key]: typeof value === 'function' ? value(prevUser[key] ?? user?.[key]) : value,
+      [key]: typeof value === 'function' ? value(prevUser[key] ?? userData?.[key]) : value,
     }))
   }
 
@@ -79,8 +78,12 @@ export default function UserDetailPageContent({ userId }: Props) {
     return !_.isEmpty(resolvedUser?.firstName)
   }, [resolvedUser])
 
-  if (!user || !resolvedUser) {
-    return null
+  if (isFetching || userData === null) {
+    return <Spinner />
+  }
+
+  if (!userData || !resolvedUser) {
+    return <Spinner />
   }
   return (
     <>
@@ -91,7 +94,11 @@ export default function UserDetailPageContent({ userId }: Props) {
               {/* header */}
               <div className="flex flex-row justify-between px-10">
                 <div className="flex flex-row flex-1">
-                  <img className="h-24 w-24 rounded-full" src={user.imageUrlString ?? ''} alt="" />
+                  <img
+                    className="h-24 w-24 rounded-full"
+                    src={userData.imageUrlString ?? ''}
+                    alt=""
+                  />
                 </div>
                 <div className="flex flex-row gap-4">
                   <button
@@ -292,16 +299,20 @@ export default function UserDetailPageContent({ userId }: Props) {
             <div>
               <div className="flex flex-row justify-between px-10">
                 <div className="flex flex-row flex-1">
-                  <img className="h-24 w-24 rounded-full" src={user.imageUrlString ?? ''} alt="" />
+                  <img
+                    className="h-24 w-24 rounded-full"
+                    src={userData.imageUrlString ?? ''}
+                    alt=""
+                  />
                   <div className="flex-1">
                     <h3 className="text-base font-semibold leading-7 text-gray-900 px-10">
-                      {user.firstName} {user.lastName}
+                      {userData.firstName} {userData.lastName}
                     </h3>
                     <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500 px-10">
-                      {user.email}
+                      {userData.email}
                     </p>
                     <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500 px-10">
-                      {user.countryCode} {user.phoneNumber}
+                      {userData.countryCode} {userData.phoneNumber}
                     </p>
                   </div>
                 </div>
@@ -324,13 +335,17 @@ export default function UserDetailPageContent({ userId }: Props) {
                   <div className="flex-1 py-6 border-t border-gray-100">
                     <div className="text-sm font-medium leading-6 text-gray-900">Service for</div>
                     <div className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-                      {user.musicianGroups.join(', ')}
+                      {_.isEmpty(userData.musicianGroups)
+                        ? '-'
+                        : userData.musicianGroups.join(', ')}
                     </div>
                   </div>
                   <div className="flex-1 py-6 border-t border-gray-100">
                     <div className="text-sm font-medium leading-6 text-gray-900">Roles</div>
                     <div className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-                      {user.availableRoles.map((role) => roleInfo[role].name).join(', ')}
+                      {_.isEmpty(userData.availableRoles)
+                        ? '-'
+                        : userData.availableRoles.map((role) => roleInfo[role].name).join(', ')}
                     </div>
                   </div>
                 </div>
@@ -340,7 +355,7 @@ export default function UserDetailPageContent({ userId }: Props) {
                       Available as music lead
                     </div>
                     <div className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-                      {user.isLead ? 'Yes' : 'No'}
+                      {userData.isLead ? 'Yes' : 'No'}
                     </div>
                   </div>
                   <div className="flex-1 py-6 border-t border-gray-100">
@@ -348,7 +363,7 @@ export default function UserDetailPageContent({ userId }: Props) {
                       Is in Singapore now
                     </div>
                     <div className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-                      {user.isInSingapore ? 'Yes' : 'No'}
+                      {userData.isInSingapore ? 'Yes' : 'No'}
                     </div>
                   </div>
                 </div>
