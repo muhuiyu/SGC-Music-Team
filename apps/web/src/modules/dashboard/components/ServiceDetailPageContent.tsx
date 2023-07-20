@@ -92,7 +92,7 @@ export default function ServiceDetailPageContent({ serviceId }: Props) {
   })
 
   // Editing
-  const [isEditing, setIsEditing] = useState(true)
+  const [isEditing, setIsEditing] = useState(false)
   const { updateService } = useUpdateService()
   const [isShowingAddServiceSongModal, setIsShowingAddServiceSongModal] = useState(false)
 
