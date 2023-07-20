@@ -61,7 +61,7 @@ const UpcomingServiceCard = (props: {
 
   return (
     <div className="bg-white p-6 flex flex-row gap-4" onClick={() => onClickView(service.id)}>
-      <div className="flex flex-col items-center pr-6 border-r-2">
+      <div className="flex flex-col items-center pr-6 border-r-2 w-[72px]">
         <div className="text-xs">{getMonthString(service.dateTime.month)}</div>
         <div className="text-lg">{service.dateTime.day}</div>
       </div>
