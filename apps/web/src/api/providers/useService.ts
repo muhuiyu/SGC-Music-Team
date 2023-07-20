@@ -1,17 +1,22 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query'
-import Service, { serviceFromSnapshot } from '../../models/service/Service'
-import { serviceQueryKey, servicesReference } from '../constants/FirebaseKeys'
-import { doc, getDoc, query } from 'firebase/firestore'
-import { db } from './FirebaseProvider'
+import { useQuery } from '@tanstack/react-query'
+import Service, { SupabaseService, serviceFromSupabase } from '../../models/service/Service'
+import { serviceQueryKey, servicesReference } from '../constants/QueryKeys'
+import { supabase } from './SupabaseProvider'
+import _ from 'lodash'
+
+const hookName = 'useService'
 
 export default function useService(serviceId: Service['id']) {
   const { data: service, isFetching } = useQuery({
     queryKey: [serviceQueryKey],
     queryFn: async () => {
-      const serviceDocRef = doc(db, servicesReference, serviceId)
-      const querySnapshot = await getDoc(serviceDocRef)
-      const service = serviceFromSnapshot(querySnapshot)
-      return service
+      const { data, error } = await supabase.from(servicesReference).select().eq('id', serviceId)
+      if (error) {
+        console.log(`Error: ${hookName} fetchService `, error)
+      }
+      if (data === null || _.isEmpty(data)) return null
+      const supabaseService = data[0] as SupabaseService
+      return serviceFromSupabase(supabaseService)
     },
   })
 

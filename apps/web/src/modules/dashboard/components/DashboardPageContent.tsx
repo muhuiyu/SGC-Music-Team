@@ -14,6 +14,8 @@ import useAllUsers from '../../../api/providers/useAllUsers'
 import useAllSongs from '../../../api/providers/useAllSongs'
 import { useNavigate } from 'react-router-dom'
 import { pageInfo } from '../../../models/common/AppPage'
+import { pageContentDashboardDivStyle } from '../../common/styles/ComponentStyles'
+import { DateTime } from 'luxon'
 
 export default function DashboardPageContent() {
   const [isShowingAvailabilitySurveryModal, setShowingAvailabilitySurveryModal] = useState(false)
@@ -36,7 +38,9 @@ export default function DashboardPageContent() {
   )
 
   const getUpcomingServices = () => {
-    return services.filter((service) => isUserOnDuty(service, currentUser?.id ?? ''))
+    return services
+      .filter((service) => service.dateTime >= DateTime.now())
+      .filter((service) => isUserOnDuty(service, currentUser?.id ?? ''))
   }
 
   const onSubmitAvailabilitySurvey = (responses: Availability[]) => {
@@ -59,7 +63,7 @@ export default function DashboardPageContent() {
 
   return (
     <>
-      <div className="flex flex-row gap-4 pr-4">
+      <div className={pageContentDashboardDivStyle}>
         <UpcomingServicesView
           {...{
             services: getUpcomingServices(),

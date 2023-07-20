@@ -1,26 +1,33 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import useUser from '../../../api/providers/useUser'
 import User, { UserRole, allRoles, musicLeadOptions, roleInfo } from '../../../models/user/User'
-import produce from 'immer'
 import _ from 'lodash'
 import PhoneTextField from '../../common/components/PhoneTextField'
 import { singaporeCountryDialCode } from '../../common/pages/CountryCode'
 import classNames from 'classnames'
 import { MusicianGroup, allMusicianGroups } from '../../../models/user/MusicianGroup'
-import useAllUsers from '../../../api/providers/useAllUsers'
+import useUpdateUser from '../../../api/providers/useUpdateUser'
+import Spinner from '../../common/components/Spinner'
+import {
+  detailPageSecondaryButtonStyle,
+  detailPageFormRowStyle,
+  detailPageHeaderDivStyle,
+  detailPagePrimaryButtonStyle,
+  detailPageTextFieldLabelStyle,
+  detailPageTextFieldStyle,
+  pageContentDivStyle,
+  detailPageInfoDivStyle,
+  detailPageInfoTitleStyle,
+  detailPageInfoContentStyle,
+} from '../../common/styles/ComponentStyles'
 
 interface Props {
   userId: User['id']
 }
 
-const labelStyle = 'block text-sm font-medium leading-6 text-gray-900'
-
-const textFieldStyle =
-  'block w-full rounded-md border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
-
 export default function UserDetailPageContent({ userId }: Props) {
-  const { user } = useUser(userId)
-  const { updateUser } = useAllUsers()
+  const { user, isFetching } = useUser(userId)
+  const { updateUser } = useUpdateUser()
   const [isEditing, setIsEditing] = useState(false)
 
   const [editingUser, setEditingUser] = useState<Partial<User>>({})
@@ -78,27 +85,28 @@ export default function UserDetailPageContent({ userId }: Props) {
     return !_.isEmpty(resolvedUser?.firstName)
   }, [resolvedUser])
 
+  if (isFetching || user === null) {
+    return <Spinner />
+  }
+
   if (!user || !resolvedUser) {
-    return null
+    return <Spinner />
   }
   return (
     <>
-      <div className="flex flex-row gap-4 pr-4">
+      <div className={pageContentDivStyle}>
         <div className="w-full mt-4">
           {isEditing ? (
             <div className="flex flex-col gap-8">
               {/* header */}
-              <div className="flex flex-row justify-between px-10">
+              <div className={classNames(detailPageHeaderDivStyle, 'justify-between')}>
                 <div className="flex flex-row flex-1">
                   <img className="h-24 w-24 rounded-full" src={user.imageUrlString ?? ''} alt="" />
                 </div>
                 <div className="flex flex-row gap-4">
                   <button
                     type="button"
-                    className={classNames(
-                      'block h-10 rounded-md  px-4 py-2 text-center text-sm font-semibold leading-6 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2',
-                      'bg-gray-200 text-gray-600 hover:bg-gray-300 focus-visible: outline-gray-500',
-                    )}
+                    className={detailPageSecondaryButtonStyle}
                     onClick={(e) => {
                       e.preventDefault()
                       e.stopPropagation()
@@ -110,10 +118,7 @@ export default function UserDetailPageContent({ userId }: Props) {
                   </button>
                   <button
                     type="button"
-                    className={classNames(
-                      'block h-10 rounded-md  px-4 py-2 text-center text-sm font-semibold leading-6 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2',
-                      'bg-indigo-500 text-white hover:bg-indigo-600 focus-visible: outline-indigo-600',
-                    )}
+                    className={detailPagePrimaryButtonStyle}
                     onClick={(e) => {
                       e.preventDefault()
                       e.stopPropagation()
@@ -127,20 +132,17 @@ export default function UserDetailPageContent({ userId }: Props) {
                   </button>
                 </div>
               </div>
-              <div className="flex flex-row gap-8 px-10">
+              <div className={detailPageFormRowStyle}>
                 {/* first name */}
                 <div className="flex-1">
-                  <label
-                    htmlFor="firstName"
-                    className="block mb-2 text-sm font-medium text-gray-900 "
-                  >
+                  <label htmlFor="firstName" className={detailPageTextFieldLabelStyle}>
                     First name
                   </label>
                   <input
                     type="text"
                     name="firstName"
                     id="firstName"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                    className={detailPageTextFieldStyle}
                     placeholder="Enter first name"
                     required
                     value={resolvedUser.firstName}
@@ -149,17 +151,14 @@ export default function UserDetailPageContent({ userId }: Props) {
                 </div>
                 {/* last name */}
                 <div className="flex-1">
-                  <label
-                    htmlFor="lastName"
-                    className="block mb-2 text-sm font-medium text-gray-900 "
-                  >
+                  <label htmlFor="lastName" className={detailPageTextFieldLabelStyle}>
                     Last name
                   </label>
                   <input
                     type="text"
                     name="lastName"
                     id="lastName"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                    className={detailPageTextFieldStyle}
                     placeholder="Enter first name"
                     required
                     value={resolvedUser.lastName}
@@ -167,17 +166,17 @@ export default function UserDetailPageContent({ userId }: Props) {
                   />
                 </div>
               </div>
-              <div className="flex flex-row gap-8 px-10">
+              <div className={detailPageFormRowStyle}>
                 {/* email */}
                 <div className="flex-1">
-                  <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 ">
+                  <label htmlFor="email" className={detailPageTextFieldLabelStyle}>
                     Email
                   </label>
                   <input
                     type="email"
                     name="email"
                     id="email"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                    className={detailPageTextFieldStyle}
                     placeholder="Enter email"
                     required
                     value={resolvedUser.email}
@@ -195,10 +194,10 @@ export default function UserDetailPageContent({ userId }: Props) {
                 </div>
               </div>
 
-              <div className="flex flex-row gap-8 px-10">
+              <div className={detailPageFormRowStyle}>
                 {/* musician group */}
                 <div className="flex-1">
-                  <label htmlFor="role" className="block text-sm font-medium text-gray-900">
+                  <label htmlFor="role" className={detailPageTextFieldLabelStyle}>
                     Time
                   </label>
                   <div className="flex flex-row gap-6">
@@ -230,7 +229,7 @@ export default function UserDetailPageContent({ userId }: Props) {
                 </div>
                 {/* role */}
                 <div className="flex-1">
-                  <label htmlFor="role" className="block text-sm font-medium text-gray-900">
+                  <label htmlFor="role" className={detailPageTextFieldLabelStyle}>
                     Role
                   </label>
                   <div className="flex flex-row gap-6">
@@ -259,7 +258,7 @@ export default function UserDetailPageContent({ userId }: Props) {
                 </div>
               </div>
 
-              <div className="flex flex-row px-10">
+              <div className={detailPageFormRowStyle}>
                 <div className="flex-1">
                   <label htmlFor="role" className="block mb-4 text-sm font-medium text-gray-900">
                     Available to lead music
@@ -295,7 +294,8 @@ export default function UserDetailPageContent({ userId }: Props) {
             </div>
           ) : (
             <div>
-              <div className="flex flex-row justify-between px-10">
+              {/* header */}
+              <div className={classNames(detailPageHeaderDivStyle, 'justify-between')}>
                 <div className="flex flex-row flex-1">
                   <img className="h-24 w-24 rounded-full" src={user.imageUrlString ?? ''} alt="" />
                   <div className="flex-1">
@@ -312,10 +312,7 @@ export default function UserDetailPageContent({ userId }: Props) {
                 </div>
                 <button
                   type="button"
-                  className={classNames(
-                    'block h-10 rounded-md  px-4 py-2 text-center text-sm font-semibold leading-6 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2',
-                    'bg-gray-200 text-gray-600 hover:bg-gray-300 focus-visible: outline-gray-500',
-                  )}
+                  className={detailPageSecondaryButtonStyle}
                   onClick={() => {
                     setIsEditing(true)
                   }}
@@ -325,42 +322,38 @@ export default function UserDetailPageContent({ userId }: Props) {
               </div>
 
               <div className="mt-6">
-                <div className="flex flex-row px-10">
-                  <div className="flex-1 py-6 border-t border-gray-100">
-                    <div className="text-sm font-medium leading-6 text-gray-900">Service for</div>
-                    <div className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-                      {user.musicianGroups.join(', ')}
+                <div className={detailPageFormRowStyle}>
+                  <div className={detailPageInfoDivStyle}>
+                    <div className={detailPageInfoTitleStyle}>Service for</div>
+                    <div className={detailPageInfoContentStyle}>
+                      {_.isEmpty(user.musicianGroups) ? '-' : user.musicianGroups.join(', ')}
                     </div>
                   </div>
-                  <div className="flex-1 py-6 border-t border-gray-100">
-                    <div className="text-sm font-medium leading-6 text-gray-900">Roles</div>
-                    <div className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-                      {user.availableRoles.map((role) => roleInfo[role].name).join(', ')}
+                  <div className={detailPageInfoDivStyle}>
+                    <div className={detailPageInfoTitleStyle}>Roles</div>
+                    <div className={detailPageInfoContentStyle}>
+                      {_.isEmpty(user.availableRoles)
+                        ? '-'
+                        : user.availableRoles.map((role) => roleInfo[role].name).join(', ')}
                     </div>
                   </div>
                 </div>
-                <div className="flex flex-row px-10">
-                  <div className="flex-1 py-6 border-t border-gray-100">
-                    <div className="text-sm font-medium leading-6 text-gray-900">
-                      Available as music lead
-                    </div>
-                    <div className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-                      {user.isLead ? 'Yes' : 'No'}
-                    </div>
+                <div className={detailPageFormRowStyle}>
+                  <div className={detailPageInfoDivStyle}>
+                    <div className={detailPageInfoTitleStyle}>Available as music lead</div>
+                    <div className={detailPageInfoContentStyle}>{user.isLead ? 'Yes' : 'No'}</div>
                   </div>
-                  <div className="flex-1 py-6 border-t border-gray-100">
-                    <div className="text-sm font-medium leading-6 text-gray-900">
-                      Is in Singapore now
-                    </div>
-                    <div className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
+                  <div className={detailPageInfoDivStyle}>
+                    <div className={detailPageInfoTitleStyle}>Is in Singapore now</div>
+                    <div className={detailPageInfoContentStyle}>
                       {user.isInSingapore ? 'Yes' : 'No'}
                     </div>
                   </div>
                 </div>
-                <div className="flex flex-row px-10">
-                  <div className="flex-1 py-6 border-t border-gray-100">
-                    <div className="text-sm font-medium leading-6 text-gray-900">Note</div>
-                    <div className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
+                <div className={detailPageFormRowStyle}>
+                  <div className={detailPageInfoDivStyle}>
+                    <div className={detailPageInfoTitleStyle}>Note</div>
+                    <div className={detailPageInfoContentStyle}>
                       {/* {getServiceNoteString()} */}
                       something
                     </div>

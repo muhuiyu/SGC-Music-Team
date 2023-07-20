@@ -55,7 +55,6 @@ export default function UserListTable({ users, isLoading }: Props) {
                       <input
                         type="checkbox"
                         className="w-4 h-4 border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-indigo-300"
-                        // className="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-gray-300  focus:ring-indigo-600"
                         checked={areAllUsersSelected}
                         onChange={(e) => {
                           if (e.target.checked) {
@@ -95,9 +94,6 @@ export default function UserListTable({ users, isLoading }: Props) {
                       className="p-4 text-xs font-medium text-left text-gray-500 uppercase"
                     >
                       In Singpaore
-                    </th>
-                    <th scope="col" className="py-3.5 pl-3 pr-4 items-end">
-                      <span className="sr-only">Edit</span>
                     </th>
                   </tr>
                 </thead>

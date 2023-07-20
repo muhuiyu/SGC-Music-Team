@@ -6,6 +6,7 @@ export const availabilityReference = 'availability'
 
 // QueryKey
 export const currentUserQueryKey = 'currentUser'
+export const currentAuthQueryKey = 'currentAuth'
 export const userQueryKey = 'user'
 export const usersQueryKey = 'users'
 export const songQueryKey = 'song'

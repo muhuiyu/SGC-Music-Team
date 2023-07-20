@@ -1,26 +1,41 @@
-import { User as FirebaseUser, signInWithRedirect, signOut } from 'firebase/auth'
+import { User as SupabaseUser } from '@supabase/supabase-js'
 import React, { useState } from 'react'
-import { auth, googleProvider } from '../providers/FirebaseProvider'
 import { AuthContext } from './AuthContext'
+import { supabase } from '../providers/SupabaseProvider'
+import { QueryClient, useQuery } from '@tanstack/react-query'
+import { currentAuthQueryKey } from '../constants/QueryKeys'
 
 // Auth Provider
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  let [user, setUser] = useState<FirebaseUser | null>(null)
+  let [user, setUser] = useState<SupabaseUser | null>(null)
 
-  let signin = async (callback: VoidFunction) => {
-    const user = await signInWithRedirect(auth, googleProvider)
-    setUser(user)
-    console.log(user)
-    callback()
+  const { data: sessionData } = useQuery({
+    queryKey: [currentAuthQueryKey],
+    queryFn: async () => {
+      const { data: sessionData, error } = await supabase.auth.getSession()
+      if (error) {
+        throw error
+      }
+      setUser(sessionData.session?.user ?? null)
+      return sessionData!
+    },
+  })
+
+  const queryClient = new QueryClient()
+
+  let signin = async () => {
+    supabase.auth
+      .signInWithOAuth({
+        provider: 'google',
+      })
+      .finally(() => {
+        queryClient.invalidateQueries([currentAuthQueryKey])
+      })
   }
 
-  let signout = async (callback: VoidFunction) => {
-    const result = await signOut(auth)
-    setUser(null)
-    callback()
-  }
+  let signout = () => supabase.auth.signOut()
 
-  let value = { user, signin, signout }
+  let value = { sessionData, user, signin, signout }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }

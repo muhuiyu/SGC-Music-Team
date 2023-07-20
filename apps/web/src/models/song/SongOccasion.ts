@@ -7,6 +7,16 @@ export type SongOccasion =
   | 'after'
   | 'others'
 
+export const allOccasions: SongOccasion[] = [
+  'worship',
+  'kids',
+  'response',
+  'communion',
+  'closing',
+  'after',
+  'others',
+]
+
 export const songOccasionInfo: Record<SongOccasion, { name: string; order: number }> = {
   worship: {
     name: 'Worship',

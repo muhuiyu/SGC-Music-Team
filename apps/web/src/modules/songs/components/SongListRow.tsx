@@ -9,12 +9,11 @@ interface Props {
   song: Song
   selected?: boolean
   onUpdateSelection(selected: boolean): void
-  onRequestEdit(): void
   onClick?: MouseEventHandler | undefined
 }
 
 export default function SongListRow(props: Props) {
-  const { song, selected = false, onUpdateSelection, onRequestEdit, onClick } = props
+  const { song, selected = false, onUpdateSelection, onClick } = props
 
   return (
     <tr key={song.id} onClick={onClick}>
@@ -60,16 +59,6 @@ export default function SongListRow(props: Props) {
             <YouTube htmlColor="red" />{' '}
           </a>
         )}
-      </td>
-      <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-        <a
-          onClick={() => {
-            onRequestEdit()
-          }}
-          className="text-primary hover:text-indigo-900"
-        >
-          Edit
-        </a>
       </td>
     </tr>
   )

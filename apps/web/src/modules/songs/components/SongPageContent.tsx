@@ -2,7 +2,6 @@ import classNames from 'classnames'
 import _ from 'lodash'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import useAllSongs from '../../../api/providers/useAllSongs'
-import useCurrentUser from '../../../api/providers/useCurrentUser'
 import TableHeader from '../../../components/TableHeader'
 import { Song, emptySong } from '../../../models/song/Song'
 import { SongTag } from '../../../models/song/SongTag'
@@ -12,18 +11,20 @@ import AddSongModal from './AddSongModal'
 import SongFilterButton from './SongFilterButton'
 import SongFilterPanel from './SongFilterPanel'
 import SongListTable from './SongListTable'
+import useUpdateSong from '../../../api/providers/useUpdateSong'
+import useAddSong from '../../../api/providers/useAddSong'
+import { pageContentDivStyle } from '../../common/styles/ComponentStyles'
 
 export default function SongPageContent() {
   const [isShowingAddSongModal, setShowingAddSongModal] = useState(false)
   const [currentEditingSong, setCurrentEditingSong] = useState<Song | null>(null)
   const [orderBy, setOrderBy] = useState<'name' | 'key' | 'tempo' | 'version'>('name')
 
-  const { currentUser } = useCurrentUser()
-
-  // firebase
-  const { songs, updateSong, addSong, isLoading } = useAllSongs({
+  const { songs, isLoading } = useAllSongs({
     order: orderBy,
   })
+
+  const { addSong } = useAddSong()
 
   // filter (currently filtered by tags only)
   const [filters, setFilters] = useState<SongTag[]>([])
@@ -130,7 +131,7 @@ export default function SongPageContent() {
 
   return (
     <>
-      <div className="flex flex-col gap-4">
+      <div className={pageContentDivStyle}>
         <TableHeader
           title="Songs"
           buttonText="Add song"
@@ -156,10 +157,6 @@ export default function SongPageContent() {
         <AddSongModal
           {...{ isShowingAddSongModal }}
           song={currentEditingSong ?? emptySong}
-          onSaveSong={(song) => {
-            updateSong(song.id, song)
-            setShowingAddSongModal(false)
-          }}
           onAddSong={(songDetails) => {
             addSong(songDetails)
             setShowingAddSongModal(false)
