@@ -11,6 +11,7 @@ import { singaporeCountryDialCode } from '../../common/pages/CountryCode'
 import { AuthContext } from '../../../api/auth/AuthContext'
 import { getUserProfile } from '../../../api/providers/SupabaseProvider'
 import MaskedSpinner from '../../common/components/MaskedSpinner'
+import useAddUser from '../../../api/providers/useAddUser'
 
 const labelStyle = 'block text-sm font-medium leading-6 text-gray-900'
 
@@ -55,7 +56,7 @@ const SignUpPage = () => {
   })
 
   // Submit
-  const { addUser } = useAllUsers()
+  const { addUser } = useAddUser()
   async function handleSubmit() {
     const id = user?.id
     if (id && firstName !== '' && email !== '') {
