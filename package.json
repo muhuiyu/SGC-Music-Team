@@ -8,5 +8,14 @@
   "license": "MIT",
   "devDependencies": {
     "prettier": "^2.8.7"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.26.0",
+    "csv-writer": "^1.6.0",
+    "firebase-admin": "^11.10.1",
+    "fs": "^0.0.1-security",
+    "isomorphic-fetch": "^3.0.0",
+    "node-fetch": "^3.3.1",
+    "pg": "^8.11.1"
   }
 }

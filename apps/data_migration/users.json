@@ -1,0 +1,56 @@
+[
+  {
+    "id": "Fj0SEfCbmsWn8YGCX45tcQv1se33",
+    "musicianGroups": [],
+    "firstName": "Grace",
+    "lastName": "Yu",
+    "phoneNumber": "89213123",
+    "isLead": false,
+    "countryCode": "+65",
+    "isInSingapore": true,
+    "imageUrlString": "https://lh3.googleusercontent.com/a/AAcHTte9XescPv274TUoVmShG_QA79mW24f0EnJgaISjhaTPGA=s96-c",
+    "availableRoles": [],
+    "email": "grace.yu@monstar-lab.com"
+  },
+  {
+    "id": "OtDzyH9l3xdrQqpyjPan1Sbjwk02",
+    "isInSingapore": true,
+    "imageUrlString": "https://lh3.googleusercontent.com/a/AGNmyxa4Qewa6tJ5_kHjaFtLE_O26ZofipQL-_-I5Z9I=s96-c",
+    "email": "obovate.avocado@gmail.com",
+    "firstName": "Obovate",
+    "lastName": "Avocado",
+    "countryCode": "+65",
+    "isLead": false,
+    "phoneNumber": "89267383",
+    "availableRoles": [
+      "drums",
+      "pa",
+      "guitar"
+    ],
+    "musicianGroups": [
+      "8am",
+      "5:30pm"
+    ]
+  },
+  {
+    "id": "ZOveKqsU5zgSCtlAAh8ufFPzM6l1",
+    "firstName": "Grace",
+    "lastName": "Yu",
+    "countryCode": "+65",
+    "isInSingapore": true,
+    "imageUrlString": "https://lh3.googleusercontent.com/a/AGNmyxZRFH1yoiCwMZjO9ql6n3yyKToWXsZllbUR76oc=s96-c",
+    "email": "muyuhello@gmail.com",
+    "phoneNumber": "89516033",
+    "isLead": true,
+    "musicianGroups": [
+      "10:15am",
+      "5:30pm"
+    ],
+    "availableRoles": [
+      "piano",
+      "drums",
+      "guitar",
+      "pa"
+    ]
+  }
+]
