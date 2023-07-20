@@ -7,6 +7,10 @@ import { allKeys, keyInfo } from '../../../models/song/Key'
 import { Song } from '../../../models/song/Song'
 import { SongTag } from '../../../models/song/SongTag'
 import SongTagInput from './SongTagInput'
+import {
+  detailPageTextFieldLabelStyle,
+  detailPageTextFieldStyle,
+} from '../../common/styles/ComponentStyles'
 
 interface Props {
   isShowingAddSongModal: boolean
@@ -97,7 +101,7 @@ export default function AddSongModal({
           <form className="space-y-6 text-left pt-6" action="#">
             {/* song name */}
             <div>
-              <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 ">
+              <label htmlFor="name" className={detailPageTextFieldLabelStyle}>
                 Song name
               </label>
               <input
@@ -113,7 +117,7 @@ export default function AddSongModal({
             </div>
             {/* version */}
             <div>
-              <label htmlFor="version" className="block mb-2 text-sm font-medium text-gray-900 ">
+              <label htmlFor="version" className={detailPageTextFieldLabelStyle}>
                 Version (author/artist)
               </label>
               <input
@@ -121,17 +125,14 @@ export default function AddSongModal({
                 name="version"
                 id="version"
                 placeholder="e.g. Hillsong"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  "
+                className={detailPageTextFieldStyle}
                 value={resolvedSong.version}
                 onChange={onChangeSongDetail('version')}
               />
             </div>
             {/* song link */}
             <div>
-              <label
-                htmlFor="songUrlString"
-                className="block mb-2 text-sm font-medium text-gray-900 "
-              >
+              <label htmlFor="songUrlString" className={detailPageTextFieldLabelStyle}>
                 Song URL
               </label>
               <input
@@ -139,17 +140,14 @@ export default function AddSongModal({
                 name="songUrlString"
                 id="songUrlString"
                 placeholder="e.g. youtube, spotify..."
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  "
+                className={detailPageTextFieldStyle}
                 value={resolvedSong.songUrlString}
                 onChange={onChangeSongDetail('songUrlString')}
               />
             </div>
-            {/* song link */}
+            {/* sheet link */}
             <div>
-              <label
-                htmlFor="sheetUrlString"
-                className="block mb-2 text-sm font-medium text-gray-900 "
-              >
+              <label htmlFor="sheetUrlString" className={detailPageTextFieldLabelStyle}>
                 Sheet URL
               </label>
               <input
@@ -157,7 +155,7 @@ export default function AddSongModal({
                 name="sheetUrlString"
                 id="sheetUrlString"
                 placeholder="e.g. Google Drive shared link"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  "
+                className={detailPageTextFieldStyle}
                 value={resolvedSong.sheetUrlString}
                 onChange={onChangeSongDetail('sheetUrlString')}
               />
@@ -165,13 +163,13 @@ export default function AddSongModal({
             <div className="flex gap-4">
               {/* Key */}
               <div>
-                <label htmlFor="key" className="block mb-2 text-sm font-medium text-gray-900 ">
+                <label htmlFor="key" className={detailPageTextFieldLabelStyle}>
                   Key
                 </label>
                 <select
                   name="key"
                   id="key"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  "
+                  className={detailPageTextFieldStyle}
                   value={resolvedSong.key}
                   onChange={onChangeSongDetail('key')}
                 >
@@ -189,7 +187,7 @@ export default function AddSongModal({
               </div>
               {/* Key */}
               <div>
-                <label htmlFor="tempo" className="block mb-2 text-sm font-medium text-gray-900 ">
+                <label htmlFor="tempo" className={detailPageTextFieldLabelStyle}>
                   Tempo
                 </label>
                 <input
@@ -197,7 +195,7 @@ export default function AddSongModal({
                   name="tempo"
                   id="tempo"
                   placeholder="e.g. 178"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  "
+                  className={detailPageTextFieldStyle}
                   value={resolvedSong.tempo ?? 0}
                   onChange={(e) => {
                     const tempo = Number.parseInt(e.target.value, 10)
@@ -208,7 +206,7 @@ export default function AddSongModal({
             </div>
             {/* tags */}
             <div>
-              <label htmlFor="tags" className="block mb-2 text-sm font-medium text-gray-900 ">
+              <label htmlFor="tags" className={detailPageTextFieldLabelStyle}>
                 Tags
               </label>
               <SongTagInput

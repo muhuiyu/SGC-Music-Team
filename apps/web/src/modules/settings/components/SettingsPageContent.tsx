@@ -1,11 +1,12 @@
 import UnderConstructionView from '../../common/components/UnderConstructionView'
+import { pageContentDivStyle } from '../../common/styles/ComponentStyles'
 
 interface Props {}
 
 export default function SettingsPageContent(props: Props) {
   return (
     <>
-      <div className="flex flex-col gap-4">
+      <div className={pageContentDivStyle}>
         <UnderConstructionView />
       </div>
     </>

@@ -9,6 +9,8 @@ import PlannerEmptyView from './PlannerEmptyView'
 import PlannerTable from './PlannerTable'
 
 import useUpdateService from '../../../api/providers/useUpdateService'
+import classNames from 'classnames'
+import { pageContentDivStyle } from '../../common/styles/ComponentStyles'
 
 export default function PlannerPageContent() {
   const { users, isLoading: isGetAllUsersLoading } = useAllUsers()
@@ -34,7 +36,7 @@ export default function PlannerPageContent() {
   }
 
   return (
-    <div className="flex flex-col gap-4 h-full">
+    <div className={classNames(pageContentDivStyle, 'h-full')}>
       <YearMonthsTimeFilter
         selectedYear={selectedYear}
         thisYear={thisYear}

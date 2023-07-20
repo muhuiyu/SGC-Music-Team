@@ -119,7 +119,7 @@ export default function AddServiceModal({
                 placeholder="e.g. Alive"
                 required
                 value={resolvedService.dateTime.toFormat('HH:mm') ?? ''}
-                // onChange={onChangeServiceDetail('dateTime')}
+                onChange={onChangeServiceDetail('dateTime')}
               />
             </div>
             {/* topic */}

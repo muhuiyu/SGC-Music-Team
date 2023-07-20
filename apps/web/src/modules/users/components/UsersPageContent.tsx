@@ -4,6 +4,7 @@ import useAllUsers from '../../../api/providers/useAllUsers'
 import TableHeader from '../../../components/TableHeader'
 import SearchBar from '../../common/components/SearchBar'
 import UserListTable from './UserListTable'
+import { pageContentDivStyle } from '../../common/styles/ComponentStyles'
 
 export default function UsersPageContent() {
   const { users, isLoading } = useAllUsers()
@@ -42,7 +43,7 @@ export default function UsersPageContent() {
 
   return (
     <>
-      <div className="flex flex-col gap-4">
+      <div className={pageContentDivStyle}>
         <TableHeader
           title="Users"
           filterElement={searchBar}

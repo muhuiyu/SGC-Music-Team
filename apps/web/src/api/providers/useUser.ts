@@ -7,7 +7,7 @@ import _ from 'lodash'
 const hookName = 'useUser'
 
 export default function useUser(userId: User['id']) {
-  const { data: userData, isFetching } = useQuery({
+  const { data: user, isFetching } = useQuery({
     queryKey: [userQueryKey],
     queryFn: async () => {
       const { data, error } = await supabase.from(usersReference).select().eq('id', userId)
@@ -23,15 +23,15 @@ export default function useUser(userId: User['id']) {
   })
 
   // ...return loading state
-  if (isFetching || userData === null) {
+  if (isFetching || user === null) {
     return {
-      userData: null,
+      user: null,
       isFetching,
     }
   }
 
   return {
-    userData,
+    user,
     isFetching,
   }
 }

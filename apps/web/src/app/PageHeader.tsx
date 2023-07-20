@@ -2,6 +2,7 @@ import { ChevronLeftIcon } from '@heroicons/react/20/solid'
 import { AppPage, pageInfo } from '../models/common/AppPage'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import { pageHeaderStyle } from '../modules/common/styles/ComponentStyles'
 
 interface Props {
   currentPage: AppPage
@@ -15,7 +16,7 @@ export default function PageHeader({ currentPage }: Props) {
   }
 
   return (
-    <div className="col-span-full pb-4">
+    <div className={pageHeaderStyle}>
       <div className="flex flex-row items-center gap-4">
         {pageInfo[currentPage].isBackButtonAvailable && (
           <ChevronLeftIcon width={24} height={24} onClick={handleGoBack} />

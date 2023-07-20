@@ -8,31 +8,38 @@ import classNames from 'classnames'
 import { MusicianGroup, allMusicianGroups } from '../../../models/user/MusicianGroup'
 import useUpdateUser from '../../../api/providers/useUpdateUser'
 import Spinner from '../../common/components/Spinner'
+import {
+  detailPageSecondaryButtonStyle,
+  detailPageFormRowStyle,
+  detailPageHeaderDivStyle,
+  detailPagePrimaryButtonStyle,
+  detailPageTextFieldLabelStyle,
+  detailPageTextFieldStyle,
+  pageContentDivStyle,
+  detailPageInfoDivStyle,
+  detailPageInfoTitleStyle,
+  detailPageInfoContentStyle,
+} from '../../common/styles/ComponentStyles'
 
 interface Props {
   userId: User['id']
 }
 
-const labelStyle = 'block mb-2 text-sm font-medium text-gray-900'
-
-const textFieldStyle =
-  'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'
-
 export default function UserDetailPageContent({ userId }: Props) {
-  const { userData, isFetching } = useUser(userId)
+  const { user, isFetching } = useUser(userId)
   const { updateUser } = useUpdateUser()
   const [isEditing, setIsEditing] = useState(false)
 
   const [editingUser, setEditingUser] = useState<Partial<User>>({})
   const resolvedUser = useMemo(
     (): User | undefined =>
-      userData
+      user
         ? {
-            ...userData,
+            ...user,
             ...editingUser,
           }
         : undefined,
-    [userData, editingUser],
+    [user, editingUser],
   )
 
   const clearResolvedUser = () => {
@@ -45,7 +52,7 @@ export default function UserDetailPageContent({ userId }: Props) {
   ) => {
     setEditingUser((prevUser) => ({
       ...prevUser,
-      [key]: typeof value === 'function' ? value(prevUser[key] ?? userData?.[key]) : value,
+      [key]: typeof value === 'function' ? value(prevUser[key] ?? user?.[key]) : value,
     }))
   }
 
@@ -78,35 +85,28 @@ export default function UserDetailPageContent({ userId }: Props) {
     return !_.isEmpty(resolvedUser?.firstName)
   }, [resolvedUser])
 
-  if (isFetching || userData === null) {
+  if (isFetching || user === null) {
     return <Spinner />
   }
 
-  if (!userData || !resolvedUser) {
+  if (!user || !resolvedUser) {
     return <Spinner />
   }
   return (
     <>
-      <div className="flex flex-row gap-4 pr-4">
+      <div className={pageContentDivStyle}>
         <div className="w-full mt-4">
           {isEditing ? (
             <div className="flex flex-col gap-8">
               {/* header */}
-              <div className="flex flex-row justify-between px-10">
+              <div className={classNames(detailPageHeaderDivStyle, 'justify-between')}>
                 <div className="flex flex-row flex-1">
-                  <img
-                    className="h-24 w-24 rounded-full"
-                    src={userData.imageUrlString ?? ''}
-                    alt=""
-                  />
+                  <img className="h-24 w-24 rounded-full" src={user.imageUrlString ?? ''} alt="" />
                 </div>
                 <div className="flex flex-row gap-4">
                   <button
                     type="button"
-                    className={classNames(
-                      'block h-10 rounded-md  px-4 py-2 text-center text-sm font-semibold leading-6 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2',
-                      'bg-gray-200 text-gray-600 hover:bg-gray-300 focus-visible: outline-gray-500',
-                    )}
+                    className={detailPageSecondaryButtonStyle}
                     onClick={(e) => {
                       e.preventDefault()
                       e.stopPropagation()
@@ -118,10 +118,7 @@ export default function UserDetailPageContent({ userId }: Props) {
                   </button>
                   <button
                     type="button"
-                    className={classNames(
-                      'block h-10 rounded-md  px-4 py-2 text-center text-sm font-semibold leading-6 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2',
-                      'bg-indigo-500 text-white hover:bg-indigo-600 focus-visible: outline-indigo-600',
-                    )}
+                    className={detailPagePrimaryButtonStyle}
                     onClick={(e) => {
                       e.preventDefault()
                       e.stopPropagation()
@@ -135,17 +132,17 @@ export default function UserDetailPageContent({ userId }: Props) {
                   </button>
                 </div>
               </div>
-              <div className="flex flex-row gap-8 px-10">
+              <div className={detailPageFormRowStyle}>
                 {/* first name */}
                 <div className="flex-1">
-                  <label htmlFor="firstName" className={labelStyle}>
+                  <label htmlFor="firstName" className={detailPageTextFieldLabelStyle}>
                     First name
                   </label>
                   <input
                     type="text"
                     name="firstName"
                     id="firstName"
-                    className={textFieldStyle}
+                    className={detailPageTextFieldStyle}
                     placeholder="Enter first name"
                     required
                     value={resolvedUser.firstName}
@@ -154,14 +151,14 @@ export default function UserDetailPageContent({ userId }: Props) {
                 </div>
                 {/* last name */}
                 <div className="flex-1">
-                  <label htmlFor="lastName" className={labelStyle}>
+                  <label htmlFor="lastName" className={detailPageTextFieldLabelStyle}>
                     Last name
                   </label>
                   <input
                     type="text"
                     name="lastName"
                     id="lastName"
-                    className={textFieldStyle}
+                    className={detailPageTextFieldStyle}
                     placeholder="Enter first name"
                     required
                     value={resolvedUser.lastName}
@@ -169,17 +166,17 @@ export default function UserDetailPageContent({ userId }: Props) {
                   />
                 </div>
               </div>
-              <div className="flex flex-row gap-8 px-10">
+              <div className={detailPageFormRowStyle}>
                 {/* email */}
                 <div className="flex-1">
-                  <label htmlFor="email" className={labelStyle}>
+                  <label htmlFor="email" className={detailPageTextFieldLabelStyle}>
                     Email
                   </label>
                   <input
                     type="email"
                     name="email"
                     id="email"
-                    className={textFieldStyle}
+                    className={detailPageTextFieldStyle}
                     placeholder="Enter email"
                     required
                     value={resolvedUser.email}
@@ -197,10 +194,10 @@ export default function UserDetailPageContent({ userId }: Props) {
                 </div>
               </div>
 
-              <div className="flex flex-row gap-8 px-10">
+              <div className={detailPageFormRowStyle}>
                 {/* musician group */}
                 <div className="flex-1">
-                  <label htmlFor="role" className={labelStyle}>
+                  <label htmlFor="role" className={detailPageTextFieldLabelStyle}>
                     Time
                   </label>
                   <div className="flex flex-row gap-6">
@@ -232,7 +229,7 @@ export default function UserDetailPageContent({ userId }: Props) {
                 </div>
                 {/* role */}
                 <div className="flex-1">
-                  <label htmlFor="role" className={labelStyle}>
+                  <label htmlFor="role" className={detailPageTextFieldLabelStyle}>
                     Role
                   </label>
                   <div className="flex flex-row gap-6">
@@ -261,7 +258,7 @@ export default function UserDetailPageContent({ userId }: Props) {
                 </div>
               </div>
 
-              <div className="flex flex-row px-10">
+              <div className={detailPageFormRowStyle}>
                 <div className="flex-1">
                   <label htmlFor="role" className="block mb-4 text-sm font-medium text-gray-900">
                     Available to lead music
@@ -297,31 +294,25 @@ export default function UserDetailPageContent({ userId }: Props) {
             </div>
           ) : (
             <div>
-              <div className="flex flex-row justify-between px-10">
+              {/* header */}
+              <div className={classNames(detailPageHeaderDivStyle, 'justify-between')}>
                 <div className="flex flex-row flex-1">
-                  <img
-                    className="h-24 w-24 rounded-full"
-                    src={userData.imageUrlString ?? ''}
-                    alt=""
-                  />
+                  <img className="h-24 w-24 rounded-full" src={user.imageUrlString ?? ''} alt="" />
                   <div className="flex-1">
                     <h3 className="text-base font-semibold leading-7 text-gray-900 px-10">
-                      {userData.firstName} {userData.lastName}
+                      {user.firstName} {user.lastName}
                     </h3>
                     <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500 px-10">
-                      {userData.email}
+                      {user.email}
                     </p>
                     <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500 px-10">
-                      {userData.countryCode} {userData.phoneNumber}
+                      {user.countryCode} {user.phoneNumber}
                     </p>
                   </div>
                 </div>
                 <button
                   type="button"
-                  className={classNames(
-                    'block h-10 rounded-md  px-4 py-2 text-center text-sm font-semibold leading-6 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2',
-                    'bg-gray-200 text-gray-600 hover:bg-gray-300 focus-visible: outline-gray-500',
-                  )}
+                  className={detailPageSecondaryButtonStyle}
                   onClick={() => {
                     setIsEditing(true)
                   }}
@@ -331,46 +322,38 @@ export default function UserDetailPageContent({ userId }: Props) {
               </div>
 
               <div className="mt-6">
-                <div className="flex flex-row px-10">
-                  <div className="flex-1 py-6 border-t border-gray-100">
-                    <div className="text-sm font-medium leading-6 text-gray-900">Service for</div>
-                    <div className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-                      {_.isEmpty(userData.musicianGroups)
-                        ? '-'
-                        : userData.musicianGroups.join(', ')}
+                <div className={detailPageFormRowStyle}>
+                  <div className={detailPageInfoDivStyle}>
+                    <div className={detailPageInfoTitleStyle}>Service for</div>
+                    <div className={detailPageInfoContentStyle}>
+                      {_.isEmpty(user.musicianGroups) ? '-' : user.musicianGroups.join(', ')}
                     </div>
                   </div>
-                  <div className="flex-1 py-6 border-t border-gray-100">
-                    <div className="text-sm font-medium leading-6 text-gray-900">Roles</div>
-                    <div className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-                      {_.isEmpty(userData.availableRoles)
+                  <div className={detailPageInfoDivStyle}>
+                    <div className={detailPageInfoTitleStyle}>Roles</div>
+                    <div className={detailPageInfoContentStyle}>
+                      {_.isEmpty(user.availableRoles)
                         ? '-'
-                        : userData.availableRoles.map((role) => roleInfo[role].name).join(', ')}
+                        : user.availableRoles.map((role) => roleInfo[role].name).join(', ')}
                     </div>
                   </div>
                 </div>
-                <div className="flex flex-row px-10">
-                  <div className="flex-1 py-6 border-t border-gray-100">
-                    <div className="text-sm font-medium leading-6 text-gray-900">
-                      Available as music lead
-                    </div>
-                    <div className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-                      {userData.isLead ? 'Yes' : 'No'}
-                    </div>
+                <div className={detailPageFormRowStyle}>
+                  <div className={detailPageInfoDivStyle}>
+                    <div className={detailPageInfoTitleStyle}>Available as music lead</div>
+                    <div className={detailPageInfoContentStyle}>{user.isLead ? 'Yes' : 'No'}</div>
                   </div>
-                  <div className="flex-1 py-6 border-t border-gray-100">
-                    <div className="text-sm font-medium leading-6 text-gray-900">
-                      Is in Singapore now
-                    </div>
-                    <div className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-                      {userData.isInSingapore ? 'Yes' : 'No'}
+                  <div className={detailPageInfoDivStyle}>
+                    <div className={detailPageInfoTitleStyle}>Is in Singapore now</div>
+                    <div className={detailPageInfoContentStyle}>
+                      {user.isInSingapore ? 'Yes' : 'No'}
                     </div>
                   </div>
                 </div>
-                <div className="flex flex-row px-10">
-                  <div className="flex-1 py-6 border-t border-gray-100">
-                    <div className="text-sm font-medium leading-6 text-gray-900">Note</div>
-                    <div className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
+                <div className={detailPageFormRowStyle}>
+                  <div className={detailPageInfoDivStyle}>
+                    <div className={detailPageInfoTitleStyle}>Note</div>
+                    <div className={detailPageInfoContentStyle}>
                       {/* {getServiceNoteString()} */}
                       something
                     </div>

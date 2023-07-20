@@ -13,6 +13,7 @@ import SongFilterPanel from './SongFilterPanel'
 import SongListTable from './SongListTable'
 import useUpdateSong from '../../../api/providers/useUpdateSong'
 import useAddSong from '../../../api/providers/useAddSong'
+import { pageContentDivStyle } from '../../common/styles/ComponentStyles'
 
 export default function SongPageContent() {
   const [isShowingAddSongModal, setShowingAddSongModal] = useState(false)
@@ -130,7 +131,7 @@ export default function SongPageContent() {
 
   return (
     <>
-      <div className="flex flex-col gap-4">
+      <div className={pageContentDivStyle}>
         <TableHeader
           title="Songs"
           buttonText="Add song"

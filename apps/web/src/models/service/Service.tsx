@@ -1,7 +1,6 @@
 import { DateTime } from 'luxon'
 import User, { UserRole } from '../user/User'
 import { ServiceSong } from '../song/ServiceSong'
-import { Timestamp } from 'firebase/firestore'
 
 // 10:15
 export const morningServiceTime: HourMinute = {
@@ -73,7 +72,7 @@ export interface SupabaseService {
   id: string
   year: number
   month: number
-  timestamp: Timestamp
+  timestamp: string
   topic: string
   lead: User['id'] | undefined
   assignments: { [userId: User['id']]: UserRole }
@@ -85,14 +84,14 @@ export function convertToSupabaseService(service: Service): SupabaseService {
   const { dateTime, ...restOfService } = service
   return {
     ...restOfService,
-    timestamp: Timestamp.fromDate(dateTime.toJSDate()),
+    timestamp: dateTime.toISO() ?? new Date().toISOString(),
   }
 }
 
 export function serviceFromSupabase(data: SupabaseService): Service {
   return {
     ...data,
-    dateTime: DateTime.fromJSDate(data.timestamp.toDate()),
+    dateTime: DateTime.fromISO(data.timestamp),
   }
 }
 

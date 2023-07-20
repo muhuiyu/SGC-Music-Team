@@ -8,12 +8,12 @@ interface Props {
 }
 
 export default function SongTagInput({ selectedTags, onTagAdd, onTagRemove }: Props) {
-  const [query, setQuery] = useState('')
+  const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState<SongTag[]>([])
   const searchResultsRef = useRef(null)
 
   const handleInputChange = (value: string) => {
-    setQuery(value)
+    setSearchQuery(value)
 
     if (value.trim()) {
       const filteredTags = allSongTags.filter((tag) => {
@@ -28,7 +28,7 @@ export default function SongTagInput({ selectedTags, onTagAdd, onTagRemove }: Pr
 
   const handleClickOutside = (e: MouseEvent) => {
     setSearchResults([])
-    setQuery('')
+    setSearchQuery('')
   }
 
   useEffect(() => {
@@ -40,7 +40,7 @@ export default function SongTagInput({ selectedTags, onTagAdd, onTagRemove }: Pr
 
   const handleTagSelect = (tag: SongTag) => {
     setSearchResults([])
-    setQuery('')
+    setSearchQuery('')
     onTagAdd(tag)
   }
 
@@ -50,7 +50,7 @@ export default function SongTagInput({ selectedTags, onTagAdd, onTagRemove }: Pr
 
   return (
     <div className="relative">
-      <div className="relative items-center bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  ">
+      <div className="relative items-center bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
         {selectedTags.map((tag) => (
           <span
             key={tag}
@@ -68,7 +68,7 @@ export default function SongTagInput({ selectedTags, onTagAdd, onTagRemove }: Pr
         <input
           type="text"
           className="flex-grow bg-gray-50 text-sm focus:outline-none focus:border-blue-500"
-          value={query}
+          value={searchQuery}
           onChange={(e) => {
             handleInputChange(e.target.value)
           }}

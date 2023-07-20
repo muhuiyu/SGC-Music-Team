@@ -2,7 +2,8 @@ import { useQuery } from '@tanstack/react-query'
 import _ from 'lodash'
 import { servicesQueryKey, servicesReference } from '../constants/QueryKeys'
 import { supabase } from './SupabaseProvider'
-import { serviceFromSupabase } from '../../models/service/Service'
+import Service, { serviceFromSupabase } from '../../models/service/Service'
+import { Song } from '../../models/song/Song'
 
 const hookName = 'useAllServices'
 
@@ -21,8 +22,22 @@ export default function useAllServices() {
     },
   })
 
+  function getLastServiceWithSong(songId: Song['id']): Service | null {
+    if (!services) return null
+    const servicesWithSong = services.filter((service) =>
+      service.songs.some((song) => song.songId === songId),
+    )
+    const sortedServices = _.sortBy(servicesWithSong, (a) => a.dateTime)
+    if (_.isEmpty(servicesWithSong)) {
+      return null
+    } else {
+      return sortedServices[0]
+    }
+  }
+
   return {
     isFetching,
     services: services ?? [],
+    getLastServiceWithSong,
   }
 }

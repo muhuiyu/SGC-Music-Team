@@ -12,6 +12,7 @@ export const defaultLimitPerPage = 10
 
 const hookName = 'useAllSongs'
 
+// todo: add pagination
 export default function useAllSongs(filter: SongFilter) {
   const { data: songs, isFetching } = useQuery({
     queryKey: [songsQueryKey, filter.order],
@@ -19,7 +20,7 @@ export default function useAllSongs(filter: SongFilter) {
       const { data, error } = await supabase
         .from(songsReference)
         .select()
-        .order(filter.order, { ascending: false })
+        .order(filter.order, { ascending: true })
 
       if (error) {
         console.log(`Error: ${hookName} fetchServices `, error)

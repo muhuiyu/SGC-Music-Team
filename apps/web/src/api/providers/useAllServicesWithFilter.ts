@@ -58,7 +58,7 @@ export default function useAllServicesWithFilter(
           id: uuidv4(),
           year: sunday.year,
           month: sunday.month,
-          timestamp: Timestamp.fromDate(sunday.toJSDate()),
+          timestamp: sunday.toISO() ?? new Date().toISOString(),
           topic: '',
           lead: '',
           assignments: {},
