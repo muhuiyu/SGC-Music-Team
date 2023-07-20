@@ -3,6 +3,8 @@ import classNames from 'classnames'
 import { useEffect, useRef, useState } from 'react'
 import Service from '../../../models/service/Service'
 import User, { UserRole, roleInfo } from '../../../models/user/User'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faXmark } from '@fortawesome/free-solid-svg-icons'
 
 interface Props {
   service: Service
@@ -53,17 +55,11 @@ export default function PlannerTableCell(props: Props) {
         onClick={handleClick}
       >
         {currentRole ? roleInfo[currentRole].name : 'Choose a role'}&nbsp;
-        <span
-          style={
-            currentRole
-              ? { color: roleInfo[currentRole].textColorCode }
-              : { color: 'text-gray-400' }
-          }
-        >
+        <span style={currentRole ? { color: roleInfo[currentRole].textColorCode } : { color: 'text-gray-400' }}>
           {currentRole && isEditing ? (
-            <XMarkIcon
-              className="px-2"
-              width={18}
+            <FontAwesomeIcon
+              icon={faXmark}
+              className="px-1"
               onClick={() => {
                 setCurrentRole(undefined)
                 onEndEditing()
