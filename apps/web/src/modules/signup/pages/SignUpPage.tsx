@@ -99,7 +99,7 @@ const SignUpPage = () => {
     try {
       await refetch()
     } catch (error) {
-      console.log('error in refetch')
+      console.log('Error: refetchUserData()')
     }
   }
 
@@ -113,16 +113,12 @@ const SignUpPage = () => {
         {/* Header */}
         <div className="sm:mx-auto sm:w-full sm:max-w-md pb-12">
           <img className="mx-auto h-12 w-auto" src={logoImageUrl} alt="St George Church" />
-          <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
-            Sign up a new account
-          </h2>
+          <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">Sign up a new account</h2>
         </div>
         <div className="border-b border-gray-900/10 pb-12">
           {/* Title */}
           <h2 className="text-lg font-semibold leading-7 text-gray-900">Personal Indivation</h2>
-          <p className="mt-1 text-sm leading-6 text-gray-600">
-            To receive music team weekly update and roster.
-          </p>
+          <p className="mt-1 text-sm leading-6 text-gray-600">To receive music team weekly update and roster.</p>
 
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
             {/* First name */}
@@ -397,16 +393,11 @@ const SignUpPage = () => {
                           if (e.target.checked) {
                             setSelectedRoles([...selectedRoles, role])
                           } else {
-                            setSelectedRoles(
-                              selectedRoles.filter((selectedRole) => selectedRole !== role),
-                            )
+                            setSelectedRoles(selectedRoles.filter((selectedRole) => selectedRole !== role))
                           }
                         }}
                       />
-                      <label
-                        htmlFor="orange-checkbox"
-                        className="ml-2 text-sm font-medium text-gray-900"
-                      >
+                      <label htmlFor="orange-checkbox" className="ml-2 text-sm font-medium text-gray-900">
                         {roleInfo[role].name}
                       </label>
                     </div>
@@ -416,9 +407,7 @@ const SignUpPage = () => {
             </fieldset>
           </div>
           <div className="pt-12">
-            <label className="text-sm font-semibold text-gray-900">
-              Would you like to lead music?
-            </label>
+            <label className="text-sm font-semibold text-gray-900">Would you like to lead music?</label>
 
             <fieldset className="mt-4">
               <div className="space-y-4 sm:flex sm:items-center sm:space-x-10 sm:space-y-0">
@@ -438,10 +427,7 @@ const SignUpPage = () => {
                         }
                       }}
                     />
-                    <label
-                      htmlFor={option.id}
-                      className="ml-3 block text-sm font-medium leading-6 text-gray-900"
-                    >
+                    <label htmlFor={option.id} className="ml-3 block text-sm font-medium leading-6 text-gray-900">
                       {option.title}
                     </label>
                   </div>
@@ -450,9 +436,7 @@ const SignUpPage = () => {
             </fieldset>
           </div>
           <div className="pt-12">
-            <label className="text-sm font-semibold text-gray-900">
-              Any extra comment or notes?
-            </label>
+            <label className="text-sm font-semibold text-gray-900">Any extra comment or notes?</label>
 
             <textarea
               id="message"
@@ -464,11 +448,7 @@ const SignUpPage = () => {
         </div>
 
         <div className="mt-6 flex items-center justify-center gap-x-6">
-          <button
-            type="button"
-            className="text-sm font-semibold leading-6 text-gray-900"
-            onClick={handleCancel}
-          >
+          <button type="button" className="text-sm font-semibold leading-6 text-gray-900" onClick={handleCancel}>
             Cancel
           </button>
           <button

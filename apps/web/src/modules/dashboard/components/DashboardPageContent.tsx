@@ -1,9 +1,7 @@
 import classNames from 'classnames'
 import { useState } from 'react'
 import useAllAvailability from '../../../api/providers/useAllAvailability'
-import useAllServicesWithFilter, {
-  getCurrentServiceYearMonths,
-} from '../../../api/providers/useAllServicesWithFilter'
+import useAllServicesWithFilter, { getCurrentServiceYearMonths } from '../../../api/providers/useAllServicesWithFilter'
 import useCurrentUser from '../../../api/providers/useCurrentUser'
 import { Availability } from '../../../models/service/Availability'
 import Service, { isUserOnDuty, morningServiceTime } from '../../../models/service/Service'
@@ -21,10 +19,7 @@ export default function DashboardPageContent() {
   const [isShowingAvailabilitySurveryModal, setShowingAvailabilitySurveryModal] = useState(false)
   // for testing, later we will connect to useNotifications
 
-  const { allServiceDates, services } = useAllServicesWithFilter(
-    getCurrentServiceYearMonths(),
-    morningServiceTime,
-  )
+  const { allServiceDates, services } = useAllServicesWithFilter(getCurrentServiceYearMonths(), morningServiceTime)
 
   const { users, isLoading: isGetAllUsersLoading } = useAllUsers()
   const { songs, generateSongDictionary } = useAllSongs({
@@ -46,8 +41,7 @@ export default function DashboardPageContent() {
   const onSubmitAvailabilitySurvey = (responses: Availability[]) => {
     const updatedResponses = responses.map((response) => ({
       dateTime: response.dateTime,
-      availabilityState:
-        response.availabilityState == 'unknown' ? 'no' : response.availabilityState,
+      availabilityState: response.availabilityState == 'unknown' ? 'no' : response.availabilityState,
     }))
     // addAvailability(updatedResponses)
   }

@@ -11,25 +11,25 @@ interface Props {
   onClickView(serviceId: Service['id']): void
 }
 
-export default function UpcomingServicesView({
-  services,
-  users,
-  songDictionary,
-  onClickView,
-}: Props) {
+export default function UpcomingServicesView({ services, users, songDictionary, onClickView }: Props) {
   return (
     <div className="w-4/5 pr-8">
       <div className="text-xl pb-4">Upcoming services</div>
       <div className="flex flex-col gap-3 rounded-lg">
-        {services.map((service) => (
-          <UpcomingServiceCard
-            key={service.id}
-            {...{ service, users, songDictionary, onClickView }}
-          />
-        ))}
+        {_.isEmpty(services) ? (
+          <EmptyView />
+        ) : (
+          services.map((service) => (
+            <UpcomingServiceCard key={service.id} {...{ service, users, songDictionary, onClickView }} />
+          ))
+        )}
       </div>
     </div>
   )
+}
+
+const EmptyView = () => {
+  return <div className="text-sm text-gray-700">You don't have any upcoming service</div>
 }
 
 const UpcomingServiceCard = (props: {
@@ -43,10 +43,20 @@ const UpcomingServiceCard = (props: {
 
   const songsJoinedText = (): string => {
     if (_.isEmpty(service.songs)) return 'TBD'
+    if (!songDictionary) {
+      return 'TBD'
+    }
     const string = service.songs
-      .map((serviceSong) => songDictionary[serviceSong.songId].name)
+      .map((serviceSong) => {
+        const song = songDictionary[serviceSong.songId]
+        return song ? song.name : ''
+      })
       .join(', ')
     return string
+  }
+
+  if (!service || !users || !songDictionary) {
+    return null
   }
 
   return (

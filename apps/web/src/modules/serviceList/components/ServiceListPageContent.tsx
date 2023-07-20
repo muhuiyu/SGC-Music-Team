@@ -5,11 +5,7 @@ import useAllServicesWithFilter from '../../../api/providers/useAllServicesWithF
 import useCurrentUser from '../../../api/providers/useCurrentUser'
 import TableHeader from '../../../components/TableHeader'
 import { getCurrentMonths, thisYear } from '../../../helpers/DateHelpers'
-import Service, {
-  HourMinute,
-  emptyService,
-  morningServiceTime,
-} from '../../../models/service/Service'
+import Service, { HourMinute, emptyService, morningServiceTime } from '../../../models/service/Service'
 import YearMonthsTimeFilter from '../../common/components/YearMonthsFilter'
 import AddServiceModal from './AddServiceModal'
 import ServiceEmptyView from './ServiceEmptyView'

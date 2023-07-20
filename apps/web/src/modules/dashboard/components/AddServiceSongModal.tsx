@@ -15,13 +15,7 @@ interface Props {
   className?: string
 }
 
-export default function AddServiceSongModal({
-  originalSong,
-  songs,
-  onSave,
-  onDismiss,
-  className,
-}: Props) {
+export default function AddServiceSongModal({ originalSong, songs, onSave, onDismiss, className }: Props) {
   // current song
   const [currentSong, setCurrentSong] = useState<Song | undefined>(originalSong)
   const [searchResults, setSearchResults] = useState<Song[]>([])
@@ -36,15 +30,10 @@ export default function AddServiceSongModal({
     if (!_.isEmpty(value.trim())) {
       const lowercasedQuery = value.trim().toLowerCase()
       var filteredSongs = songs.filter((song) => {
-        return (
-          song.name.toLowerCase().includes(lowercasedQuery) ||
-          song.version.toLowerCase().includes(lowercasedQuery)
-        )
+        return song.name.toLowerCase().includes(lowercasedQuery) || song.version.toLowerCase().includes(lowercasedQuery)
       })
-      console.log('searchQuery', value)
       setSearchResults(filteredSongs)
     } else {
-      console.log('searchQuery is empty')
       setSearchResults([])
     }
   }
@@ -64,7 +53,6 @@ export default function AddServiceSongModal({
   }, [])
 
   const handleSongSelect = (song: Song) => {
-    console.log('choose song')
     setCurrentSong(song)
     setSearchQuery('')
     setSearchResults([])

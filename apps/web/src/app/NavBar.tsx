@@ -1,17 +1,19 @@
 import classNames from 'classnames'
 import { useContext, useEffect, useState } from 'react'
 import SearchInput from '../components/SearchInput'
-import { AppPage } from '../models/common/AppPage'
+import { AppPage, pageInfo } from '../models/common/AppPage'
 import User from '../models/user/User'
 import { logoImageUrl } from '../modules/common/assets/AppImages'
 import { AuthContext } from '../api/auth/AuthContext'
+import { useNavigate, useNavigation } from 'react-router-dom'
+import useCurrentUser from '../api/providers/useCurrentUser'
 
 interface Props {
   currentPage: AppPage
-  user: User | null | undefined
 }
 
-export default function NavBar({ currentPage, user }: Props) {
+export default function NavBar({ currentPage }: Props) {
+  const { currentUser: user } = useCurrentUser()
   const { signout } = useContext(AuthContext)
 
   const [isUserDropdownVisible, setUserDropdownVisible] = useState(false)
@@ -85,12 +87,7 @@ export default function NavBar({ currentPage, user }: Props) {
       >
         <span className="sr-only">Search</span>
 
-        <svg
-          className="w-6 h-6"
-          fill="currentColor"
-          viewBox="0 0 20 20"
-          xmlns="http://www.w3.org/2000/svg"
-        >
+        <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
           <path
             fillRule="evenodd"
             d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
@@ -110,12 +107,7 @@ export default function NavBar({ currentPage, user }: Props) {
       >
         <span className="sr-only">View notifications</span>
 
-        <svg
-          className="w-6 h-6"
-          fill="currentColor"
-          viewBox="0 0 20 20"
-          xmlns="http://www.w3.org/2000/svg"
-        >
+        <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
           <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"></path>
         </svg>
       </button>
@@ -130,9 +122,7 @@ export default function NavBar({ currentPage, user }: Props) {
           isNotificationDropdownVisible ? '' : 'hidden',
         )}
       >
-        <div className="block px-4 py-2 text-base font-medium text-center text-gray-700 bg-gray-50 ">
-          Notifications
-        </div>
+        <div className="block px-4 py-2 text-base font-medium text-center text-gray-700 bg-gray-50 ">Notifications</div>
         <div>
           <a href="#" className="flex px-4 py-3 border-b hover:bg-gray-100 ">
             <div className="flex-shrink-0">
@@ -155,8 +145,8 @@ export default function NavBar({ currentPage, user }: Props) {
             </div>
             <div className="w-full pl-3">
               <div className="text-gray-500 font-normal text-sm mb-1.5 ">
-                New message from <span className="font-semibold text-gray-900 ">Bonnie Green</span>:
-                "Hey, what's up? All set for the presentation?"
+                New message from <span className="font-semibold text-gray-900 ">Bonnie Green</span>: "Hey, what's up?
+                All set for the presentation?"
               </div>
               <div className="text-xs font-medium text-primary-700 ">a few moments ago</div>
             </div>
@@ -212,8 +202,8 @@ export default function NavBar({ currentPage, user }: Props) {
             <div className="w-full pl-3">
               <div className="text-gray-500 font-normal text-sm mb-1.5 ">
                 <span className="font-semibold text-gray-900 ">Joseph Mcfall</span> and{' '}
-                <span className="font-medium text-gray-900 ">141 others</span> love your story. See
-                it and view more stories.
+                <span className="font-medium text-gray-900 ">141 others</span> love your story. See it and view more
+                stories.
               </div>
               <div className="text-xs font-medium text-primary-700 ">44 minutes ago</div>
             </div>
@@ -242,10 +232,8 @@ export default function NavBar({ currentPage, user }: Props) {
             </div>
             <div className="w-full pl-3">
               <div className="text-gray-500 font-normal text-sm mb-1.5 ">
-                <span className="font-semibold text-gray-900 ">Leslie Livingston</span> mentioned
-                you in a comment:{' '}
-                <span className="font-medium text-primary-700 ">@bonnie.green</span> what do you
-                say?
+                <span className="font-semibold text-gray-900 ">Leslie Livingston</span> mentioned you in a comment:{' '}
+                <span className="font-medium text-primary-700 ">@bonnie.green</span> what do you say?
               </div>
               <div className="text-xs font-medium text-primary-700 ">1 hour ago</div>
             </div>
@@ -270,17 +258,14 @@ export default function NavBar({ currentPage, user }: Props) {
             </div>
             <div className="w-full pl-3">
               <div className="text-gray-500 font-normal text-sm mb-1.5 ">
-                <span className="font-semibold text-gray-900 ">Robert Brown</span> posted a new
-                video: Glassmorphism - learn how to implement the new design trend.
+                <span className="font-semibold text-gray-900 ">Robert Brown</span> posted a new video: Glassmorphism -
+                learn how to implement the new design trend.
               </div>
               <div className="text-xs font-medium text-primary-700 ">3 hours ago</div>
             </div>
           </a>
         </div>
-        <a
-          href="#"
-          className="block py-2 text-base font-normal text-center text-gray-900 bg-gray-50 hover:bg-gray-100"
-        >
+        <a href="#" className="block py-2 text-base font-normal text-center text-gray-900 bg-gray-50 hover:bg-gray-100">
           <div className="inline-flex items-center">
             <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="">
               <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path>
@@ -312,10 +297,8 @@ export default function NavBar({ currentPage, user }: Props) {
     )
   }
 
-  function handleLogout() {
-    signout(() => {
-      // todo
-    })
+  async function handleLogout() {
+    signout(() => {})
   }
 
   const UserDropdown = () => {

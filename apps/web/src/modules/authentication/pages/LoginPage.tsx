@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import { logoImageUrl } from '../../common/assets/AppImages'
 import { getUserProfile } from '../../../api/providers/SupabaseProvider'
 import { AuthContext } from '../../../api/auth/AuthContext'
+import useCurrentUser from '../../../api/providers/useCurrentUser'
 
 export default function LoginPage() {
   const navigate = useNavigate()
@@ -19,15 +20,15 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (isFetchingUser) {
+      // loading
       return
     }
     if (user && typeof fetchedUserData !== 'undefined') {
-      console.log('fetched user')
       if (fetchedUserData === null) {
-        console.log('should move to signup')
+        // Fetched auth data but user hasn't created profile in database yet
         navigate('/signup')
       } else {
-        console.log('should move to login')
+        // Fetched auth data and user data from database
         navigate('/')
       }
     }
@@ -43,9 +44,7 @@ export default function LoginPage() {
       >
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <img className="mx-auto h-12 w-auto" src={logoImageUrl} alt="St George Church" />
-          <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
-            Sign in to your account
-          </h2>
+          <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">Sign in to your account</h2>
         </div>
 
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">

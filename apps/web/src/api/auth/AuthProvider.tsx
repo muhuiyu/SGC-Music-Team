@@ -4,19 +4,25 @@ import { AuthContext } from './AuthContext'
 import { supabase } from '../providers/SupabaseProvider'
 import { QueryClient, useQuery } from '@tanstack/react-query'
 import { currentAuthQueryKey } from '../constants/QueryKeys'
+import { baseUrl } from '../constants/Environment'
+import { useNavigate } from 'react-router-dom'
 
 // Auth Provider
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   let [user, setUser] = useState<SupabaseUser | null>(null)
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
 
-  const { data: sessionData } = useQuery({
+  const { data: sessionData, isFetching } = useQuery({
     queryKey: [currentAuthQueryKey],
     queryFn: async () => {
       const { data: sessionData, error } = await supabase.auth.getSession()
       if (error) {
         throw error
       }
-      setUser(sessionData.session?.user ?? null)
+      const loggedInUser = sessionData.session?.user ?? null
+      setUser(loggedInUser)
+      setIsLoggedIn(!!loggedInUser) // update login status
+
       return sessionData!
     },
   })
@@ -27,15 +33,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     supabase.auth
       .signInWithOAuth({
         provider: 'google',
+        options: {
+          redirectTo: baseUrl + 'login',
+        },
       })
       .finally(() => {
         queryClient.invalidateQueries([currentAuthQueryKey])
       })
+      .catch((error) => {
+        console.log('error', error)
+      })
   }
 
-  let signout = () => supabase.auth.signOut()
+  let signout = async () => {
+    await supabase.auth.signOut().finally(() => {
+      setIsLoggedIn(false)
+      setUser(null)
+      queryClient.invalidateQueries([currentAuthQueryKey])
+    })
+  }
 
-  let value = { sessionData, user, signin, signout }
+  let value = { sessionData, user, isFetching, isLoggedIn, signin, signout }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
