@@ -32,10 +32,10 @@ export default function DashboardPageContent() {
   })
 
   const { currentUser } = useCurrentUser()
-  const { availabilities, addAvailability, isLoading } = useAllAvailability(
-    currentUser?.id ?? null,
-    allServiceDates,
-  )
+  // const { availabilities, addAvailability, isLoading } = useAllAvailability(
+  //   currentUser?.id ?? null,
+  //   allServiceDates,
+  // )
 
   const getUpcomingServices = () => {
     return services
@@ -49,7 +49,7 @@ export default function DashboardPageContent() {
       availabilityState:
         response.availabilityState == 'unknown' ? 'no' : response.availabilityState,
     }))
-    addAvailability(updatedResponses)
+    // addAvailability(updatedResponses)
   }
   const onDismissAvailabilitySurvey = () => {
     // todo
@@ -81,7 +81,7 @@ export default function DashboardPageContent() {
           { hidden: !isShowingAvailabilitySurveryModal },
         )}
       >
-        <AvailabilitySurveyModal
+        {/* <AvailabilitySurveyModal
           {...{
             isShowingAvailabilitySurveryModal,
             isFetching: isLoading,
@@ -90,7 +90,7 @@ export default function DashboardPageContent() {
             onSubmit: onSubmitAvailabilitySurvey,
             onDismiss: onDismissAvailabilitySurvey,
           }}
-        />
+        /> */}
       </div>
     </>
   )
