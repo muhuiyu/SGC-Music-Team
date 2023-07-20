@@ -39,10 +39,7 @@ export default function SongPageContent() {
     if (!_.isEmpty(searchQuery)) {
       const lowercasedQuery = searchQuery.toLowerCase()
       filteredSongs = filteredSongs.filter((song) => {
-        return (
-          song.name.toLowerCase().includes(lowercasedQuery) ||
-          song.version.toLowerCase().includes(lowercasedQuery)
-        )
+        return song.name.toLowerCase().includes(lowercasedQuery) || song.version.toLowerCase().includes(lowercasedQuery)
       })
     }
     if (isFiltering) {
@@ -141,11 +138,9 @@ export default function SongPageContent() {
             setShowingAddSongModal(true)
           }}
         />
-        <SongListTable
-          {...{ isLoading, orderBy, setOrderBy, onRequestEdit }}
-          songs={filteredData}
-        />
-        <NavigationPagination />
+        <SongListTable {...{ isLoading, orderBy, setOrderBy, onRequestEdit }} songs={filteredData} />
+        {/* todo: add pagination */}
+        {/* <NavigationPagination /> */}
       </div>
       {/* add song */}
       <div

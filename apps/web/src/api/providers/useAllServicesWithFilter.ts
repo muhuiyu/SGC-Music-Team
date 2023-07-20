@@ -1,5 +1,4 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Timestamp } from 'firebase/firestore'
 import _ from 'lodash'
 import { DateTime } from 'luxon'
 import { useCallback, useMemo } from 'react'
@@ -26,10 +25,7 @@ export function getCurrentServiceYearMonths(): ServiceYearMonths {
 }
 
 // todo: add service time
-export default function useAllServicesWithFilter(
-  filter: ServiceYearMonths,
-  serviceTime: HourMinute,
-) {
+export default function useAllServicesWithFilter(filter: ServiceYearMonths, serviceTime: HourMinute) {
   const { data: services, isFetching } = useQuery({
     queryKey: [servicesQueryKey, filter.year, filter.startMonth, filter.endMonth],
     queryFn: async () => {

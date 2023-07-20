@@ -33,6 +33,7 @@ export default function DashboardPageContent() {
   // )
 
   const getUpcomingServices = () => {
+    console.log('getUpcomingServices', services.length)
     return services
       .filter((service) => service.dateTime >= DateTime.now())
       .filter((service) => isUserOnDuty(service, currentUser?.id ?? ''))

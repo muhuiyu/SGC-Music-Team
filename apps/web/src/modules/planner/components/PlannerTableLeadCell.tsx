@@ -15,9 +15,7 @@ interface Props {
 
 export default function PlannerTableLeadCell(props: Props) {
   const { users, service, isEditing, onStartEditing, onEndEditing, onChangeLead } = props
-  const [currentUser, setCurrentUser] = useState<User | undefined>(
-    users.filter((e) => e.id === service.lead)[0],
-  )
+  const [currentUser, setCurrentUser] = useState<User | undefined>(users.filter((e) => e.id === service.lead)[0])
   const dropdownRef = useRef<HTMLUListElement>(null)
 
   useEffect(() => {
@@ -85,7 +83,7 @@ export default function PlannerTableLeadCell(props: Props) {
       >
         <ul
           ref={dropdownRef}
-          className="h-48 py-2 overflow-y-auto text-gray-700 dark:text-gray-200"
+          className="py-2 overflow-y-auto text-gray-700 dark:text-gray-200"
           aria-labelledby="dropdownUsersButton"
         >
           {users.map((user) => (
@@ -108,7 +106,7 @@ export default function PlannerTableLeadCell(props: Props) {
             </li>
           ))}
         </ul>
-        <a
+        {/* <a
           href="#"
           className="flex items-center p-3 text-sm font-medium text-blue-600 border-t border-gray-200 rounded-b-lg bg-gray-50 dark:border-gray-600 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-blue-500 hover:underline"
         >
@@ -122,7 +120,7 @@ export default function PlannerTableLeadCell(props: Props) {
             <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z"></path>
           </svg>
           Add new user
-        </a>
+        </a> */}
       </div>
     </td>
   )

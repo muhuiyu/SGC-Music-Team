@@ -20,7 +20,7 @@ import {
   detailPageTextFieldStyle,
   pageContentDivStyle,
 } from '../../common/styles/ComponentStyles'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Song } from '../../../models/song/Song'
 import useUpdateService from '../../../api/providers/useUpdateService'
 import classNames from 'classnames'
@@ -46,8 +46,7 @@ export default function ServiceDetailPageContent({ serviceId }: Props) {
   }
 
   const getServiceTeamList = () => {
-    if (!service || _.isEmpty(service.assignments))
-      return <div className={detailPageInfoContentStyle}>-</div>
+    if (!service || _.isEmpty(service.assignments)) return <div className={detailPageInfoContentStyle}>-</div>
     return Object.entries(service.assignments).map(([userId, role]) => {
       const user = generateUserDictionary()[userId]
       return (
@@ -81,6 +80,16 @@ export default function ServiceDetailPageContent({ serviceId }: Props) {
     if (service?.note == undefined || _.isEmpty(service.note)) return '-'
     return service.note
   }
+
+  useEffect(() => {
+    function handleEscapeKey(event: KeyboardEvent) {
+      if (event.code === 'Escape') {
+        setIsShowingAddServiceSongModal(false)
+      }
+    }
+    document.addEventListener('keydown', handleEscapeKey)
+    return () => document.removeEventListener('keydown', handleEscapeKey)
+  })
 
   // Editing
   const [isEditing, setIsEditing] = useState(true)
@@ -203,7 +212,7 @@ export default function ServiceDetailPageContent({ serviceId }: Props) {
                     type="text"
                     name="songUrlString"
                     id="songUrlString"
-                    placeholder="e.g. youtube, spotify..."
+                    placeholder="e.g. Luke 1:1-10..."
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  "
                     value={resolvedService?.topic}
                     onChange={onChangeServiceDetail('topic')}
@@ -278,12 +287,8 @@ export default function ServiceDetailPageContent({ serviceId }: Props) {
               <div className={classNames(detailPageHeaderDivStyle, 'justify-between')}>
                 <div className="flex flex-row flex-1">
                   <div className="flex-1">
-                    <h3 className="text-base font-semibold leading-7 text-gray-900 px-10">
-                      {getServiceDateString()}
-                    </h3>
-                    <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500 px-10">
-                      {service?.topic}
-                    </p>
+                    <h3 className="text-base font-semibold leading-7 text-gray-900 px-10">{getServiceDateString()}</h3>
+                    <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500 px-10">{service?.topic}</p>
                   </div>
                 </div>
                 <button
@@ -328,10 +333,7 @@ export default function ServiceDetailPageContent({ serviceId }: Props) {
                 <div className="border-t border-gray-100 py-6 px-10">
                   <div className={detailPageInfoTitleStyle}>Attachments</div>
                   <div className="mt-2 text-sm text-gray-900">
-                    <ul
-                      role="list"
-                      className="divide-y divide-gray-100 rounded-md border border-gray-200"
-                    >
+                    <ul role="list" className="divide-y divide-gray-100 rounded-md border border-gray-200">
                       <li className="flex items-center justify-between py-4 pl-4 pr-5 text-sm leading-6">
                         <div className="flex w-0 flex-1 items-center">
                           <PaperClipIcon className="h-5 w-5 flex-shrink-0 text-gray-400" />
@@ -351,9 +353,7 @@ export default function ServiceDetailPageContent({ serviceId }: Props) {
                         <div className="flex w-0 flex-1 items-center">
                           <PaperClipIcon className="h-5 w-5 flex-shrink-0 text-gray-400" />
                           <div className="ml-4 flex min-w-0 flex-1 gap-2">
-                            <span className="truncate font-medium">
-                              special_event_transcript.pdf
-                            </span>
+                            <span className="truncate font-medium">special_event_transcript.pdf</span>
                             <span className="flex-shrink-0 text-gray-400">4.5mb</span>
                           </div>
                         </div>
