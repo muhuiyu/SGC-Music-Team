@@ -287,8 +287,12 @@ export default function ServiceDetailPageContent({ serviceId }: Props) {
               <div className={classNames(detailPageHeaderDivStyle, 'justify-between')}>
                 <div className="flex flex-row flex-1">
                   <div className="flex-1">
-                    <h3 className="text-base font-semibold leading-7 text-gray-900 px-10">{getServiceDateString()}</h3>
-                    <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500 px-10">{service?.readings}</p>
+                    <h3 className="text-base font-semibold leading-7 text-gray-900">{getServiceDateString()}</h3>
+                    <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">
+                      {service?.title}
+                      {_.isEmpty(service.theme) ? '' : ` - ${service.theme}`}
+                    </p>
+                    <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">{service?.readings}</p>
                   </div>
                 </div>
                 <button
@@ -305,8 +309,8 @@ export default function ServiceDetailPageContent({ serviceId }: Props) {
               <div className="mt-6">
                 <div className={detailPageRowStyle}>
                   <div className={detailPageInfoDivStyle}>
-                    <div className={detailPageInfoTitleStyle}>Sermon</div>
-                    <div className={detailPageInfoContentStyle}>Pastor Jacob</div>
+                    <div className={detailPageInfoTitleStyle}>Preacher</div>
+                    <div className={detailPageInfoContentStyle}>{service?.preacher}</div>
                   </div>
                   <div className={detailPageInfoDivStyle}>
                     <div className={detailPageInfoTitleStyle}>Music lead</div>
@@ -338,23 +342,8 @@ export default function ServiceDetailPageContent({ serviceId }: Props) {
                         <div className="flex w-0 flex-1 items-center">
                           <PaperClipIcon className="h-5 w-5 flex-shrink-0 text-gray-400" />
                           <div className="ml-4 flex min-w-0 flex-1 gap-2">
-                            <span className="truncate font-medium">worship_timesheet.pdf</span>
-                            <span className="flex-shrink-0 text-gray-400">2.4mb</span>
-                          </div>
-                        </div>
-                        <div className="ml-4 flex-shrink-0">
-                          <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
-                            Download
-                          </a>
-                        </div>
-                      </li>
-                      {/* todo: add upload button */}
-                      <li className="flex items-center justify-between py-4 pl-4 pr-5 text-sm leading-6">
-                        <div className="flex w-0 flex-1 items-center">
-                          <PaperClipIcon className="h-5 w-5 flex-shrink-0 text-gray-400" />
-                          <div className="ml-4 flex min-w-0 flex-1 gap-2">
-                            <span className="truncate font-medium">special_event_transcript.pdf</span>
-                            <span className="flex-shrink-0 text-gray-400">4.5mb</span>
+                            <span className="truncate font-medium">worship_schedule.pdf</span>
+                            <span className="flex-shrink-0 text-gray-400">2.4MB</span>
                           </div>
                         </div>
                         <div className="ml-4 flex-shrink-0">
