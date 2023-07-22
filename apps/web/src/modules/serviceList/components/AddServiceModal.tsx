@@ -4,12 +4,15 @@ import produce from 'immer'
 import _ from 'lodash'
 import React, { useEffect, useMemo, useState } from 'react'
 import Service from '../../../models/service/Service'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTrash } from '@fortawesome/free-solid-svg-icons'
 
 interface Props {
   isShowingAddServiceModal: boolean
   service: Service
-  onSaveService(details: Service): void
+  onSaveService(id: Service['id'], details: Service): void
   onAddService(details: Omit<Service, 'id'>): void
+  onRemoveService(id: Service['id']): void
   onDismiss(): void
   className?: string
 }
@@ -17,8 +20,9 @@ interface Props {
 export default function AddServiceModal({
   isShowingAddServiceModal: isShowingAddServiceModal,
   service: service,
-  onSaveService: onSaveSong,
-  onAddService: onAddSong,
+  onSaveService,
+  onAddService,
+  onRemoveService,
   onDismiss,
   className,
 }: Props) {
@@ -122,27 +126,88 @@ export default function AddServiceModal({
                 onChange={onChangeServiceDetail('dateTime')}
               />
             </div>
-            {/* topic */}
+            {/* title */}
             <div>
               <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 ">
-                Topic
+                Title
               </label>
               <input
                 type="text"
-                name="topic"
-                id="topic"
+                name="title"
+                id="title"
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                placeholder="e.g. Alive"
+                placeholder="e.g. Mark 1:1-10"
                 required
-                value={resolvedService.topic}
-                onChange={onChangeServiceDetail('topic')}
+                value={resolvedService.title}
+                onChange={onChangeServiceDetail('title')}
+              />
+            </div>
+            {/* theme */}
+            <div>
+              <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 ">
+                Theme
+              </label>
+              <input
+                type="text"
+                name="theme"
+                id="theme"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                placeholder="e.g. Mark 1:1-10"
+                required
+                value={resolvedService.theme}
+                onChange={onChangeServiceDetail('theme')}
+              />
+            </div>
+            {/* reading */}
+            <div>
+              <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 ">
+                Readings
+              </label>
+              <input
+                type="text"
+                name="readings"
+                id="readings"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                placeholder="e.g. Mark 1:1-10"
+                required
+                value={resolvedService.readings}
+                onChange={onChangeServiceDetail('readings')}
+              />
+            </div>
+            {/* preacher */}
+            <div>
+              <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 ">
+                Preacher
+              </label>
+              <input
+                type="text"
+                name="preacher"
+                id="preacher"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                placeholder="e.g. Pastor Jacob"
+                required
+                value={resolvedService.preacher}
+                onChange={onChangeServiceDetail('preacher')}
               />
             </div>
 
             <div className="flex justify-between gap-4 pt-8">
               <button
                 type="reset"
-                className="w-1/2 text-black bg-gray-100 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                className="w-1/4 text-white bg-red-500 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-600 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                onClick={() => {
+                  // todo: add confirmation
+                  onRemoveService(resolvedService.id)
+                  clearResolvedService()
+                  onDismiss()
+                }}
+              >
+                Delete
+              </button>
+              <div className="w-1/4"></div>
+              <button
+                type="reset"
+                className="w-1/4 text-black bg-gray-100 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                 onClick={() => {
                   clearResolvedService()
                   onDismiss()
@@ -152,14 +217,14 @@ export default function AddServiceModal({
               </button>
               <button
                 type="submit"
-                className="w-1/2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                className="w-1/4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                 onClick={(e) => {
                   e.preventDefault()
                   e.stopPropagation()
                   if (resolvedService.id === '') {
-                    onAddSong(resolvedService)
+                    onAddService(resolvedService)
                   } else {
-                    onSaveSong(resolvedService)
+                    onSaveService(resolvedService.id, resolvedService)
                   }
                   clearResolvedService()
                 }}

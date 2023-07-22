@@ -22,7 +22,7 @@ export default function useUpdateService() {
         }
       }
 
-      console.log(supabaseService)
+      console.log('supabaseService', supabaseService)
 
       const { error } = await supabase.from(servicesReference).update(supabaseService).eq('id', serviceId)
       if (error) {
@@ -43,7 +43,30 @@ export default function useUpdateService() {
     [mutation],
   )
 
+  const deleteMutation = useMutation({
+    mutationFn: async ({ serviceId }: { serviceId: Service['id'] }) => {
+      const { error } = await supabase.from(servicesReference).delete().eq('id', serviceId)
+      if (error) {
+        console.log(`Error: ${hookName} updateService `, error)
+      }
+      console.log('delete', serviceId)
+      return
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries([servicesQueryKey])
+      queryClient.invalidateQueries([serviceQueryKey])
+    },
+  })
+
+  const deleteService = useCallback(
+    (serviceId: Service['id']) => {
+      deleteMutation.mutate({ serviceId })
+    },
+    [deleteMutation],
+  )
+
   return {
     updateService,
+    deleteService,
   }
 }

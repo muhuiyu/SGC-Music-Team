@@ -30,17 +30,17 @@ export default interface Service {
   year: number
   month: number
   dateTime: DateTime
-  topic: string
+  title: string
+  theme: string
+  readings: string
+  preacher: string
   lead: User['id'] | undefined
   assignments: { [userId: User['id']]: UserRole }
   songs: ServiceSong[]
   note: string
 }
 
-export const getFormattedLocalString = (
-  dateTime: DateTime,
-  dateFormat: string = 'MMM dd yyyy, HH:mm a',
-) => {
+export const getFormattedLocalString = (dateTime: DateTime, dateFormat: string = 'MMM dd yyyy, HH:mm a') => {
   return dateTime.toFormat(dateFormat)
 }
 
@@ -62,6 +62,10 @@ export const isUserOnDuty = (service: Service, userId: User['id']) => {
   return false
 }
 
+export const yearMonthConverter = (serviceDetails: Omit<Service, 'id'>) => {
+  return { ...serviceDetails, year: serviceDetails.dateTime.year, month: serviceDetails.dateTime.month }
+}
+
 export interface ServiceYearMonths {
   year: number
   startMonth: number
@@ -73,7 +77,10 @@ export interface SupabaseService {
   year: number
   month: number
   timestamp: string
-  topic: string
+  title: string
+  theme: string
+  readings: string
+  preacher: string
   lead: User['id'] | undefined
   assignments: { [userId: User['id']]: UserRole }
   songs: ServiceSong[]
@@ -97,10 +104,13 @@ export function serviceFromSupabase(data: SupabaseService): Service {
 
 export const emptyService: Service = {
   id: '',
-  year: 0,
-  month: 0,
+  year: DateTime.now().year,
+  month: DateTime.now().month,
   dateTime: DateTime.now(),
-  topic: '',
+  title: '',
+  theme: '',
+  readings: '',
+  preacher: '',
   lead: undefined,
   assignments: {},
   songs: [],

@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import Service, { getFormattedLocalString } from '../../../models/service/Service'
 
 interface Props {
@@ -7,12 +8,7 @@ interface Props {
   onRequestEdit(): void
 }
 
-export default function ServiceListRow({
-  service,
-  selected = false,
-  onUpdateSelection,
-  onRequestEdit,
-}: Props) {
+export default function ServiceListRow({ service, selected = false, onUpdateSelection, onRequestEdit }: Props) {
   return (
     <tr key={service.id}>
       <td className="relative px-7 sm:w-12 sm:px-6">
@@ -28,7 +24,16 @@ export default function ServiceListRow({
         {getFormattedLocalString(service.dateTime)}
       </td>
       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-        {service.topic}
+        {_.isEmpty(service.title) ? '-' : service.title}
+      </td>
+      <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+        {_.isEmpty(service.theme) ? '-' : service.theme}
+      </td>
+      <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+        {_.isEmpty(service.readings) ? '-' : service.readings}
+      </td>
+      <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+        {_.isEmpty(service.preacher) ? '-' : service.preacher}
       </td>
 
       <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">

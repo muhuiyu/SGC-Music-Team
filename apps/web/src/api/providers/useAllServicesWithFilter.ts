@@ -27,7 +27,7 @@ export function getCurrentServiceYearMonths(): ServiceYearMonths {
 // todo: add service time
 export default function useAllServicesWithFilter(filter: ServiceYearMonths, serviceTime: HourMinute) {
   const { data: services, isFetching } = useQuery({
-    queryKey: [servicesQueryKey, filter.year, filter.startMonth, filter.endMonth],
+    queryKey: [servicesQueryKey],
     queryFn: async () => {
       const { data, error } = await supabase
         .from(servicesReference)
@@ -55,7 +55,10 @@ export default function useAllServicesWithFilter(filter: ServiceYearMonths, serv
           year: sunday.year,
           month: sunday.month,
           timestamp: sunday.toISO() ?? new Date().toISOString(),
-          topic: '',
+          title: '',
+          theme: '',
+          readings: '',
+          preacher: '',
           lead: '',
           assignments: {},
           songs: [],

@@ -18,8 +18,20 @@ const headers = [
     key: 'date',
   },
   {
-    name: 'Topic',
-    key: 'topic',
+    name: 'Title',
+    key: 'title',
+  },
+  {
+    name: 'Theme',
+    key: 'Theme',
+  },
+  {
+    name: 'Readings',
+    key: 'readings',
+  },
+  {
+    name: 'Preacher',
+    key: 'preacher',
   },
 ]
 
@@ -111,12 +123,9 @@ export default function ServiceListTable({ services, onRequestEdit, isLoading }:
                 </table>
                 {/* Loading */}
                 <div
-                  className={classNames(
-                    'absolute inset-0 flex justify-center items-center text-center',
-                    {
-                      hidden: !isLoading,
-                    },
-                  )}
+                  className={classNames('absolute inset-0 flex justify-center items-center text-center', {
+                    hidden: !isLoading,
+                  })}
                 >
                   <Spinner />
                 </div>

@@ -10,6 +10,8 @@ import YearMonthsTimeFilter from '../../common/components/YearMonthsFilter'
 import AddServiceModal from './AddServiceModal'
 import ServiceEmptyView from './ServiceEmptyView'
 import ServiceListTable from './ServiceListTable'
+import useUpdateService from '../../../api/providers/useUpdateService'
+import useAddService from '../../../api/providers/useAddService'
 
 export default function ServiceListPageContent() {
   const [selectedYear, setYear] = useState(thisYear)
@@ -26,6 +28,9 @@ export default function ServiceListPageContent() {
     },
     time,
   )
+
+  const { addService } = useAddService()
+  const { updateService, deleteService } = useUpdateService()
 
   useEffect(() => {
     function handleEscapeKey(event: KeyboardEvent) {
@@ -79,8 +84,21 @@ export default function ServiceListPageContent() {
         <AddServiceModal
           isShowingAddServiceModal={isShowingAddServiceModal}
           service={currentEditingService ?? emptyService}
-          onSaveService={() => {}}
-          onAddService={() => {}}
+          onSaveService={(serviceId, details) => {
+            updateService(serviceId, details)
+            setShowingAddServiceModal(false)
+            setCurrentEditingService(null)
+          }}
+          onAddService={(details) => {
+            addService(details)
+            setShowingAddServiceModal(false)
+            setCurrentEditingService(null)
+          }}
+          onRemoveService={(serviceId) => {
+            deleteService(serviceId)
+            setShowingAddServiceModal(false)
+            setCurrentEditingService(null)
+          }}
           onDismiss={() => {
             setShowingAddServiceModal(false)
             setCurrentEditingService(null)

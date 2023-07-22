@@ -67,7 +67,7 @@ const UpcomingServiceCard = (props: {
       </div>
       <div className="flex flex-col gap-2">
         <div className="font-medium text-lg">{getFormattedLocalTimeString(service.dateTime)}</div>
-        <div>{service.topic}</div>
+        <div>{service.readings}</div>
         <div className="text-md text-slate-500">
           Lead: {leadUser === undefined ? 'TBD' : leadUser.firstName + ' ' + leadUser.lastName}
         </div>

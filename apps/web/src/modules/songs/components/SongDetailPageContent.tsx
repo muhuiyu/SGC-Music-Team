@@ -33,6 +33,7 @@ export default function SongDetailPageContent({ songId }: Props) {
   const { updateSong } = useUpdateSong()
   const { getLastServiceWithSong } = useAllServices()
 
+  console.log('select song', songId)
   function getLastTimeWithSongString(): string {
     const lastService = getLastServiceWithSong(songId)
     return lastService === null ? '-' : getFormattedLocalString(lastService.dateTime)
@@ -211,12 +212,7 @@ export default function SongDetailPageContent({ songId }: Props) {
                     onChange={onChangeSongDetail('key')}
                   >
                     {allKeys.map((key) => (
-                      <option
-                        key={key}
-                        value={key}
-                        className="text-gray-900 text-sm"
-                        defaultValue="C"
-                      >
+                      <option key={key} value={key} className="text-gray-900 text-sm" defaultValue="C">
                         {keyInfo[key].name}
                       </option>
                     ))}

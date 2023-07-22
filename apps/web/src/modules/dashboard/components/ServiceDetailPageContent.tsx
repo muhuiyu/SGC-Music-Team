@@ -204,9 +204,9 @@ export default function ServiceDetailPageContent({ serviceId }: Props) {
               {/* form */}
               <div className={detailPageFormRowStyle}>
                 <div className="flex-1">
-                  {/* topic */}
+                  {/* readings */}
                   <label htmlFor="songUrlString" className={detailPageTextFieldLabelStyle}>
-                    Topic
+                    Readings
                   </label>
                   <input
                     type="text"
@@ -214,8 +214,8 @@ export default function ServiceDetailPageContent({ serviceId }: Props) {
                     id="songUrlString"
                     placeholder="e.g. Luke 1:1-10..."
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  "
-                    value={resolvedService?.topic}
-                    onChange={onChangeServiceDetail('topic')}
+                    value={resolvedService?.readings}
+                    onChange={onChangeServiceDetail('readings')}
                   />
                 </div>
               </div>
@@ -288,7 +288,7 @@ export default function ServiceDetailPageContent({ serviceId }: Props) {
                 <div className="flex flex-row flex-1">
                   <div className="flex-1">
                     <h3 className="text-base font-semibold leading-7 text-gray-900 px-10">{getServiceDateString()}</h3>
-                    <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500 px-10">{service?.topic}</p>
+                    <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500 px-10">{service?.readings}</p>
                   </div>
                 </div>
                 <button
