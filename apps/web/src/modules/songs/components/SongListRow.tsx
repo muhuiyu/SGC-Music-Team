@@ -31,10 +31,7 @@ export default function SongListRow(props: Props) {
           <span className="text-sm font-medium text-gray-900">{song.name}</span>
           <div className={classNames('flex flex-row', _.isEmpty(song.tags) ? '' : 'pt-1')}>
             {song.tags.map((tag) => (
-              <span
-                key={tag}
-                className="bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded"
-              >
+              <span key={tag} className="bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
                 {songTagInfo[tag].name}
               </span>
             ))}
@@ -43,19 +40,29 @@ export default function SongListRow(props: Props) {
       </td>
       <td className="whitespace-nowrap px-4 py-4 text-sm text-gray-500">{song.version}</td>
       <td className="whitespace-nowrap px-4 py-4 text-sm text-gray-500">{song.key}</td>
-      <td className="whitespace-nowrap px-4 py-4 text-sm text-gray-500">
-        {song.tempo !== 0 && song.tempo}
-      </td>
+      <td className="whitespace-nowrap px-4 py-4 text-sm text-gray-500">{song.tempo !== 0 && song.tempo}</td>
       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
         {!_.isEmpty(song.sheetUrlString) && (
-          <a href={song.sheetUrlString}>
+          <a
+            target="_blank"
+            href={song.sheetUrlString}
+            onClick={(e) => {
+              e.stopPropagation()
+            }}
+          >
             <LinkOutlined />
           </a>
         )}
       </td>
       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
         {!_.isEmpty(song.songUrlString) && (
-          <a href={song.songUrlString}>
+          <a
+            target="_blank"
+            href={song.songUrlString}
+            onClick={(e) => {
+              e.stopPropagation()
+            }}
+          >
             <YouTube htmlColor="red" />{' '}
           </a>
         )}
