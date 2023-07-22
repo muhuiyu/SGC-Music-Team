@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import _ from 'lodash'
 import { useCallback } from 'react'
 import Service, { SupabaseService, convertToSupabaseService } from '../../models/service/Service'
-import { servicesQueryKey, servicesReference } from '../constants/QueryKeys'
+import { serviceQueryKey, servicesQueryKey, servicesReference } from '../constants/QueryKeys'
 import { supabase } from './SupabaseProvider'
 
 const hookName = 'useUpdateService'
@@ -32,6 +32,7 @@ export default function useUpdateService() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries([servicesQueryKey])
+      queryClient.invalidateQueries([serviceQueryKey])
     },
   })
 

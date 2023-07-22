@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useCallback } from 'react'
 import { Song } from '../../models/song/Song'
-import { songsQueryKey, songsReference } from '../constants/QueryKeys'
+import { songQueryKey, songsQueryKey, songsReference } from '../constants/QueryKeys'
 import _ from 'lodash'
 import { supabase } from './SupabaseProvider'
 
@@ -15,10 +15,12 @@ export default function useUpdateSong() {
       if (error) {
         console.log(`Error: ${hookName} updateSong `, error)
       }
+      console.log('update song', details)
       return
     },
     onSuccess: () => {
       queryClient.invalidateQueries([songsQueryKey])
+      queryClient.invalidateQueries([songQueryKey])
     },
   })
 
