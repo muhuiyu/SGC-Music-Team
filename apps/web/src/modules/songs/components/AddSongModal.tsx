@@ -1,16 +1,16 @@
+import { faXmark } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { XMarkIcon } from '@heroicons/react/20/solid'
 import classNames from 'classnames'
 import produce from 'immer'
 import _ from 'lodash'
 import React, { useEffect, useMemo, useState } from 'react'
-import { allKeys, keyInfo } from '../../../models/song/Key'
+import { Chart, ChartType, allChartTypes, chartTypeInfo } from '../../../models/song/Chart'
+import { Key, allKeys, keyInfo } from '../../../models/song/Key'
 import { Song } from '../../../models/song/Song'
 import { SongTag } from '../../../models/song/SongTag'
+import { detailPageTextFieldLabelStyle, detailPageTextFieldStyle } from '../../common/styles/ComponentStyles'
 import SongTagInput from './SongTagInput'
-import {
-  detailPageTextFieldLabelStyle,
-  detailPageTextFieldStyle,
-} from '../../common/styles/ComponentStyles'
 
 interface Props {
   isShowingAddSongModal: boolean
@@ -20,13 +20,7 @@ interface Props {
   className?: string
 }
 
-export default function AddSongModal({
-  isShowingAddSongModal,
-  song,
-  onAddSong,
-  onDismiss,
-  className,
-}: Props) {
+export default function AddSongModal({ isShowingAddSongModal, song, onAddSong, onDismiss, className }: Props) {
   const [editingSong, setEditingSong] = useState<Partial<Song>>({})
   const resolvedSong = useMemo(
     () => ({
@@ -60,6 +54,13 @@ export default function AddSongModal({
     (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => {
       updateSongDetail(key, e.target.value as Song[K])
     }
+
+  const onChangeCharts = (chart: Chart, index: number) => {
+    if (!song) return
+    let updatedCharts = [...song.charts]
+    updatedCharts[index] = chart
+    updateSongDetail('charts', updatedCharts)
+  }
 
   const onChangeTags = (tags: SongTag[]) => {
     updateSongDetail('tags', tags)
@@ -110,7 +111,6 @@ export default function AddSongModal({
                 id="name"
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                 placeholder="e.g. Alive"
-                required
                 value={resolvedSong.name}
                 onChange={onChangeSongDetail('name')}
               />
@@ -145,65 +145,6 @@ export default function AddSongModal({
                 onChange={onChangeSongDetail('songUrlString')}
               />
             </div>
-            {/* sheet link */}
-            <div>
-              <label htmlFor="sheetUrlString" className={detailPageTextFieldLabelStyle}>
-                Sheet URL
-              </label>
-              <input
-                type="text"
-                name="sheetUrlString"
-                id="sheetUrlString"
-                placeholder="e.g. Google Drive shared link"
-                className={detailPageTextFieldStyle}
-                value={resolvedSong.sheetUrlString}
-                onChange={onChangeSongDetail('sheetUrlString')}
-              />
-            </div>
-            <div className="flex gap-4">
-              {/* Key */}
-              <div>
-                <label htmlFor="key" className={detailPageTextFieldLabelStyle}>
-                  Key
-                </label>
-                <select
-                  name="key"
-                  id="key"
-                  className={detailPageTextFieldStyle}
-                  value={resolvedSong.key}
-                  onChange={onChangeSongDetail('key')}
-                >
-                  {allKeys.map((key) => (
-                    <option
-                      key={key}
-                      value={key}
-                      className="text-gray-900 text-sm"
-                      defaultValue="C"
-                    >
-                      {keyInfo[key].name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              {/* Key */}
-              <div>
-                <label htmlFor="tempo" className={detailPageTextFieldLabelStyle}>
-                  Tempo
-                </label>
-                <input
-                  type="number"
-                  name="tempo"
-                  id="tempo"
-                  placeholder="e.g. 178"
-                  className={detailPageTextFieldStyle}
-                  value={resolvedSong.tempo ?? 0}
-                  onChange={(e) => {
-                    const tempo = Number.parseInt(e.target.value, 10)
-                    if (tempo !== 0) updateSongDetail('tempo', tempo)
-                  }}
-                />
-              </div>
-            </div>
             {/* tags */}
             <div>
               <label htmlFor="tags" className={detailPageTextFieldLabelStyle}>
@@ -218,6 +159,94 @@ export default function AddSongModal({
                   onChangeTags(resolvedSong.tags.filter((t) => t !== tag))
                 }}
               />
+            </div>
+            <div>
+              <div className="flex-1">
+                <label htmlFor="charts" className={detailPageTextFieldLabelStyle}>
+                  Chart versions
+                </label>
+                {resolvedSong.charts.map((chart, index) => {
+                  return (
+                    <div className="flex flex-row gap-4 mt-2 items-center" key={index}>
+                      <div className="">
+                        <select
+                          name="key"
+                          id="key"
+                          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  "
+                          value={chart.key}
+                          onChange={(e) => {
+                            let updatedChart = chart
+                            updatedChart.key = e.target.value as Key
+                            onChangeCharts(updatedChart, index)
+                          }}
+                        >
+                          {allKeys.map((key) => (
+                            <option key={key} value={key} className="text-gray-900 text-sm" defaultValue="C">
+                              {keyInfo[key].name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="">
+                        <select
+                          name="chartType"
+                          id="chartType"
+                          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  "
+                          value={chart.type}
+                          onChange={(e) => {
+                            let updatedChart = chart
+                            updatedChart.type = e.target.value as ChartType
+                            onChangeCharts(updatedChart, index)
+                          }}
+                        >
+                          {allChartTypes.map((type) => (
+                            <option key={type} value={type} className="text-gray-900 text-sm" defaultValue="leadSheet">
+                              {chartTypeInfo[type].name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="flex-1">
+                        <input
+                          type="text"
+                          name="sheetUrlString"
+                          id="sheetUrlString"
+                          placeholder="e.g. Google Drive shared link"
+                          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  "
+                          value={chart.url}
+                          onChange={(e) => {
+                            let updatedChart = chart
+                            updatedChart.url = e.target.value
+                            onChangeCharts(updatedChart, index)
+                          }}
+                        />
+                      </div>
+
+                      <FontAwesomeIcon
+                        className="hover:cursor-pointer"
+                        icon={faXmark}
+                        onClick={() => {
+                          const updatedCharts = [
+                            ...resolvedSong.charts.slice(0, index),
+                            ...resolvedSong.charts.slice(index + 1),
+                          ]
+                          updateSongDetail('charts', updatedCharts)
+                        }}
+                      />
+                    </div>
+                  )
+                })}
+                <button
+                  className="py-2 mt-2 text-sm font-bold text-indigo-500 hover:text-indigo-600 hover:cursor-pointer"
+                  onClick={() => {
+                    const updatedCharts = [...resolvedSong.charts]
+                    updatedCharts.push({ key: 'C', type: 'leadSheet', url: '' })
+                    updateSongDetail('charts', updatedCharts)
+                  }}
+                >
+                  + Add chart
+                </button>
+              </div>
             </div>
             <div className="flex justify-between gap-4 pt-8">
               <button

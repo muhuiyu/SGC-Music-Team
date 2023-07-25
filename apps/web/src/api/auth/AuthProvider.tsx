@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom'
 // Auth Provider
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   let [user, setUser] = useState<SupabaseUser | null>(null)
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
+  const [isLoggedIn, setLoggedIn] = useState<boolean>(false)
 
   const { data: sessionData, isFetching } = useQuery({
     queryKey: [currentAuthQueryKey],
@@ -21,7 +21,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
       const loggedInUser = sessionData.session?.user ?? null
       setUser(loggedInUser)
-      setIsLoggedIn(!!loggedInUser) // update login status
+      setLoggedIn(!!loggedInUser) // update login status
 
       return sessionData!
     },
@@ -47,7 +47,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   let signout = async () => {
     await supabase.auth.signOut().finally(() => {
-      setIsLoggedIn(false)
+      setLoggedIn(false)
       setUser(null)
       queryClient.invalidateQueries([currentAuthQueryKey])
     })

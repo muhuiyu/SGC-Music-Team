@@ -1,27 +1,26 @@
-import { Song } from '../../../models/song/Song'
-import useSong from '../../../api/providers/useSong'
-import _ from 'lodash'
-import { LinkOutlined, YouTube } from '@material-ui/icons'
-import { getFormattedLocalString } from '../../../models/service/Service'
-import useAllServices from '../../../api/providers/useAllServices'
-import { useMemo, useState } from 'react'
-import useUpdateSong from '../../../api/providers/useUpdateSong'
+import { faXmark } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import classNames from 'classnames'
+import _ from 'lodash'
+import { useMemo, useState } from 'react'
+import useAllServices from '../../../api/providers/useAllServices'
+import useSong from '../../../api/providers/useSong'
+import useUpdateSong from '../../../api/providers/useUpdateSong'
+import { getFormattedLocalString } from '../../../models/service/Service'
+import { Chart, ChartType, allChartTypes, chartTypeInfo } from '../../../models/song/Chart'
+import { Key, allKeys, keyInfo } from '../../../models/song/Key'
+import { Song } from '../../../models/song/Song'
 import { SongTag } from '../../../models/song/SongTag'
 import {
-  detailPageSecondaryButtonStyle,
   detailPageFormRowStyle,
   detailPageHeaderDivStyle,
   detailPagePrimaryButtonStyle,
+  detailPageSecondaryButtonStyle,
   detailPageTextFieldLabelStyle,
   detailPageTextFieldStyle,
   pageContentDivStyle,
-  detailPageInfoDivStyle,
-  detailPageInfoTitleStyle,
-  detailPageInfoContentStyle,
-  detailPageRowStyle,
 } from '../../common/styles/ComponentStyles'
-import { allKeys, keyInfo } from '../../../models/song/Key'
+import SongDetailPageViewContent from './SongDetailPageViewContent'
 import SongTagInput from './SongTagInput'
 
 interface Props {
@@ -40,7 +39,7 @@ export default function SongDetailPageContent({ songId }: Props) {
   }
 
   // Editing
-  const [isEditing, setIsEditing] = useState(false)
+  const [isEditing, setEditing] = useState(false)
 
   const [editingSong, setEditingSong] = useState<Partial<Song>>({})
   const resolvedSong = useMemo(
@@ -78,15 +77,33 @@ export default function SongDetailPageContent({ songId }: Props) {
     updateSongDetail('tags', tags)
   }
 
+  const onChangeCharts = (chart: Chart, index: number) => {
+    if (!song) return
+    let updatedCharts = [...song.charts]
+    updatedCharts[index] = chart
+    updateSongDetail('charts', updatedCharts)
+  }
+
   const onSaveSong = () => {
     if (resolvedSong === undefined || resolvedSong.id === undefined) {
       return
     }
+    console.log('updateSong', resolvedSong)
     updateSong(resolvedSong.id, resolvedSong)
   }
 
-  const areDetailsValid = useMemo(() => {
-    return !_.isEmpty(resolvedSong?.name)
+  const areDetailsValid: boolean = useMemo(() => {
+    if (_.isEmpty(resolvedSong?.name)) {
+      return false
+    } else {
+      resolvedSong?.charts.forEach((chart) => {
+        if (_.isEmpty(chart.url)) {
+          return false
+        }
+      })
+    }
+
+    return true
   }, [resolvedSong])
 
   if (!song || !resolvedSong) {
@@ -108,9 +125,8 @@ export default function SongDetailPageContent({ songId }: Props) {
                     onClick={(e) => {
                       e.preventDefault()
                       e.stopPropagation()
-                      setIsEditing(false)
+                      setEditing(false)
                     }}
-                    disabled={!areDetailsValid}
                   >
                     Cancel
                   </button>
@@ -122,7 +138,7 @@ export default function SongDetailPageContent({ songId }: Props) {
                       e.stopPropagation()
                       onSaveSong()
                       clearResolvedSong()
-                      setIsEditing(false)
+                      setEditing(false)
                     }}
                     disabled={!areDetailsValid}
                   >
@@ -164,81 +180,9 @@ export default function SongDetailPageContent({ songId }: Props) {
                   />
                 </div>
               </div>
+
+              {/* tags */}
               <div className={detailPageFormRowStyle}>
-                <div className="flex-1">
-                  {/* song link */}
-                  <label htmlFor="songUrlString" className={detailPageTextFieldLabelStyle}>
-                    Song URL
-                  </label>
-                  <input
-                    type="text"
-                    name="songUrlString"
-                    id="songUrlString"
-                    placeholder="e.g. youtube, spotify..."
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  "
-                    value={resolvedSong.songUrlString}
-                    onChange={onChangeSongDetail('songUrlString')}
-                  />
-                </div>
-              </div>
-              <div className={detailPageFormRowStyle}>
-                <div className="flex-1">
-                  {/* sheet link */}
-                  <label htmlFor="sheetUrlString" className={detailPageTextFieldLabelStyle}>
-                    Sheet URL
-                  </label>
-                  <input
-                    type="text"
-                    name="sheetUrlString"
-                    id="sheetUrlString"
-                    placeholder="e.g. Google Drive shared link"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  "
-                    value={resolvedSong.sheetUrlString}
-                    onChange={onChangeSongDetail('sheetUrlString')}
-                  />
-                </div>
-              </div>
-              <div className={detailPageFormRowStyle}>
-                {/* Key */}
-                <div className="flex-1">
-                  <label htmlFor="key" className={detailPageTextFieldLabelStyle}>
-                    Key
-                  </label>
-                  <select
-                    name="key"
-                    id="key"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  "
-                    value={resolvedSong.key}
-                    onChange={onChangeSongDetail('key')}
-                  >
-                    {allKeys.map((key) => (
-                      <option key={key} value={key} className="text-gray-900 text-sm" defaultValue="C">
-                        {keyInfo[key].name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                {/* Tempo */}
-                <div className="flex-1">
-                  <label htmlFor="tempo" className={detailPageTextFieldLabelStyle}>
-                    Tempo
-                  </label>
-                  <input
-                    type="number"
-                    name="tempo"
-                    id="tempo"
-                    placeholder="e.g. 178"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  "
-                    value={resolvedSong.tempo ?? 0}
-                    onChange={(e) => {
-                      const tempo = Number.parseInt(e.target.value, 10)
-                      if (tempo !== 0) updateSongDetail('tempo', tempo)
-                    }}
-                  />
-                </div>
-              </div>
-              <div className={detailPageFormRowStyle}>
-                {/* tags */}
                 <div className="flex-1">
                   <label htmlFor="tags" className={detailPageTextFieldLabelStyle}>
                     Tags
@@ -254,77 +198,121 @@ export default function SongDetailPageContent({ songId }: Props) {
                   />
                 </div>
               </div>
+
+              {/* song link */}
+              <div className={detailPageFormRowStyle}>
+                <div className="flex-1">
+                  <label htmlFor="songUrlString" className={detailPageTextFieldLabelStyle}>
+                    Song URL
+                  </label>
+                  <input
+                    type="text"
+                    name="songUrlString"
+                    id="songUrlString"
+                    placeholder="e.g. youtube, spotify..."
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  "
+                    value={resolvedSong.songUrlString}
+                    onChange={onChangeSongDetail('songUrlString')}
+                  />
+                </div>
+              </div>
+
+              {/* Chart versions */}
+              <div className={detailPageFormRowStyle}>
+                <div className="flex-1">
+                  <label htmlFor="sheetUrlString" className={detailPageTextFieldLabelStyle}>
+                    Chart versions
+                  </label>
+                  {resolvedSong.charts.map((chart, index) => {
+                    return (
+                      <div className="flex flex-row gap-4 mt-2 items-center" key={index}>
+                        <div className="">
+                          <select
+                            name="key"
+                            id="key"
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  "
+                            value={chart.key}
+                            onChange={(e) => {
+                              let updatedChart = chart
+                              updatedChart.key = e.target.value as Key
+                              onChangeCharts(updatedChart, index)
+                            }}
+                          >
+                            {allKeys.map((key) => (
+                              <option key={key} value={key} className="text-gray-900 text-sm" defaultValue="C">
+                                {keyInfo[key].name}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="">
+                          <select
+                            name="chartType"
+                            id="chartType"
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  "
+                            value={chart.type}
+                            onChange={(e) => {
+                              let updatedChart = chart
+                              updatedChart.type = e.target.value as ChartType
+                              onChangeCharts(updatedChart, index)
+                            }}
+                          >
+                            {allChartTypes.map((type) => (
+                              <option
+                                key={type}
+                                value={type}
+                                className="text-gray-900 text-sm"
+                                defaultValue="leadSheet"
+                              >
+                                {chartTypeInfo[type].name}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="flex-1">
+                          <input
+                            type="text"
+                            name="sheetUrlString"
+                            id="sheetUrlString"
+                            placeholder="e.g. Google Drive shared link"
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  "
+                            value={chart.url}
+                            onChange={(e) => {
+                              let updatedChart = chart
+                              updatedChart.url = e.target.value
+                              onChangeCharts(updatedChart, index)
+                            }}
+                          />
+                        </div>
+                        <FontAwesomeIcon
+                          className="hover:cursor-pointer"
+                          icon={faXmark}
+                          onClick={() => {
+                            const updatedCharts = [
+                              ...resolvedSong.charts.slice(0, index),
+                              ...resolvedSong.charts.slice(index + 1),
+                            ]
+                            updateSongDetail('charts', updatedCharts)
+                          }}
+                        />
+                      </div>
+                    )
+                  })}
+                  <button
+                    className="py-2 mt-2 text-sm font-bold text-indigo-500 hover:text-indigo-600 hover:cursor-pointer"
+                    onClick={() => {
+                      const updatedCharts = [...resolvedSong.charts]
+                      updatedCharts.push({ key: 'C', type: 'leadSheet', url: '' })
+                      updateSongDetail('charts', updatedCharts)
+                    }}
+                  >
+                    + Add chart
+                  </button>
+                </div>
+              </div>
             </div>
           ) : (
-            <div>
-              {/* header */}
-              <div className={classNames(detailPageHeaderDivStyle, 'justify-between')}>
-                <div className="flex flex-row flex-1">
-                  <div className="flex-1">
-                    <h2 className="text-lg font-semibold text-gray-900">{song.name}</h2>
-                    <p className="mt-1 max-w-2xl text-sm text-gray-500">
-                      {_.isEmpty(song.version) ? '-' : song.version}
-                    </p>
-                    <p className="mt-1 max-w-2xl text-sm text-gray-500">{song.tags.join(', ')}</p>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  className={detailPageSecondaryButtonStyle}
-                  onClick={() => {
-                    setIsEditing(true)
-                  }}
-                >
-                  Edit
-                </button>
-              </div>
-
-              <div className="mt-6">
-                <div className={detailPageRowStyle}>
-                  <div className={detailPageInfoDivStyle}>
-                    <div className={detailPageInfoTitleStyle}>Key</div>
-                    <div className={detailPageInfoContentStyle}>{song.key}</div>
-                  </div>
-                  <div className={detailPageInfoDivStyle}>
-                    <div className={detailPageInfoTitleStyle}>Tempo</div>
-                    <div className={detailPageInfoContentStyle}>{song.tempo}</div>
-                  </div>
-                  <div className={detailPageInfoDivStyle}>
-                    <div className={detailPageInfoTitleStyle}>Song Link</div>
-                    <div className={classNames(detailPageInfoContentStyle, 'whitespace-nowrap')}>
-                      {!_.isEmpty(song.songUrlString) && (
-                        <a href={song.songUrlString}>
-                          <YouTube htmlColor="red" />{' '}
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                  <div className={detailPageInfoDivStyle}>
-                    <div className={detailPageInfoTitleStyle}>Sheet Link</div>
-                    <div className={classNames(detailPageInfoContentStyle, 'whitespace-nowrap')}>
-                      {!_.isEmpty(song.sheetUrlString) && (
-                        <a href={song.sheetUrlString}>
-                          <LinkOutlined />
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                <div className={detailPageRowStyle}>
-                  <div className={detailPageInfoDivStyle}>
-                    <div className={detailPageInfoTitleStyle}>Note</div>
-                    <div className={detailPageInfoContentStyle}>-</div>
-                  </div>
-                </div>
-                <div className={detailPageRowStyle}>
-                  <div className={detailPageInfoDivStyle}>
-                    <div className={detailPageInfoTitleStyle}>Last time used when</div>
-                    <div className={detailPageInfoContentStyle}>{getLastTimeWithSongString()}</div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <SongDetailPageViewContent {...{ song, setEditing, lastTimeWithSongString: getLastTimeWithSongString() }} />
           )}
         </div>
       </div>

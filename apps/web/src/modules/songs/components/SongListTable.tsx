@@ -11,15 +11,15 @@ import { pageInfo } from '../../../models/common/AppPage'
 
 interface Props {
   songs: Song[]
-  orderBy: 'name' | 'tempo' | 'version' | 'key'
-  setOrderBy(order: 'name' | 'tempo' | 'version' | 'key'): void
+  orderBy: 'name' | 'version'
+  setOrderBy(order: 'name' | 'version'): void
   isLoading: boolean
 }
 
 interface Header {
   name: string
-  key: 'name' | 'tempo' | 'version' | 'key' | 'sheetUrlString' | 'songUrlString'
-  order: 'name' | 'tempo' | 'version' | 'key'
+  key: 'name' | 'version' | 'songUrlString' | 'lyrics'
+  order: 'name' | 'version'
 }
 
 export default function SongListTable({ songs, orderBy, setOrderBy, isLoading }: Props) {
@@ -37,18 +37,8 @@ export default function SongListTable({ songs, orderBy, setOrderBy, isLoading }:
       order: 'version',
     },
     {
-      name: 'Key',
-      key: 'key',
-      order: 'key',
-    },
-    {
-      name: 'Tempo',
-      key: 'tempo',
-      order: 'tempo',
-    },
-    {
-      name: 'Chart',
-      key: 'sheetUrlString',
+      name: 'Lyrics',
+      key: 'lyrics',
       order: 'name',
     },
     {
@@ -114,12 +104,9 @@ export default function SongListTable({ songs, orderBy, setOrderBy, isLoading }:
                           scope="col"
                           className="p-4 text-left text-xs font-medium text-gray-500 uppercase"
                         >
-                          <button
-                            className="group inline-flex"
-                            onClick={() => setOrderBy(header.order)}
-                          >
+                          <button className="group inline-flex" onClick={() => setOrderBy(header.order)}>
                             {header.name}
-                            {header.key != 'songUrlString' && header.key != 'sheetUrlString' && (
+                            {header.key != 'songUrlString' && header.key != 'lyrics' && (
                               <span
                                 className={classNames(
                                   orderBy !== header.order
@@ -162,12 +149,9 @@ export default function SongListTable({ songs, orderBy, setOrderBy, isLoading }:
                 </table>
                 {/* Loading */}
                 <div
-                  className={classNames(
-                    'absolute inset-0 flex justify-center items-center text-center',
-                    {
-                      hidden: !isLoading,
-                    },
-                  )}
+                  className={classNames('absolute inset-0 flex justify-center items-center text-center', {
+                    hidden: !isLoading,
+                  })}
                 >
                   <Spinner />
                 </div>
