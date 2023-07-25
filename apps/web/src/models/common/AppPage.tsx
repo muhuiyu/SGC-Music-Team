@@ -1,5 +1,6 @@
 import {
   CalendarIcon,
+  ClockIcon,
   DocumentDuplicateIcon,
   HomeIcon,
   ListBulletIcon,
@@ -10,7 +11,15 @@ import {
   WrenchIcon,
 } from '@heroicons/react/20/solid'
 
-export const navigationPages: AppPage[] = ['dashboard', 'calendar', 'planner', 'users', 'songs', 'serviceList']
+export const navigationPages: AppPage[] = [
+  'dashboard',
+  'calendar',
+  'planner',
+  'availability',
+  'users',
+  'songs',
+  'serviceList',
+]
 
 export const allAppPages: AppPage[] = [
   'dashboard',
@@ -25,12 +34,14 @@ export const allAppPages: AppPage[] = [
   'login',
   'signup',
   'serviceDetail',
+  'availability',
 ]
 
 export type AppPage =
   | 'dashboard'
   | 'planner'
   | 'calendar'
+  | 'availability'
   | 'users'
   | 'userDetail'
   | 'songs'
@@ -65,6 +76,12 @@ export const pageInfo: Record<AppPage, AppPageInfo> = {
     name: 'Calendar',
     icon: CalendarIcon,
     href: '/calendar',
+    isBackButtonAvailable: false,
+  },
+  availability: {
+    name: 'Availability',
+    icon: ClockIcon,
+    href: '/availability',
     isBackButtonAvailable: false,
   },
   users: {

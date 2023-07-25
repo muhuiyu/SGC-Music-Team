@@ -3,18 +3,19 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { AuthProvider } from './api/auth/AuthProvider'
 import { pageInfo } from './models/common/AppPage'
 import LoginPage from './modules/authentication/pages/LoginPage'
+import AvailabilityPage from './modules/availability/pages/AvailabilityPage'
 import CalendarPage from './modules/calendar/pages/CalendarPage'
 import ErrorPage from './modules/common/pages/ErrorPage'
 import DashboardPage from './modules/dashboard/pages/DashboardPage'
+import ServiceDetailsPage from './modules/dashboard/pages/ServiceDetailPage'
 import PlannerPage from './modules/planner/pages/PlannerPage'
 import ServiceListPage from './modules/serviceList/pages/ServiceListPage'
 import SettingsPage from './modules/settings/pages/SettingsPage'
 import SignUpPage from './modules/signup/pages/SignUpPage'
-import SongsPage from './modules/songs/pages/SongsPage'
-import UsersPage from './modules/users/pages/UsersPage'
-import ServiceDetailsPage from './modules/dashboard/pages/ServiceDetailPage'
 import SongDetailPage from './modules/songs/pages/SongDetailPage'
+import SongsPage from './modules/songs/pages/SongsPage'
 import UserDetailPage from './modules/users/pages/UserDetailPage'
+import UsersPage from './modules/users/pages/UsersPage'
 
 const router = createBrowserRouter([
   {
@@ -40,6 +41,11 @@ const router = createBrowserRouter([
   {
     path: pageInfo.calendar.href,
     Component: () => <CalendarPage />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: pageInfo.availability.href,
+    Component: () => <AvailabilityPage />,
     errorElement: <ErrorPage />,
   },
   {
