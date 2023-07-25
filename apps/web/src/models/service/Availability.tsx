@@ -1,39 +1,39 @@
-import { DocumentData, DocumentSnapshot, Timestamp } from 'firebase/firestore'
 import { DateTime } from 'luxon'
+import User from '../user/User'
 
 export type AvailabilityState = 'yes' | 'no' | 'unknown'
 
 export interface Availability {
+  id: string
+  userId: User['id']
   dateTime: DateTime
   availabilityState: AvailabilityState
+  note: string
 }
 
-export interface FirebaseAvailability {
-  timestamp: Timestamp
+export interface SupabaseAvailability {
+  id: string
+  userId: User['id']
+  timestamp: string
   availabilityState: AvailabilityState
+  note: string
 }
 
 export function getDateTimeKey(dateTime: DateTime): string {
   return dateTime.toISO()?.replace(/[^\d]+/g, '') ?? ''
 }
 
-export function convertFromFirebaseAvailability(availability: FirebaseAvailability): Availability {
-  const { timestamp, ...restOfAvailability } = availability
+export function availabilityFromSupabase(data: SupabaseAvailability): Availability {
   return {
-    ...restOfAvailability,
-    dateTime: DateTime.fromJSDate(availability.timestamp.toDate()),
+    ...data,
+    dateTime: DateTime.fromISO(data.timestamp),
   }
 }
 
-export function convertToFirebaseAvailability(availability: Availability): FirebaseAvailability {
+export function convertToSupabaseAvailability(availability: Availability): SupabaseAvailability {
   const { dateTime, ...restOfAvailability } = availability
   return {
     ...restOfAvailability,
-    timestamp: Timestamp.fromDate(dateTime.toJSDate()),
+    timestamp: dateTime.toISO() ?? new Date().toISOString(),
   }
-}
-
-export function availabilityFromSnapshot(snapshot: DocumentSnapshot<DocumentData>): Availability {
-  const { ...docData } = snapshot.data() as FirebaseAvailability
-  return convertFromFirebaseAvailability(docData)
 }

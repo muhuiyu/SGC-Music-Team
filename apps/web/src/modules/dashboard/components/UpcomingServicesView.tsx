@@ -1,8 +1,8 @@
+import _ from 'lodash'
 import { getMonthString } from '../../../helpers/DateHelpers'
 import Service, { getFormattedLocalTimeString } from '../../../models/service/Service'
-import User from '../../../models/user/User'
 import { Song } from '../../../models/song/Song'
-import _ from 'lodash'
+import User from '../../../models/user/User'
 
 interface Props {
   services: Service[]
@@ -13,7 +13,7 @@ interface Props {
 
 export default function UpcomingServicesView({ services, users, songDictionary, onClickView }: Props) {
   return (
-    <div className="w-4/5 pr-8">
+    <div className="w-full pr-8">
       <div className="text-xl pb-4">Upcoming services</div>
       <div className="flex flex-col gap-3 rounded-lg">
         {_.isEmpty(services) ? (

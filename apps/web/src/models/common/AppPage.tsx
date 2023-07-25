@@ -10,14 +10,7 @@ import {
   WrenchIcon,
 } from '@heroicons/react/20/solid'
 
-export const navigationPages: AppPage[] = [
-  'dashboard',
-  'calendar',
-  'planner',
-  'users',
-  'songs',
-  'serviceList',
-]
+export const navigationPages: AppPage[] = ['dashboard', 'calendar', 'planner', 'users', 'songs', 'serviceList']
 
 export const allAppPages: AppPage[] = [
   'dashboard',

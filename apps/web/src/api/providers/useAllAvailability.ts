@@ -1,27 +1,14 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import {
-  Timestamp,
-  and,
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  setDoc,
-  updateDoc,
-  where,
-} from 'firebase/firestore'
-import { useCallback, useMemo } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { useMemo } from 'react'
 
 import _ from 'lodash'
 import { DateTime } from 'luxon'
-import {
-  Availability,
-  availabilityFromSnapshot,
-  convertToFirebaseAvailability,
-  getDateTimeKey,
-} from '../../models/service/Availability'
-import { availabilityQueryKey, usersQueryKey, usersReference } from '../constants/QueryKeys'
+import { v4 as uuidv4 } from 'uuid'
+import { Availability, availabilityFromSupabase } from '../../models/service/Availability'
+import { availabilityQueryKey, availabilityReference } from '../constants/QueryKeys'
+import { supabase } from './SupabaseProvider'
+
+const hookName = 'useAllAvailability'
 
 export default function useAllAvailability(userId: string | null, serviceDates: DateTime[]) {
   const [minServiceDate, maxServiceDate] = useMemo(() => {
@@ -45,93 +32,52 @@ export default function useAllAvailability(userId: string | null, serviceDates: 
         return []
       }
 
-      // todo
-      // const servicesQuery = query(
-      //   collection(db, usersReference, userId, 'availabilities'),
-      //   and(
-      //     where('timestamp', '>=', Timestamp.fromDate(minServiceDate.toJSDate())),
-      //     where('timestamp', '<=', Timestamp.fromDate(maxServiceDate.toJSDate())),
-      //   ),
-      // )
-      // const snapshot = await getDocs(servicesQuery)
-      // const docIdToDoc = _.fromPairs(snapshot.docs.map((doc) => [doc.id, doc]))
-      // return serviceDates.map((serviceDate): Availability => {
-      //   const dateKey = getDateTimeKey(serviceDate)
-      //   const doc = docIdToDoc[dateKey]
-      //   if (!doc) {
-      //     return {
-      //       dateTime: serviceDate,
-      //       availabilityState: 'unknown',
-      //     }
-      //   }
-      //   return availabilityFromSnapshot(doc)
-      // })
-      return []
+      // 1. Fetch all responses
+      const { data, error } = await supabase
+        .from(availabilityReference)
+        .select()
+        .eq('userId', userId)
+        .gte('timestamp', minServiceDate)
+        .lte('timestamp', maxServiceDate)
+
+      if (error) {
+        console.log(`Error: ${hookName} fetchAvailabilities `, error)
+      }
+
+      // 2. Map data to responses
+      let currentResponses: Record<number, Availability> = {}
+      if (data !== null && !_.isEmpty(data)) {
+        currentResponses = _.keyBy(
+          data.map((entry) => availabilityFromSupabase(entry)),
+          (availability) => availability.dateTime.toMillis(),
+        )
+      }
+
+      // 3. Add dates that haven't been responsed yet
+      serviceDates.forEach((dateTime) => {
+        const timestamp = dateTime.toMillis()
+        let response = currentResponses[timestamp]
+        if (!response) {
+          currentResponses[timestamp] = {
+            id: uuidv4(),
+            userId: userId,
+            availabilityState: 'unknown',
+            dateTime: dateTime,
+            note: '',
+          }
+        }
+      })
+
+      console.log('response', currentResponses)
+
+      // 4. Convert the map back to array
+      return _.sortBy(_.values(currentResponses), (a) => a.dateTime)
     },
     enabled: !_.isEmpty(userId) && !!maxServiceDate && !!minServiceDate,
   })
 
-  // const queryClient = useQueryClient()
-  // const addMutation = useMutation({
-  //   mutationFn: async ({ availabilities }: { availabilities: Availability[] }) => {
-  //     if (!userId) {
-  //       return
-  //     }
-  //     return Promise.all(
-  //       availabilities.map(async (availability) => {
-  //         const path = collection(db, usersReference, userId, 'availabilities').path
-  //         setDoc(
-  //           doc(db, path, getDateTimeKey(availability.dateTime)),
-  //           convertToFirebaseAvailability(availability),
-  //         )
-  //       }),
-  //     )
-  //   },
-  //   onSuccess: () => {
-  //     queryClient.invalidateQueries([usersQueryKey])
-  //   },
-  // })
-
-  // const addAvailability = useCallback(
-  //   (availabilities: Availability[]) => {
-  //     addMutation.mutate({ availabilities })
-  //   },
-  //   [addMutation],
-  // )
-
-  // const updateMutation = useMutation({
-  //   mutationFn: async ({ availabilities }: { availabilities: Availability[] }) => {
-  //     if (!userId) {
-  //       return
-  //     }
-
-  //     const snapshot = await getDoc(doc(db, usersReference, userId))
-  //     if (!snapshot.exists()) return null
-  //     const promises = availabilities.map(async (availability) => {
-  //       const data = {
-  //         dateTime: availability.dateTime.toISO() ?? '',
-  //         isAvailable: availability.availabilityState,
-  //       }
-  //       updateDoc(doc(db, snapshot.ref.path, availability.dateTime.toISO() ?? ''), data)
-  //     })
-  //     return Promise.all(promises)
-  //   },
-  //   onSuccess: () => {
-  //     queryClient.invalidateQueries([usersQueryKey])
-  //   },
-  // })
-
-  // const updateAvailability = useCallback(
-  //   (availabilities: Availability[]) => {
-  //     updateMutation.mutate({ availabilities })
-  //   },
-  //   [updateMutation],
-  // )
-
   return {
     availabilities: availabilities ?? [],
     isLoading: isFetching,
-    // addAvailability,
-    // updateAvailability,
   }
 }

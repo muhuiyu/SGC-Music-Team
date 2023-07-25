@@ -1,17 +1,16 @@
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import classNames from 'classnames'
 import { useContext, useState } from 'react'
-import { withRequireAuth } from '../../../api/auth/RequireAuth'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
-import useAllUsers from '../../../api/providers/useAllUsers'
+import { AuthContext } from '../../../api/auth/AuthContext'
+import { withRequireAuth } from '../../../api/auth/RequireAuth'
+import { getUserProfile } from '../../../api/providers/SupabaseProvider'
+import useAddUser from '../../../api/providers/useAddUser'
 import User, { UserRole, allRoles, musicLeadOptions, roleInfo } from '../../../models/user/User'
 import { logoImageUrl } from '../../common/assets/AppImages'
+import MaskedSpinner from '../../common/components/MaskedSpinner'
 import PhoneTextField from '../../common/components/PhoneTextField'
 import { singaporeCountryDialCode } from '../../common/pages/CountryCode'
-import { AuthContext } from '../../../api/auth/AuthContext'
-import { getUserProfile } from '../../../api/providers/SupabaseProvider'
-import MaskedSpinner from '../../common/components/MaskedSpinner'
-import useAddUser from '../../../api/providers/useAddUser'
 
 const labelStyle = 'block text-sm font-medium leading-6 text-gray-900'
 
@@ -415,7 +414,7 @@ const SignUpPage = () => {
                   <div key={option.id} className="flex items-center">
                     <input
                       id={option.id}
-                      name="notification-method"
+                      name="lead-response"
                       type="radio"
                       defaultChecked={!option.value}
                       className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"

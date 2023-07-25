@@ -16,6 +16,21 @@ interface Props {
   className?: string
 }
 
+const responseOptions: { key: AvailabilityState; title: string }[] = [
+  {
+    key: 'yes',
+    title: 'Yes',
+  },
+  {
+    key: 'no',
+    title: 'No',
+  },
+  {
+    key: 'unknown',
+    title: 'Not sure',
+  },
+]
+
 export default function AvailabilitySurveyModal({
   isShowingAvailabilitySurveryModal,
   isFetching,
@@ -24,26 +39,39 @@ export default function AvailabilitySurveyModal({
   onDismiss,
   className,
 }: Props) {
-  const [editedResponses, setEditedResponses] = useState<{ [key: string]: Availability }>({})
+  const [editedResponses, setEditedResponses] = useState<{ [key: number]: Availability }>({})
 
   const currentResponses = useMemo(() => {
     return responses.map((response) => {
-      const isoString = response.dateTime.toISO()
-      if (!isoString || !editedResponses[isoString]) {
+      const miliSeconds = response.dateTime.toMillis()
+      if (!miliSeconds || !editedResponses[miliSeconds]) {
         return response
       }
-      return { ...response, ...editedResponses[isoString] }
+      return { ...response, ...editedResponses[miliSeconds] }
     })
   }, [responses, editedResponses])
 
   const onChangeAvailability = (dateTime: DateTime, value: AvailabilityState) => {
-    const isoString = dateTime.toISO()
-    if (!isoString) return
+    const miliSeconds = dateTime.toMillis()
+    if (!miliSeconds) return
     setEditedResponses(
       produce((draft) => {
-        draft[isoString] = {
-          ...(draft[isoString] ?? {}),
+        draft[miliSeconds] = {
+          ...(draft[miliSeconds] ?? {}),
           availabilityState: value,
+        }
+      }),
+    )
+  }
+
+  const onChangeNote = (dateTime: DateTime, value: string) => {
+    const miliSeconds = dateTime.toMillis()
+    if (!miliSeconds) return
+    setEditedResponses(
+      produce((draft) => {
+        draft[miliSeconds] = {
+          ...(draft[miliSeconds] ?? {}),
+          note: value,
         }
       }),
     )
@@ -62,45 +90,45 @@ export default function AvailabilitySurveyModal({
       <div className="relative bg-white rounded-lg shadow ">
         <div className="px-6 py-6 lg:px-8">
           {/* close button */}
-          <XMarkIcon
-            className="absolute top-8 right-6"
-            width={24}
-            height={24}
-            onClick={onDismiss}
-          />
+          <XMarkIcon className="absolute top-8 right-6" width={24} height={24} onClick={onDismiss} />
           {/* title */}
           <div className="py-4 border-b rounded-t">
             <h3 className="text-base font-semibold text-gray-900 lg:text-xl">Edit Availbility</h3>
           </div>
-          <p className="text-md font-normal text-gray-500 pt-4 pb-8">
-            Select all the time you're available to serve
-          </p>
+          <p className="text-md font-normal text-gray-500 pt-4 pb-8">Select all the time you're available to serve</p>
           {isFetching ? (
             <Spinner />
           ) : (
-            currentResponses.map((response) => (
-              <button
-                key={response.dateTime.toISO()}
-                type="button"
-                className={classNames(
-                  'py-2.5 px-5 mr-2 mb-2 text-sm font-medium rounded-lg ',
-                  response.availabilityState == 'yes'
-                    ? 'text-white bg-blue-700 border border-blue-800 hover:bg-blue-800 '
-                    : 'text-gray-900 bg-white border border-gray-200 hover:bg-gray-100 hover:text-blue-700 ',
-                )}
-                onClick={() => {
-                  if (
-                    response.availabilityState === 'no' ||
-                    response.availabilityState === 'unknown'
-                  )
-                    onChangeAvailability(response.dateTime, 'yes')
-                  else if (response.availabilityState === 'yes')
-                    onChangeAvailability(response.dateTime, 'no')
-                }}
-              >
-                {getFormattedLocalString(response.dateTime, 'MMM dd, yyyy')}
-              </button>
-            ))
+            <div className="flex flex-col gap-4">
+              {currentResponses.map((response) => (
+                <div className="flex flex-row items-center" key={response.dateTime.toSeconds()}>
+                  <input
+                    type="checkbox"
+                    size={16}
+                    defaultChecked={response.availabilityState === 'yes'}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        onChangeAvailability(response.dateTime, 'yes')
+                      } else {
+                        onChangeAvailability(response.dateTime, 'no')
+                      }
+                    }}
+                  />
+                  <div className="font-bold w-36 pl-4">
+                    {getFormattedLocalString(response.dateTime, 'MMM dd, yyyy')}
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="Add note..."
+                    value={response.note}
+                    className="bg-gray-100 rounded-md text-sm flex-1 p-2"
+                    onChange={(e) => {
+                      onChangeNote(response.dateTime, e.target.value)
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
           )}
 
           <div className="flex justify-between gap-4 pt-8">

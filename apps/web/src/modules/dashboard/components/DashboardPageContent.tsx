@@ -1,20 +1,29 @@
 import classNames from 'classnames'
 import { DateTime } from 'luxon'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import useAllAvailability from '../../../api/providers/useAllAvailability'
 import useAllServicesWithFilter, { getCurrentServiceYearMonths } from '../../../api/providers/useAllServicesWithFilter'
 import useAllSongs from '../../../api/providers/useAllSongs'
 import useAllUsers from '../../../api/providers/useAllUsers'
 import useCurrentUser from '../../../api/providers/useCurrentUser'
+import useUpdateAvailability from '../../../api/providers/useUpdateAvailability'
 import { pageInfo } from '../../../models/common/AppPage'
 import { Availability } from '../../../models/service/Availability'
 import Service, { isUserOnDuty, morningServiceTime } from '../../../models/service/Service'
 import { pageContentDashboardDivStyle } from '../../common/styles/ComponentStyles'
+import AvailabilitySurveyModal from './AvailabilitySurveyModal'
 import CalendarView from './CalendarView'
+import DashboardNotification from './DashboardNotification'
 import UpcomingServicesView from './UpcomingServicesView'
 
 export default function DashboardPageContent() {
+  // Availability notification
+  // Availability survey will be displayed one month ahead from the next cycle (on even month number)
+  // TODO: change to == 0
+  const shouldShowAvailabilitySurveyNotification = DateTime.now().month % 2 == 1
   const [isShowingAvailabilitySurveryModal, setShowingAvailabilitySurveryModal] = useState(false)
+
   // for testing, later we will connect to useNotifications
 
   const { allServiceDates, services } = useAllServicesWithFilter(getCurrentServiceYearMonths(), morningServiceTime)
@@ -25,10 +34,8 @@ export default function DashboardPageContent() {
   })
 
   const { currentUser } = useCurrentUser()
-  // const { availabilities, addAvailability, isLoading } = useAllAvailability(
-  //   currentUser?.id ?? null,
-  //   allServiceDates,
-  // )
+  const { availabilities, isLoading } = useAllAvailability(currentUser?.id ?? null, allServiceDates)
+  const { updateAvailability } = useUpdateAvailability()
 
   const getUpcomingServices = () => {
     return services
@@ -37,16 +44,24 @@ export default function DashboardPageContent() {
   }
 
   const onSubmitAvailabilitySurvey = (responses: Availability[]) => {
-    const updatedResponses = responses.map((response) => ({
-      dateTime: response.dateTime,
-      availabilityState: response.availabilityState == 'unknown' ? 'no' : response.availabilityState,
-    }))
-    // addAvailability(updatedResponses)
+    setShowingAvailabilitySurveryModal(false)
+    responses.forEach((response) => {
+      updateAvailability(response.id, {
+        ...response,
+        availabilityState: response.availabilityState === 'unknown' ? 'no' : response.availabilityState,
+      })
+    })
   }
-  const onDismissAvailabilitySurvey = () => {
-    // todo
-    console.log('dismiss')
-  }
+
+  useEffect(() => {
+    function handleEscapeKey(event: KeyboardEvent) {
+      if (event.code === 'Escape') {
+        setShowingAvailabilitySurveryModal(false)
+      }
+    }
+    document.addEventListener('keydown', handleEscapeKey)
+    return () => document.removeEventListener('keydown', handleEscapeKey)
+  }, [])
 
   const navigate = useNavigate()
   const onClickView = (serviceId: Service['id']) => {
@@ -56,14 +71,23 @@ export default function DashboardPageContent() {
   return (
     <>
       <div className={pageContentDashboardDivStyle}>
-        <UpcomingServicesView
-          {...{
-            services: getUpcomingServices(),
-            users,
-            songDictionary: generateSongDictionary(),
-            onClickView,
-          }}
-        />
+        <div className="flex flex-col flex-1">
+          {shouldShowAvailabilitySurveyNotification && (
+            <DashboardNotification
+              onClickButton={() => {
+                setShowingAvailabilitySurveryModal(true)
+              }}
+            />
+          )}
+          <UpcomingServicesView
+            {...{
+              services: getUpcomingServices(),
+              users,
+              songDictionary: generateSongDictionary(),
+              onClickView,
+            }}
+          />
+        </div>
         <CalendarView {...{ services }} />
       </div>
       {/* availability modal */}
@@ -73,16 +97,17 @@ export default function DashboardPageContent() {
           { hidden: !isShowingAvailabilitySurveryModal },
         )}
       >
-        {/* <AvailabilitySurveyModal
+        <AvailabilitySurveyModal
           {...{
             isShowingAvailabilitySurveryModal,
             isFetching: isLoading,
-            serviceDateTimes: allServiceDates,
             responses: availabilities,
             onSubmit: onSubmitAvailabilitySurvey,
-            onDismiss: onDismissAvailabilitySurvey,
           }}
-        /> */}
+          onDismiss={() => {
+            setShowingAvailabilitySurveryModal(false)
+          }}
+        />
       </div>
     </>
   )
