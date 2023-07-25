@@ -175,7 +175,7 @@ export default function AddSongModal({ isShowingAddSongModal, song, onAddSong, o
                           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  "
                           value={chart.key}
                           onChange={(e) => {
-                            let updatedChart = chart
+                            let updatedChart = { ...chart }
                             updatedChart.key = e.target.value as Key
                             onChangeCharts(updatedChart, index)
                           }}
@@ -194,7 +194,7 @@ export default function AddSongModal({ isShowingAddSongModal, song, onAddSong, o
                           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  "
                           value={chart.type}
                           onChange={(e) => {
-                            let updatedChart = chart
+                            let updatedChart = { ...chart }
                             updatedChart.type = e.target.value as ChartType
                             onChangeCharts(updatedChart, index)
                           }}
@@ -215,7 +215,7 @@ export default function AddSongModal({ isShowingAddSongModal, song, onAddSong, o
                           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  "
                           value={chart.url}
                           onChange={(e) => {
-                            let updatedChart = chart
+                            let updatedChart = { ...chart }
                             updatedChart.url = e.target.value
                             onChangeCharts(updatedChart, index)
                           }}
@@ -237,6 +237,7 @@ export default function AddSongModal({ isShowingAddSongModal, song, onAddSong, o
                   )
                 })}
                 <button
+                  type="button"
                   className="py-2 mt-2 text-sm font-bold text-indigo-500 hover:text-indigo-600 hover:cursor-pointer"
                   onClick={() => {
                     const updatedCharts = [...resolvedSong.charts]
