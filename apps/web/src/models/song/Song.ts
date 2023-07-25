@@ -1,14 +1,13 @@
-import { Key } from './Key'
+import { Chart } from './Chart'
 import { SongTag } from './SongTag'
 
 export interface Song {
   id: string
   name: string
   version: string
-  key: Key
-  tempo?: number
+  charts: Chart[]
+  lyrics: string
   songUrlString: string
-  sheetUrlString: string
   tags: SongTag[]
 }
 
@@ -16,9 +15,8 @@ export const emptySong: Song = {
   id: '',
   name: '',
   version: '',
-  key: 'C',
-  tempo: 0,
+  charts: [{ key: 'C', type: 'leadSheet', url: '' }],
+  lyrics: '',
   songUrlString: '',
-  sheetUrlString: '',
   tags: [],
 }

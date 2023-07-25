@@ -18,7 +18,7 @@ import { pageContentDivStyle } from '../../common/styles/ComponentStyles'
 export default function SongPageContent() {
   const [isShowingAddSongModal, setShowingAddSongModal] = useState(false)
   const [currentEditingSong, setCurrentEditingSong] = useState<Song | null>(null)
-  const [orderBy, setOrderBy] = useState<'name' | 'key' | 'tempo' | 'version'>('name')
+  const [orderBy, setOrderBy] = useState<'name' | 'version'>('name')
 
   const { songs, isLoading } = useAllSongs({
     order: orderBy,

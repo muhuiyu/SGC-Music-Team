@@ -5,7 +5,7 @@ import _, { keyBy } from 'lodash'
 import { supabase } from './SupabaseProvider'
 
 export interface SongFilter {
-  order: 'id' | 'version' | 'name' | 'key' | 'tempo'
+  order: 'id' | 'version' | 'name'
 }
 
 export const defaultLimitPerPage = 10
@@ -17,10 +17,7 @@ export default function useAllSongs(filter: SongFilter) {
   const { data: songs, isFetching } = useQuery({
     queryKey: [songsQueryKey, filter.order],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from(songsReference)
-        .select()
-        .order(filter.order, { ascending: true })
+      const { data, error } = await supabase.from(songsReference).select().order(filter.order, { ascending: true })
 
       if (error) {
         console.log(`Error: ${hookName} fetchServices `, error)

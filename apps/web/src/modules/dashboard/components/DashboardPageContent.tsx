@@ -1,19 +1,17 @@
 import classNames from 'classnames'
+import { DateTime } from 'luxon'
 import { useState } from 'react'
-import useAllAvailability from '../../../api/providers/useAllAvailability'
+import { useNavigate } from 'react-router-dom'
 import useAllServicesWithFilter, { getCurrentServiceYearMonths } from '../../../api/providers/useAllServicesWithFilter'
+import useAllSongs from '../../../api/providers/useAllSongs'
+import useAllUsers from '../../../api/providers/useAllUsers'
 import useCurrentUser from '../../../api/providers/useCurrentUser'
+import { pageInfo } from '../../../models/common/AppPage'
 import { Availability } from '../../../models/service/Availability'
 import Service, { isUserOnDuty, morningServiceTime } from '../../../models/service/Service'
-import AvailabilitySurveyModal from './AvailabilitySurveyModal'
+import { pageContentDashboardDivStyle } from '../../common/styles/ComponentStyles'
 import CalendarView from './CalendarView'
 import UpcomingServicesView from './UpcomingServicesView'
-import useAllUsers from '../../../api/providers/useAllUsers'
-import useAllSongs from '../../../api/providers/useAllSongs'
-import { useNavigate } from 'react-router-dom'
-import { pageInfo } from '../../../models/common/AppPage'
-import { pageContentDashboardDivStyle } from '../../common/styles/ComponentStyles'
-import { DateTime } from 'luxon'
 
 export default function DashboardPageContent() {
   const [isShowingAvailabilitySurveryModal, setShowingAvailabilitySurveryModal] = useState(false)
@@ -33,7 +31,6 @@ export default function DashboardPageContent() {
   // )
 
   const getUpcomingServices = () => {
-    console.log('getUpcomingServices', services.length)
     return services
       .filter((service) => service.dateTime >= DateTime.now())
       .filter((service) => isUserOnDuty(service, currentUser?.id ?? ''))

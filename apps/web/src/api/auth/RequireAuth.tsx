@@ -5,13 +5,13 @@ import { AuthContext } from './AuthContext'
 
 export function RequireAuth({ children }: { children: JSX.Element }) {
   const { user, isFetching, isLoggedIn } = useContext(AuthContext)
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setLoading] = useState(true)
 
   let location = useLocation()
 
   useEffect(() => {
     if (!isFetching) {
-      setIsLoading(false)
+      setLoading(false)
     }
   }, [isFetching])
 

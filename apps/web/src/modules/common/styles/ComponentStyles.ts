@@ -12,7 +12,7 @@ export const detailPageTextFieldLabelStyle = 'block mb-2 text-sm font-medium tex
 export const detailPageTextFieldStyle =
   'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'
 export const detailPagePrimaryButtonStyle =
-  'block h-10 rounded-md px-4 py-2 text-center text-sm font-semibold leading-6 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 bg-indigo-500 text-white hover:bg-indigo-600 focus-visible: outline-indigo-600'
+  'block h-10 rounded-md px-4 py-2 text-center text-sm font-semibold leading-6 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 bg-indigo-500 text-white enabled:hover:bg-indigo-600 enabled:focus-visible:outline-indigo-600 disabled:bg-indigo-300'
 export const detailPageSecondaryButtonStyle =
   'block h-10 rounded-md px-4 py-2 text-center text-sm font-semibold leading-6 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 bg-gray-200 text-gray-600 hover:bg-gray-300 focus-visible: outline-gray-500'
 export const detailPageFormRowStyle = 'flex flex-row gap-8 pl-10'

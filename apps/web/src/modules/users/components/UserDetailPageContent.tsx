@@ -28,7 +28,7 @@ interface Props {
 export default function UserDetailPageContent({ userId }: Props) {
   const { user, isFetching } = useUser(userId)
   const { updateUser } = useUpdateUser()
-  const [isEditing, setIsEditing] = useState(false)
+  const [isEditing, setEditing] = useState(false)
 
   const [editingUser, setEditingUser] = useState<Partial<User>>({})
   const resolvedUser = useMemo(
@@ -62,9 +62,7 @@ export default function UserDetailPageContent({ userId }: Props) {
       updateUserDetail(key, e.target.value as User[K])
     }
 
-  const onChangeRoles = (
-    roles: UserRole[] | ((prevRoles: UserRole[] | undefined) => UserRole[]),
-  ) => {
+  const onChangeRoles = (roles: UserRole[] | ((prevRoles: UserRole[] | undefined) => UserRole[])) => {
     updateUserDetail('availableRoles', roles)
   }
 
@@ -110,7 +108,7 @@ export default function UserDetailPageContent({ userId }: Props) {
                     onClick={(e) => {
                       e.preventDefault()
                       e.stopPropagation()
-                      setIsEditing(false)
+                      setEditing(false)
                     }}
                     disabled={!areDetailsValid}
                   >
@@ -124,7 +122,7 @@ export default function UserDetailPageContent({ userId }: Props) {
                       e.stopPropagation()
                       onSaveUser()
                       clearResolvedUser()
-                      setIsEditing(false)
+                      setEditing(false)
                     }}
                     disabled={!areDetailsValid}
                   >
@@ -217,10 +215,7 @@ export default function UserDetailPageContent({ userId }: Props) {
                             }
                           }}
                         />
-                        <label
-                          htmlFor="musician-group"
-                          className="ml-2 text-sm font-medium text-gray-900"
-                        >
+                        <label htmlFor="musician-group" className="ml-2 text-sm font-medium text-gray-900">
                           {group}
                         </label>
                       </div>
@@ -280,10 +275,7 @@ export default function UserDetailPageContent({ userId }: Props) {
                             }
                           }}
                         />
-                        <label
-                          htmlFor={option.id}
-                          className="ml-3 block text-sm font-medium leading-6 text-gray-900"
-                        >
+                        <label htmlFor={option.id} className="ml-3 block text-sm font-medium leading-6 text-gray-900">
                           {option.title}
                         </label>
                       </div>
@@ -302,9 +294,7 @@ export default function UserDetailPageContent({ userId }: Props) {
                     <h3 className="text-base font-semibold leading-7 text-gray-900 px-10">
                       {user.firstName} {user.lastName}
                     </h3>
-                    <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500 px-10">
-                      {user.email}
-                    </p>
+                    <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500 px-10">{user.email}</p>
                     <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500 px-10">
                       {user.countryCode} {user.phoneNumber}
                     </p>
@@ -314,7 +304,7 @@ export default function UserDetailPageContent({ userId }: Props) {
                   type="button"
                   className={detailPageSecondaryButtonStyle}
                   onClick={() => {
-                    setIsEditing(true)
+                    setEditing(true)
                   }}
                 >
                   Edit
@@ -345,9 +335,7 @@ export default function UserDetailPageContent({ userId }: Props) {
                   </div>
                   <div className={detailPageInfoDivStyle}>
                     <div className={detailPageInfoTitleStyle}>Is in Singapore now</div>
-                    <div className={detailPageInfoContentStyle}>
-                      {user.isInSingapore ? 'Yes' : 'No'}
-                    </div>
+                    <div className={detailPageInfoContentStyle}>{user.isInSingapore ? 'Yes' : 'No'}</div>
                   </div>
                 </div>
                 <div className={detailPageFormRowStyle}>

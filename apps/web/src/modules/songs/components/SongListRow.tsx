@@ -15,6 +15,14 @@ interface Props {
 export default function SongListRow(props: Props) {
   const { song, selected = false, onUpdateSelection, onClick } = props
 
+  const getSongLyrics = (): string => {
+    // todo
+    // if there's /n, return before /n
+    // if not, return the first 40 char
+    return song.lyrics.slice(0, 30) + '...'
+    // return 'adfasdfasdfasdfsasdfasdfsadfasdfasdfasdfasdfasdf...'.slice(0, 40)
+  }
+
   return (
     <tr key={song.id} onClick={onClick}>
       <td className="relative px-7 sm:w-12 sm:px-6">
@@ -26,7 +34,7 @@ export default function SongListRow(props: Props) {
           onChange={(e) => onUpdateSelection(e.target.checked)}
         />
       </td>
-      <td className="whitespace-nowrap px-4 py-4">
+      <td className="px-4 py-4">
         <div className="flex flex-col">
           <span className="text-sm font-medium text-gray-900">{song.name}</span>
           <div className={classNames('flex flex-row', _.isEmpty(song.tags) ? '' : 'pt-1')}>
@@ -38,23 +46,9 @@ export default function SongListRow(props: Props) {
           </div>
         </div>
       </td>
-      <td className="whitespace-nowrap px-4 py-4 text-sm text-gray-500">{song.version}</td>
-      <td className="whitespace-nowrap px-4 py-4 text-sm text-gray-500">{song.key}</td>
-      <td className="whitespace-nowrap px-4 py-4 text-sm text-gray-500">{song.tempo !== 0 && song.tempo}</td>
-      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-        {!_.isEmpty(song.sheetUrlString) && (
-          <a
-            target="_blank"
-            href={song.sheetUrlString}
-            onClick={(e) => {
-              e.stopPropagation()
-            }}
-          >
-            <LinkOutlined />
-          </a>
-        )}
-      </td>
-      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+      <td className="px-4 py-4 text-sm text-gray-500">{song.version}</td>
+      <td className="px-4 py-4 text-sm text-gray-500">{getSongLyrics()}</td>
+      <td className="px-3 py-4 text-sm text-gray-500">
         {!_.isEmpty(song.songUrlString) && (
           <a
             target="_blank"

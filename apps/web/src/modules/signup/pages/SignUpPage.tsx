@@ -30,7 +30,7 @@ const SignUpPage = () => {
   const [countryCode, setCountryCode] = useState(singaporeCountryDialCode)
   const [phoneNumber, setPhoneNumber] = useState('')
   const [selectedRoles, setSelectedRoles] = useState<UserRole[]>([])
-  const [isLead, setIsLead] = useState(false)
+  const [isLead, setLead] = useState(false)
   const [isShowingEmailTextField, setShowingEmailTextField] = useState(false)
 
   const [isLoading, setLoading] = useState(false)
@@ -421,9 +421,9 @@ const SignUpPage = () => {
                       className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
                       onChange={(e) => {
                         if (e.target.value && option.title == 'yes') {
-                          setIsLead(true)
+                          setLead(true)
                         } else if (e.target.value && option.title == 'no') {
-                          setIsLead(false)
+                          setLead(false)
                         }
                       }}
                     />
