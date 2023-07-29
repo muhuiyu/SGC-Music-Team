@@ -8,8 +8,8 @@ import YearMonthsTimeFilter from '../../common/components/YearMonthsFilter'
 import PlannerEmptyView from './PlannerEmptyView'
 import PlannerTable from './PlannerTable'
 
-import useUpdateService from '../../../api/providers/useUpdateService'
 import classNames from 'classnames'
+import useUpdateService from '../../../api/providers/useUpdateService'
 import { pageContentDivStyle } from '../../common/styles/ComponentStyles'
 
 export default function PlannerPageContent() {

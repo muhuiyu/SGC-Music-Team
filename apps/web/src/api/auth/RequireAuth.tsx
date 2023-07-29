@@ -1,29 +1,17 @@
-import React, { ComponentProps, ComponentType, useContext, useEffect, useState } from 'react'
+import React, { ComponentProps, ComponentType } from 'react'
 import { Navigate, useLocation } from 'react-router-dom'
 import { pageInfo } from '../../models/common/AppPage'
-import { AuthContext } from './AuthContext'
+import useAuth from '../providers/useAuth'
 
 export function RequireAuth({ children }: { children: JSX.Element }) {
-  const { user, isFetching, isLoggedIn } = useContext(AuthContext)
-  const [isLoading, setLoading] = useState(true)
+  const { user } = useAuth()
 
   let location = useLocation()
 
-  useEffect(() => {
-    if (!isFetching) {
-      setLoading(false)
-    }
-  }, [isFetching])
-
-  if (isLoading) {
-    return <div>Loading... </div>
-  }
-
-  if (!isLoggedIn && !user && !isFetching) {
-    return <Navigate to={pageInfo.login.href} state={{ from: location }} replace />
-  }
+  console.log('call require auth', 'user', user)
 
   if (!user) {
+    console.log('not loggedin')
     return <Navigate to={pageInfo.login.href} state={{ from: location }} replace />
   }
 

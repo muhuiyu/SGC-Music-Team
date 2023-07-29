@@ -1,12 +1,10 @@
 import classNames from 'classnames'
-import { useContext, useEffect, useState } from 'react'
-import SearchInput from '../components/SearchInput'
-import { AppPage, pageInfo } from '../models/common/AppPage'
-import User from '../models/user/User'
-import { logoImageUrl } from '../modules/common/assets/AppImages'
-import { AuthContext } from '../api/auth/AuthContext'
-import { useNavigate, useNavigation } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import useAuth from '../api/providers/useAuth'
 import useCurrentUser from '../api/providers/useCurrentUser'
+import SearchInput from '../components/SearchInput'
+import { AppPage } from '../models/common/AppPage'
+import { logoImageUrl } from '../modules/common/assets/AppImages'
 
 interface Props {
   currentPage: AppPage
@@ -14,7 +12,7 @@ interface Props {
 
 export default function NavBar({ currentPage }: Props) {
   const { currentUser: user } = useCurrentUser()
-  const { signout } = useContext(AuthContext)
+  const { signOut } = useAuth()
 
   const [isUserDropdownVisible, setUserDropdownVisible] = useState(false)
   const [isNotificationDropdownVisible, setNotificationDropdownVisible] = useState(false)
@@ -298,7 +296,7 @@ export default function NavBar({ currentPage }: Props) {
   }
 
   async function handleLogout() {
-    signout(() => {})
+    signOut()
   }
 
   const UserDropdown = () => {

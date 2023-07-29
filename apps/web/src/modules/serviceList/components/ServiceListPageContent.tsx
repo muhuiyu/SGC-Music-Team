@@ -1,8 +1,9 @@
 import classNames from 'classnames'
 import _ from 'lodash'
 import { useEffect, useState } from 'react'
+import useAddService from '../../../api/providers/useAddService'
 import useAllServicesWithFilter from '../../../api/providers/useAllServicesWithFilter'
-import useCurrentUser from '../../../api/providers/useCurrentUser'
+import useUpdateService from '../../../api/providers/useUpdateService'
 import TableHeader from '../../../components/TableHeader'
 import { getCurrentMonths, thisYear } from '../../../helpers/DateHelpers'
 import Service, { HourMinute, emptyService, morningServiceTime } from '../../../models/service/Service'
@@ -10,8 +11,6 @@ import YearMonthsTimeFilter from '../../common/components/YearMonthsFilter'
 import AddServiceModal from './AddServiceModal'
 import ServiceEmptyView from './ServiceEmptyView'
 import ServiceListTable from './ServiceListTable'
-import useUpdateService from '../../../api/providers/useUpdateService'
-import useAddService from '../../../api/providers/useAddService'
 
 export default function ServiceListPageContent() {
   const [selectedYear, setYear] = useState(thisYear)

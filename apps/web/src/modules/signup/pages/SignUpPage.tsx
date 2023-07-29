@@ -1,58 +1,33 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query'
 import classNames from 'classnames'
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { AuthContext } from '../../../api/auth/AuthContext'
 import { withRequireAuth } from '../../../api/auth/RequireAuth'
-import { getUserProfile } from '../../../api/providers/SupabaseProvider'
 import useAddUser from '../../../api/providers/useAddUser'
+import useAuth from '../../../api/providers/useAuth'
 import User, { UserRole, allRoles, musicLeadOptions, roleInfo } from '../../../models/user/User'
 import { logoImageUrl } from '../../common/assets/AppImages'
 import MaskedSpinner from '../../common/components/MaskedSpinner'
 import PhoneTextField from '../../common/components/PhoneTextField'
 import { singaporeCountryDialCode } from '../../common/pages/CountryCode'
 
-const labelStyle = 'block text-sm font-medium leading-6 text-gray-900'
-
-const textFieldStyle =
-  'block w-full rounded-md border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
-
 const SignUpPage = () => {
   // User data
-  const { user, signout } = useContext(AuthContext)
-  const userMetaData = user.user_metadata
-  console.log()
+  const { user, signOut } = useAuth()
+  const userMetaData = user?.user_metadata
 
-  const [firstName, setFirstName] = useState(userMetaData.name.split(' ')[0] ?? '')
-  const [lastName, setLastName] = useState(userMetaData.name.split(' ')[1] ?? '')
-  const [email, setEmail] = useState(userMetaData.email ?? '')
+  const [firstName, setFirstName] = useState(userMetaData?.name.split(' ')[0] ?? '')
+  const [lastName, setLastName] = useState(userMetaData?.name.split(' ')[1] ?? '')
+  const [email, setEmail] = useState(userMetaData?.email ?? '')
   const [countryCode, setCountryCode] = useState(singaporeCountryDialCode)
   const [phoneNumber, setPhoneNumber] = useState('')
   const [selectedRoles, setSelectedRoles] = useState<UserRole[]>([])
   const [isLead, setLead] = useState(false)
   const [isShowingEmailTextField, setShowingEmailTextField] = useState(false)
 
-  const [isLoading, setLoading] = useState(false)
+  const [isAddingUserDataToSupabase, setIsAddingUserToSupabase] = useState(false)
 
   // Sign up and navigation
   const navigate = useNavigate()
-  const queryClient = useQueryClient()
-
-  const { data: fetchedUserData, refetch } = useQuery({
-    queryKey: ['userProfile', user?.id ?? ''],
-    queryFn: async () => (user ? getUserProfile(user.id) : null),
-    enabled: !!user?.id,
-    onSuccess: (data) => {
-      setLoading(false)
-      if (user && typeof data !== 'undefined' && data !== null) {
-        navigate('/')
-      }
-    },
-    onError: () => {
-      setLoading(false)
-      alert('something wrong with your data, please check again')
-    },
-  })
 
   // Submit
   const { addUser } = useAddUser()
@@ -69,16 +44,16 @@ const SignUpPage = () => {
         availableRoles: selectedRoles,
         isLead: isLead,
         isInSingapore: true,
-        imageUrlString: userMetaData.avatar_url ?? '',
+        imageUrlString: userMetaData?.avatar_url ?? '',
         musicianGroups: [],
       }
-      setLoading(true)
+      setIsAddingUserToSupabase(true)
       try {
         await addUser(signedUpUser)
-        invalidateAndRefetchUserData()
+        navigate('/')
       } catch (error) {
         alert('something wrong with your data, please check again')
-        setLoading(false)
+        setIsAddingUserToSupabase(false)
       }
     } else {
       alert('something wrong with your data, please check again')
@@ -86,20 +61,7 @@ const SignUpPage = () => {
   }
 
   function handleCancel() {
-    signout(() => {})
-  }
-
-  async function invalidateAndRefetchUserData() {
-    await queryClient.invalidateQueries(['userProfile', user?.id])
-    await refetchUserData()
-  }
-
-  async function refetchUserData() {
-    try {
-      await refetch()
-    } catch (error) {
-      console.log('Error: refetchUserData()')
-    }
+    signOut()
   }
 
   if (user === null || user === undefined) {
@@ -460,9 +422,14 @@ const SignUpPage = () => {
         </div>
       </div>
 
-      {isLoading && <MaskedSpinner />}
+      {isAddingUserDataToSupabase && <MaskedSpinner />}
     </div>
   )
 }
 
 export default withRequireAuth(SignUpPage)
+
+const labelStyle = 'block text-sm font-medium leading-6 text-gray-900'
+
+const textFieldStyle =
+  'block w-full rounded-md border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
