@@ -2,10 +2,10 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import _ from 'lodash'
 import { DateTime } from 'luxon'
 import { useCallback, useMemo } from 'react'
+import { v4 as uuidv4 } from 'uuid'
 import { HourMinute, SupabaseService, serviceFromSupabase } from '../../models/service/Service'
 import { servicesQueryKey, servicesReference } from '../constants/QueryKeys'
 import { supabase } from './SupabaseProvider'
-import { v4 as uuidv4 } from 'uuid'
 
 const hookName = 'useAllServicesWithFilter'
 export interface ServiceYearMonths {
@@ -59,6 +59,7 @@ export default function useAllServicesWithFilter(filter: ServiceYearMonths, serv
           theme: '',
           readings: '',
           preacher: '',
+          hasCommunion: false,
           lead: '',
           assignments: {},
           songs: [],
