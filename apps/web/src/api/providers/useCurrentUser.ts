@@ -1,14 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
-import { useNavigate } from 'react-router-dom'
-import { pageInfo } from '../../models/common/AppPage'
 import { currentUserQueryKey } from '../constants/QueryKeys'
-import { useContext } from 'react'
-import { AuthContext } from '../auth/AuthContext'
 import { getUserProfile } from './SupabaseProvider'
+import useAuth from './useAuth'
 
 export default function useCurrentUser() {
-  const navigate = useNavigate()
-  const { user, signout } = useContext(AuthContext)
+  const { user, signOut } = useAuth()
 
   const { data: currentUser, isFetching } = useQuery({
     queryKey: [currentUserQueryKey],
@@ -23,7 +19,7 @@ export default function useCurrentUser() {
     },
     onSuccess: (user) => {
       if (!user) {
-        signout(() => {})
+        signOut()
       }
     },
   })

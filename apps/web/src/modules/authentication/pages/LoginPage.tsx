@@ -1,38 +1,33 @@
 import classNames from 'classnames'
 
 import { useQuery } from '@tanstack/react-query'
-import { useContext, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { logoImageUrl } from '../../common/assets/AppImages'
 import { getUserProfile } from '../../../api/providers/SupabaseProvider'
-import { AuthContext } from '../../../api/auth/AuthContext'
-import useCurrentUser from '../../../api/providers/useCurrentUser'
+import useAuth from '../../../api/providers/useAuth'
+import { logoImageUrl } from '../../common/assets/AppImages'
 
 export default function LoginPage() {
   const navigate = useNavigate()
-  const { user, signin } = useContext(AuthContext)
+  const { user: supabaseAuthUser, isFetching, signIn } = useAuth()
 
-  const { data: fetchedUserData, isFetching: isFetchingUser } = useQuery({
-    queryKey: ['userProfile', user?.id ?? ''],
-    queryFn: async () => (user ? getUserProfile(user.id) : null),
-    enabled: !!user?.id,
-  })
-
-  useEffect(() => {
-    if (isFetchingUser) {
-      // loading
-      return
-    }
-    if (user && typeof fetchedUserData !== 'undefined') {
-      if (fetchedUserData === null) {
-        // Fetched auth data but user hasn't created profile in database yet
-        navigate('/signup')
-      } else {
-        // Fetched auth data and user data from database
-        navigate('/')
+  const { data, isFetching: isFetchingUser } = useQuery({
+    queryKey: ['userProfile', supabaseAuthUser?.id ?? ''],
+    queryFn: async () => (supabaseAuthUser ? getUserProfile(supabaseAuthUser.id) : null),
+    onSettled: (data) => {
+      // onSuccess callback might not have the updated value of fetchedUserData
+      // so it's better to use onSettled instead
+      if (supabaseAuthUser) {
+        if (data) {
+          // Fetched auth data and user data from the database
+          navigate('/')
+        } else {
+          // Fetched auth data but the user hasn't created a profile in the database yet
+          navigate('/signup')
+        }
       }
-    }
-  }, [user, fetchedUserData, isFetchingUser])
+    },
+    enabled: !!supabaseAuthUser?.id,
+  })
 
   return (
     <>
@@ -52,11 +47,7 @@ export default function LoginPage() {
             <button
               type="button"
               className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              onClick={() => {
-                signin(() => {
-                  // todo
-                })
-              }}
+              onClick={signIn}
             >
               Continue with Google
             </button>
@@ -66,11 +57,9 @@ export default function LoginPage() {
 
       {/* Loading */}
       <div
-        className={classNames(
-          'absolute inset-0 bg-white bg-opacity-80 flex justify-center items-center',
-          { hidden: !isFetchingUser },
-          // { hidden: !isFetching },
-        )}
+        className={classNames('absolute inset-0 bg-white bg-opacity-80 flex justify-center items-center', {
+          hidden: !isFetching,
+        })}
       >
         <span className="text-2xl">Loading&hellip;</span>
       </div>

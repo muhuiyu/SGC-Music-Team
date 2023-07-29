@@ -1,6 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
-import { AuthProvider } from './api/auth/AuthProvider'
 import { pageInfo } from './models/common/AppPage'
 import LoginPage from './modules/authentication/pages/LoginPage'
 import AvailabilityPage from './modules/availability/pages/AvailabilityPage'
@@ -20,12 +19,12 @@ import UsersPage from './modules/users/pages/UsersPage'
 const router = createBrowserRouter([
   {
     path: pageInfo.login.href,
-    element: <LoginPage />,
+    Component: () => <LoginPage />,
     errorElement: <ErrorPage />,
   },
   {
     path: pageInfo.signup.href,
-    element: <SignUpPage />,
+    Component: () => <SignUpPage />,
     errorElement: <ErrorPage />,
   },
   {
@@ -91,9 +90,7 @@ const queryClient = new QueryClient()
 const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <RouterProvider router={router} />
-      </AuthProvider>
+      <RouterProvider router={router} />
     </QueryClientProvider>
   )
 }

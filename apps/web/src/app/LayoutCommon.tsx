@@ -1,4 +1,3 @@
-import useCurrentUser from '../api/providers/useCurrentUser'
 import { AppPage } from '../models/common/AppPage'
 import FooterSideBar from './FooterSidebar'
 import NavBar from './NavBar'

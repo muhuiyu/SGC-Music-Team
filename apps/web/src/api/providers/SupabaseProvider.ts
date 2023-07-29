@@ -1,8 +1,7 @@
-import { createClient } from '@supabase/supabase-js'
-import { User as SupabaseUser } from '@supabase/supabase-js'
+import { User as SupabaseUser, createClient } from '@supabase/supabase-js'
+import _ from 'lodash'
 import User from '../../models/user/User'
 import { usersReference } from '../constants/QueryKeys'
-import _ from 'lodash'
 
 // Setup
 const supabaseUrl = 'https://lxnkjsazarmoeuyfhtqz.supabase.co'
@@ -13,5 +12,6 @@ export const supabase = createClient(supabaseUrl, supabaseKey)
 export async function getUserProfile(userId: SupabaseUser['id']): Promise<User | null> {
   const { data, error } = await supabase.from(usersReference).select().eq('id', userId)
   if (data === null || _.isEmpty(data)) return null
+  console.log('data[0]', data[0])
   return data[0] as User
 }
