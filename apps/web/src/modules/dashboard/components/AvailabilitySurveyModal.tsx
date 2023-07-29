@@ -95,7 +95,9 @@ export default function AvailabilitySurveyModal({
           <div className="py-4 border-b rounded-t">
             <h3 className="text-base font-semibold text-gray-900 lg:text-xl">Edit Availbility</h3>
           </div>
-          <p className="text-md font-normal text-gray-500 pt-4 pb-8">Select all the time you're available to serve</p>
+          <p className="text-md font-normal text-gray-500 pt-4 pb-8">
+            Select all the time you're available to serve (it's fake data, it won't be updated)
+          </p>
           {isFetching ? (
             <Spinner />
           ) : (

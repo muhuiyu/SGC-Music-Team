@@ -4,8 +4,6 @@ import produce from 'immer'
 import _ from 'lodash'
 import React, { useEffect, useMemo, useState } from 'react'
 import Service from '../../../models/service/Service'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrash } from '@fortawesome/free-solid-svg-icons'
 
 interface Props {
   isShowingAddServiceModal: boolean
@@ -191,6 +189,36 @@ export default function AddServiceModal({
               />
             </div>
 
+            {/* communion */}
+            <div>
+              <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 ">
+                Has communion?
+              </label>
+              <div className="space-y-4 sm:flex sm:items-center sm:space-x-10 sm:space-y-0">
+                {hasCommunionOptions.map((option) => (
+                  <div key={option.id} className="flex items-center">
+                    <input
+                      id={option.id}
+                      name="lead-response"
+                      type="radio"
+                      defaultChecked={!option.value}
+                      className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                      onChange={(e) => {
+                        if (e.target.value && option.title == 'yes') {
+                          updateServiceDetail('hasCommunion', true)
+                        } else if (e.target.value && option.title == 'no') {
+                          updateServiceDetail('hasCommunion', false)
+                        }
+                      }}
+                    />
+                    <label htmlFor={option.id} className="ml-3 block text-sm font-medium leading-6 text-gray-900">
+                      {option.title}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </div>
+
             <div className="flex justify-between gap-4 pt-8">
               <button
                 type="reset"
@@ -239,3 +267,8 @@ export default function AddServiceModal({
     </div>
   )
 }
+
+export const hasCommunionOptions = [
+  { id: 'yes', title: 'yes', value: true },
+  { id: 'no', title: 'no', value: false },
+]

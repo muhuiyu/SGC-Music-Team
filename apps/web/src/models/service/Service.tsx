@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon'
-import User, { UserRole } from '../user/User'
 import { ServiceSong } from '../song/ServiceSong'
+import User, { UserRole } from '../user/User'
 
 // 10:15
 export const morningServiceTime: HourMinute = {
@@ -34,6 +34,7 @@ export default interface Service {
   theme: string
   readings: string
   preacher: string
+  hasCommunion: boolean
   lead: User['id'] | undefined
   assignments: { [userId: User['id']]: UserRole }
   songs: ServiceSong[]
@@ -81,6 +82,7 @@ export interface SupabaseService {
   theme: string
   readings: string
   preacher: string
+  hasCommunion: boolean
   lead: User['id'] | undefined
   assignments: { [userId: User['id']]: UserRole }
   songs: ServiceSong[]
@@ -111,6 +113,7 @@ export const emptyService: Service = {
   theme: '',
   readings: '',
   preacher: '',
+  hasCommunion: false,
   lead: undefined,
   assignments: {},
   songs: [],

@@ -1,12 +1,18 @@
 import { PaperClipIcon } from '@heroicons/react/20/solid'
-import useService from '../../../api/providers/useService'
-import Service, { getFormattedLocalString } from '../../../models/service/Service'
-import useAllUsers from '../../../api/providers/useAllUsers'
-import { roleInfo } from '../../../models/user/User'
 import _ from 'lodash'
 import useAllSongs from '../../../api/providers/useAllSongs'
+import useAllUsers from '../../../api/providers/useAllUsers'
+import useService from '../../../api/providers/useService'
+import Service, { getFormattedLocalString } from '../../../models/service/Service'
+import { roleInfo } from '../../../models/user/User'
 
+import { faEdit, faLightbulb } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import classNames from 'classnames'
+import { useCallback, useEffect, useState } from 'react'
+import useUpdateService from '../../../api/providers/useUpdateService'
 import { songOccasionInfo } from '../../../models/song/SongOccasion'
+import TagLabel from '../../common/components/TagLabel'
 import {
   detailPageHeaderDivStyle,
   detailPageInfoContentStyle,
@@ -15,10 +21,7 @@ import {
   detailPageRowStyle,
   pageContentDivStyle,
 } from '../../common/styles/ComponentStyles'
-import { useEffect, useMemo, useState } from 'react'
-import useUpdateService from '../../../api/providers/useUpdateService'
-import classNames from 'classnames'
-import AddServiceSongModal from './AddServiceSongModal'
+import EditSongsModal from './EditSongsModal'
 
 interface Props {
   serviceId: Service['id']
@@ -36,7 +39,7 @@ export default function ServiceDetailPageContent({ serviceId }: Props) {
     return leadUser.firstName + ' ' + leadUser.lastName
   }
 
-  const getServiceTeamList = () => {
+  const getServiceTeamList = useCallback(() => {
     if (!service || _.isEmpty(service.assignments)) return <div className={detailPageInfoContentStyle}>-</div>
     return Object.entries(service.assignments).map(([userId, role]) => {
       const user = generateUserDictionary()[userId]
@@ -46,9 +49,9 @@ export default function ServiceDetailPageContent({ serviceId }: Props) {
         </div>
       )
     })
-  }
+  }, [])
 
-  const getSongList = () => {
+  const getSongList = useCallback(() => {
     if (!service || _.isEmpty(service.songs)) {
       return <div className={detailPageInfoContentStyle}>-</div>
     }
@@ -60,7 +63,7 @@ export default function ServiceDetailPageContent({ serviceId }: Props) {
         </div>
       )
     })
-  }
+  }, [])
 
   const getServiceDateString = (): string => {
     if (service?.dateTime === undefined) return '-'
@@ -75,7 +78,7 @@ export default function ServiceDetailPageContent({ serviceId }: Props) {
   useEffect(() => {
     function handleEscapeKey(event: KeyboardEvent) {
       if (event.code === 'Escape') {
-        setShowingAddServiceSongModal(false)
+        setShowingEditSongsModal(false)
         setShowingEditSongsModal(false)
       }
     }
@@ -83,74 +86,15 @@ export default function ServiceDetailPageContent({ serviceId }: Props) {
     return () => document.removeEventListener('keydown', handleEscapeKey)
   })
 
-  const [isShowingEditSongsModal, setShowingEditSongsModal] = useState(false)
   const { updateService } = useUpdateService()
-  const [isShowingAddServiceSongModal, setShowingAddServiceSongModal] = useState(false)
+  const [isShowingEditSongsModal, setShowingEditSongsModal] = useState(false)
 
-  const [editingService, setEditingService] = useState<Partial<Service>>({})
-  const resolvedService = useMemo(
-    (): Service | undefined =>
-      service
-        ? {
-            ...service,
-            ...editingService,
-          }
-        : undefined,
-    [service, editingService],
-  )
-
-  const clearResolvedService = () => {
-    setEditingService({})
-  }
-
-  const updateServiceDetail = <K extends keyof Service>(
-    key: K,
-    value: Service[K] | ((prevValue: Service[K] | undefined) => Service[K]),
-  ) => {
-    setEditingService((prevService) => ({
-      ...prevService,
-      [key]: typeof value === 'function' ? value(prevService[key] ?? service?.[key]) : value,
-    }))
-  }
-
-  const onChangeServiceDetail =
-    <K extends keyof Omit<Service, 'id'>>(key: K) =>
-    (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => {
-      updateServiceDetail(key, e.target.value as Service[K])
-    }
-
-  // const onChangeSongs = (songs: Song['id'][]) => {
-  // updateServiceDetail('tags', tags)
-  // }
-
-  const moveIndex = (array: any[], index: number, offset: number): any[] => {
-    if (index < 0 || index >= array.length) {
-      console.log('Invalid index')
-      return array
-    }
-
-    const newIndex = index + offset
-    if (newIndex < 0 || newIndex >= array.length) {
-      console.log('New index is out of bounds')
-      return array
-    }
-    const newArray = [...array]
-    const item = newArray.splice(index, 1)[0]
-    newArray.splice(newIndex, 0, item)
-
-    return newArray
-  }
-
-  const onSaveService = () => {
-    if (resolvedService === undefined || resolvedService.id === undefined) {
+  const onSaveService = (service: Service) => {
+    if (service === undefined || service.id === undefined) {
       return
     }
-    updateService(resolvedService.id, resolvedService)
+    updateService(service.id, service)
   }
-
-  const areDetailsValid = useMemo(() => {
-    return !_.isEmpty(resolvedService?.dateTime)
-  }, [resolvedService])
 
   if (!service) {
     return null
@@ -160,8 +104,21 @@ export default function ServiceDetailPageContent({ serviceId }: Props) {
       <div className={pageContentDivStyle}>
         <div className="w-full mt-4">
           <div>
+            {/* reminder */}
+            <div className="mx-10 p-4 border border-yellow-400 text-sm rounded-lg bg-yellow-100">
+              <FontAwesomeIcon icon={faLightbulb} className="mr-3" />
+              You can edit the service details in{' '}
+              <a href="/serviceList" className="text-blue-600">
+                Service List
+              </a>{' '}
+              ; update songs list by clicking <FontAwesomeIcon icon={faEdit} />; update music team in{' '}
+              <a href="/planner" className="text-blue-600">
+                Planner
+              </a>
+            </div>
+
             {/* header */}
-            <div className={classNames(detailPageHeaderDivStyle, 'justify-between')}>
+            <div className={classNames(detailPageHeaderDivStyle, 'justify-between mt-6')}>
               <div className="flex flex-row flex-1">
                 <div className="flex-1">
                   <h3 className="text-base font-semibold leading-7 text-gray-900">{getServiceDateString()}</h3>
@@ -170,6 +127,7 @@ export default function ServiceDetailPageContent({ serviceId }: Props) {
                     {_.isEmpty(service.theme) ? '' : ` - ${service.theme}`}
                   </p>
                   <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">{service?.readings}</p>
+                  {service.hasCommunion && <TagLabel title="Communion service" />}
                 </div>
               </div>
             </div>
@@ -191,7 +149,17 @@ export default function ServiceDetailPageContent({ serviceId }: Props) {
                   {getServiceTeamList()}
                 </div>
                 <div className={detailPageInfoDivStyle}>
-                  <div className={detailPageInfoTitleStyle}>Songs</div>
+                  <div className={classNames(detailPageInfoTitleStyle, 'flex flex-row items-center')}>
+                    <div>Songs</div>
+                    <FontAwesomeIcon
+                      icon={faEdit}
+                      className="ml-2"
+                      color="#4f46e5"
+                      onClick={() => {
+                        setShowingEditSongsModal(true)
+                      }}
+                    />
+                  </div>
                   {getSongList()}
                 </div>
               </div>
@@ -203,7 +171,7 @@ export default function ServiceDetailPageContent({ serviceId }: Props) {
               </div>
 
               <div className="border-t border-gray-100 py-6 px-10">
-                <div className={detailPageInfoTitleStyle}>Attachments</div>
+                <div className={detailPageInfoTitleStyle}>Attachments (fake data, not updated yet)</div>
                 <div className="mt-2 text-sm text-gray-900">
                   <ul role="list" className="divide-y divide-gray-100 rounded-md border border-gray-200">
                     <li className="flex items-center justify-between py-4 pl-4 pr-5 text-sm leading-6">
@@ -230,17 +198,14 @@ export default function ServiceDetailPageContent({ serviceId }: Props) {
       <div
         className={classNames(
           'fixed z-50 overflow-x-hidden overflow-y-auto h-full inset-0 flex bg-black bg-opacity-30 justify-center items-center',
-          { hidden: !isShowingAddServiceSongModal },
+          { hidden: !isShowingEditSongsModal },
         )}
       >
-        <AddServiceSongModal
-          {...{ isShowingAddServiceSongModal, songs }}
-          onSave={(song) => {
-            // todo
-            setShowingAddServiceSongModal(false)
-          }}
+        <EditSongsModal
+          {...{ isShowingEditSongsModal, service, songs, songDictionary: generateSongDictionary() }}
+          onSave={onSaveService}
           onDismiss={() => {
-            setShowingAddServiceSongModal(false)
+            setShowingEditSongsModal(false)
           }}
         />
       </div>

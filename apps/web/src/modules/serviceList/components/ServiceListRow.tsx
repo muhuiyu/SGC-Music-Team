@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import Service, { getFormattedLocalString } from '../../../models/service/Service'
+import TagLabel from '../../common/components/TagLabel'
 
 interface Props {
   service: Service
@@ -24,7 +25,10 @@ export default function ServiceListRow({ service, selected = false, onUpdateSele
         {getFormattedLocalString(service.dateTime)}
       </td>
       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-        {_.isEmpty(service.title) ? '-' : service.title}
+        <div>
+          {_.isEmpty(service.title) ? '-' : service.title}
+          {service.hasCommunion && <TagLabel title="Communion service" />}
+        </div>
       </td>
       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
         {_.isEmpty(service.theme) ? '-' : service.theme}

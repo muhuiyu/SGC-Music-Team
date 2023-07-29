@@ -1,9 +1,7 @@
 import { XMarkIcon } from '@heroicons/react/20/solid'
 import classNames from 'classnames'
-import produce from 'immer'
-import _, { filter, keyBy } from 'lodash'
-import React, { useEffect, useMemo, useRef, useState } from 'react'
-import Service from '../../../models/service/Service'
+import _ from 'lodash'
+import { useEffect, useRef, useState } from 'react'
 import { Song } from '../../../models/song/Song'
 
 interface Props {
