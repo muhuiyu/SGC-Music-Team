@@ -1,7 +1,6 @@
 import classNames from 'classnames'
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { signUpPageKey } from '../../../constants/PageKeys'
 import useAddUser from '../../../hooks/useAddUser'
 import useAuth from '../../../hooks/useAuth'
 import { pageInfo } from '../../../models/common/AppPage'
@@ -110,7 +109,7 @@ const SignUpPage = () => {
   }
 
   return (
-    <div key={signUpPageKey} className="space-y-12 py-12">
+    <div className="space-y-12 py-12">
       <div className="max-w-2xl mx-auto">
         <SignUpHeader />
 
