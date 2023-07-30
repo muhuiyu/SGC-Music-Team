@@ -1,20 +1,18 @@
 import { useState } from 'react'
-import useAllServicesWithFilter from '../../../api/providers/useAllServicesWithFilter'
-import useAllUsers from '../../../api/providers/useAllUsers'
-import useCurrentUser from '../../../api/providers/useCurrentUser'
-import { getCurrentMonths, thisYear } from '../../../helpers/DateHelpers'
+import useAllServicesWithFilter from '../../../hooks/useAllServicesWithFilter'
+import useAllUsers from '../../../hooks/useAllUsers'
 import Service, { HourMinute, morningServiceTime } from '../../../models/service/Service'
 import YearMonthsTimeFilter from '../../common/components/YearMonthsFilter'
+import { getCurrentMonths, thisYear } from '../../common/helpers/DateHelpers'
 import PlannerEmptyView from './PlannerEmptyView'
 import PlannerTable from './PlannerTable'
 
 import classNames from 'classnames'
-import useUpdateService from '../../../api/providers/useUpdateService'
+import useUpdateService from '../../../hooks/useUpdateService'
 import { pageContentDivStyle } from '../../common/styles/ComponentStyles'
 
 export default function PlannerPageContent() {
   const { users, isLoading: isGetAllUsersLoading } = useAllUsers()
-  const { currentUser } = useCurrentUser()
 
   const [selectedYear, setYear] = useState(thisYear)
   const [months, setMonths] = useState<[number, number]>(getCurrentMonths())

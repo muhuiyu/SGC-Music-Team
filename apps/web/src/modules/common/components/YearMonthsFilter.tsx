@@ -3,13 +3,8 @@ import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import classNames from 'classnames'
 import _ from 'lodash'
 import { Fragment, useMemo } from 'react'
-import { monthFormatter } from '../pages/helper/MonthFormatter'
-import {
-  HourMinute,
-  eveningServiceTime,
-  hourMinuteToString,
-  morningServiceTime,
-} from '../../../models/service/Service'
+import { HourMinute, eveningServiceTime, hourMinuteToString, morningServiceTime } from '../../../models/service/Service'
+import { monthFormatter } from '../helpers/MonthFormatter'
 
 interface Props {
   selectedYear: number
@@ -22,15 +17,7 @@ interface Props {
 }
 
 export default function YearMonthsTimeFilter(props: Props) {
-  const {
-    selectedYear,
-    thisYear,
-    months,
-    selectedTime,
-    onChangeYear,
-    onChangeMonths,
-    onChangeTime,
-  } = props
+  const { selectedYear, thisYear, months, selectedTime, onChangeYear, onChangeMonths, onChangeTime } = props
 
   const firstDate = useMemo(() => {
     return new Date(`${selectedYear}-${_.padStart(months[0].toString(), 2, '0')}-01`)
@@ -106,12 +93,8 @@ export default function YearMonthsTimeFilter(props: Props) {
           <Menu.Items className="absolute left-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
             <div className="py-1">
               {_.chunk(_.range(1, 13), 2).map(([firstMonth, secondMonth]) => {
-                const firstDate = new Date(
-                  `${selectedYear}-${_.padStart(firstMonth.toString(), 2, '0')}-01`,
-                )
-                const secondDate = new Date(
-                  `${selectedYear}-${_.padStart(secondMonth.toString(), 2, '0')}-01`,
-                )
+                const firstDate = new Date(`${selectedYear}-${_.padStart(firstMonth.toString(), 2, '0')}-01`)
+                const secondDate = new Date(`${selectedYear}-${_.padStart(secondMonth.toString(), 2, '0')}-01`)
                 return (
                   <Menu.Item key={`${firstMonth}-${secondMonth}`}>
                     {({ active }) => (

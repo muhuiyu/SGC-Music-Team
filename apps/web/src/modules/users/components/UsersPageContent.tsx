@@ -1,10 +1,11 @@
 import _ from 'lodash'
 import { useMemo, useState } from 'react'
-import useAllUsers from '../../../api/providers/useAllUsers'
-import TableHeader from '../../../components/TableHeader'
+
+import useAllUsers from '../../../hooks/useAllUsers'
 import SearchBar from '../../common/components/SearchBar'
-import UserListTable from './UserListTable'
+import TableHeader from '../../common/components/TableHeader'
 import { pageContentDivStyle } from '../../common/styles/ComponentStyles'
+import UserListTable from './UserListTable'
 
 export default function UsersPageContent() {
   const { users, isLoading } = useAllUsers()
@@ -17,7 +18,7 @@ export default function UsersPageContent() {
   const searchableUsers = useMemo(() => {
     return users.map((user) => ({
       id: user.id,
-      key: [user.firstName, user.lastName, user.email].map((e) => e.toLowerCase()).join(' '),
+      key: [user.name, user.email].map((e) => e.toLowerCase()).join(' '),
     }))
   }, [users])
 
@@ -26,9 +27,7 @@ export default function UsersPageContent() {
       return users
     }
     const lowercasedQuery = searchQuery.toLowerCase()
-    const userIds = searchableUsers
-      .filter(({ key }) => key.includes(lowercasedQuery))
-      .map(({ id }) => id)
+    const userIds = searchableUsers.filter(({ key }) => key.includes(lowercasedQuery)).map(({ id }) => id)
     return _.compact(userIds.map((id) => keyedUsers[id]))
   }, [users, searchQuery])
 

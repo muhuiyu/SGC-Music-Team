@@ -22,9 +22,7 @@ export default function UserListRow(props: Props) {
           onChange={(e) => onUpdateSelection(e.target.checked)}
         />
       </td>
-      <td className="whitespace-nowrap px-4 py-4 text-sm font-medium text-gray-900">
-        {user.firstName} {user.lastName}
-      </td>
+      <td className="whitespace-nowrap px-4 py-4 text-sm font-medium text-gray-900">{user.name}</td>
       <td className="whitespace-nowrap px-3 py-4 text-sm flex flex-row gap-1">
         {user.availableRoles.map((role) => (
           <span
@@ -39,9 +37,7 @@ export default function UserListRow(props: Props) {
           </span>
         ))}
       </td>
-      <td className="whitespace-nowrap px-4 py-4 text-sm font-medium text-gray-900">
-        {user.email}
-      </td>
+      <td className="whitespace-nowrap px-4 py-4 text-sm font-medium text-gray-900">{user.email}</td>
       <td className="whitespace-nowrap px-4 py-4 text-sm font-medium text-gray-900">
         {user.countryCode} {user.phoneNumber}
       </td>

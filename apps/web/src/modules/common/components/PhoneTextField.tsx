@@ -1,3 +1,4 @@
+import classNames from 'classnames'
 import countryCodes from '../pages/CountryCode'
 
 interface Props {
@@ -5,17 +6,13 @@ interface Props {
   phoneNumber: string
   setCountryCode(value: string): void
   setPhoneNumber(value: string): void
+  className?: string
 }
 
-export default function PhoneTextField({
-  countryCode,
-  phoneNumber,
-  setCountryCode,
-  setPhoneNumber,
-}: Props) {
+export default function PhoneTextField({ countryCode, phoneNumber, setCountryCode, setPhoneNumber, className }: Props) {
   return (
-    <div className="flex flex-row gap-4">
-      <div className="col-span-2 col-start-1">
+    <div className={classNames('flex flex-row gap-4', className)}>
+      <div className="">
         <label htmlFor="country" className="block text-sm font-medium leading-6 text-gray-900">
           Country
         </label>
@@ -37,7 +34,7 @@ export default function PhoneTextField({
           </select>
         </div>
       </div>
-      <div className="col-span-6">
+      <div className="flex-1">
         <label htmlFor="phoneNumber" className="block text-sm font-medium leading-6 text-gray-900">
           Phone number
         </label>

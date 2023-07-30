@@ -1,8 +1,8 @@
 import _ from 'lodash'
-import { getMonthString } from '../../../helpers/DateHelpers'
 import Service, { getFormattedLocalTimeString } from '../../../models/service/Service'
 import { Song } from '../../../models/song/Song'
 import User from '../../../models/user/User'
+import { getMonthString } from '../../common/helpers/DateHelpers'
 
 interface Props {
   services: Service[]
@@ -68,9 +68,7 @@ const UpcomingServiceCard = (props: {
       <div className="flex flex-col gap-2">
         <div className="font-medium text-lg">{getFormattedLocalTimeString(service.dateTime)}</div>
         <div>{service.readings}</div>
-        <div className="text-md text-slate-500">
-          Lead: {leadUser === undefined ? 'TBD' : leadUser.firstName + ' ' + leadUser.lastName}
-        </div>
+        <div className="text-md text-slate-500">Lead: {leadUser === undefined ? 'TBD' : leadUser.name}</div>
         <div className="text-md text-slate-500">Songs: {songsJoinedText()}</div>
       </div>
     </div>

@@ -1,24 +1,24 @@
-import { useMemo, useState } from 'react'
-import useUser from '../../../api/providers/useUser'
-import User, { UserRole, allRoles, musicLeadOptions, roleInfo } from '../../../models/user/User'
-import _ from 'lodash'
-import PhoneTextField from '../../common/components/PhoneTextField'
-import { singaporeCountryDialCode } from '../../common/pages/CountryCode'
 import classNames from 'classnames'
+import _ from 'lodash'
+import { useMemo, useState } from 'react'
+import useUpdateUser from '../../../hooks/useUpdateUser'
+import useUser from '../../../hooks/useUser'
 import { MusicianGroup, allMusicianGroups } from '../../../models/user/MusicianGroup'
-import useUpdateUser from '../../../api/providers/useUpdateUser'
+import User, { UserRole, allRoles, musicLeadOptions, roleInfo } from '../../../models/user/User'
+import PhoneTextField from '../../common/components/PhoneTextField'
 import Spinner from '../../common/components/Spinner'
+import { singaporeCountryDialCode } from '../../common/pages/CountryCode'
 import {
-  detailPageSecondaryButtonStyle,
   detailPageFormRowStyle,
   detailPageHeaderDivStyle,
+  detailPageInfoContentStyle,
+  detailPageInfoDivStyle,
+  detailPageInfoTitleStyle,
   detailPagePrimaryButtonStyle,
+  detailPageSecondaryButtonStyle,
   detailPageTextFieldLabelStyle,
   detailPageTextFieldStyle,
   pageContentDivStyle,
-  detailPageInfoDivStyle,
-  detailPageInfoTitleStyle,
-  detailPageInfoContentStyle,
 } from '../../common/styles/ComponentStyles'
 
 interface Props {
@@ -80,7 +80,7 @@ export default function UserDetailPageContent({ userId }: Props) {
   }
 
   const areDetailsValid = useMemo(() => {
-    return !_.isEmpty(resolvedUser?.firstName)
+    return !_.isEmpty(resolvedUser?.name)
   }, [resolvedUser])
 
   if (isFetching || user === null) {
@@ -131,36 +131,20 @@ export default function UserDetailPageContent({ userId }: Props) {
                 </div>
               </div>
               <div className={detailPageFormRowStyle}>
-                {/* first name */}
+                {/* name */}
                 <div className="flex-1">
-                  <label htmlFor="firstName" className={detailPageTextFieldLabelStyle}>
-                    First name
+                  <label htmlFor="name" className={detailPageTextFieldLabelStyle}>
+                    Name
                   </label>
                   <input
                     type="text"
-                    name="firstName"
-                    id="firstName"
+                    name="name"
+                    id="name"
                     className={detailPageTextFieldStyle}
-                    placeholder="Enter first name"
+                    placeholder="Enter name"
                     required
-                    value={resolvedUser.firstName}
-                    onChange={onChangeUserDetail('firstName')}
-                  />
-                </div>
-                {/* last name */}
-                <div className="flex-1">
-                  <label htmlFor="lastName" className={detailPageTextFieldLabelStyle}>
-                    Last name
-                  </label>
-                  <input
-                    type="text"
-                    name="lastName"
-                    id="lastName"
-                    className={detailPageTextFieldStyle}
-                    placeholder="Enter first name"
-                    required
-                    value={resolvedUser.lastName}
-                    onChange={onChangeUserDetail('lastName')}
+                    value={resolvedUser.name}
+                    onChange={onChangeUserDetail('name')}
                   />
                 </div>
               </div>
@@ -291,9 +275,7 @@ export default function UserDetailPageContent({ userId }: Props) {
                 <div className="flex flex-row flex-1">
                   <img className="h-24 w-24 rounded-full" src={user.imageUrlString ?? ''} alt="" />
                   <div className="flex-1">
-                    <h3 className="text-base font-semibold leading-7 text-gray-900 px-10">
-                      {user.firstName} {user.lastName}
-                    </h3>
+                    <h3 className="text-base font-semibold leading-7 text-gray-900 px-10">{user.name}</h3>
                     <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500 px-10">{user.email}</p>
                     <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500 px-10">
                       {user.countryCode} {user.phoneNumber}

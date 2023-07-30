@@ -59,7 +59,7 @@ export default function PlannerTableLeadCell(props: Props) {
         }
         onClick={handleClick}
       >
-        {currentUser ? currentUser.firstName + ' ' + currentUser.lastName : 'Choose user'}
+        {currentUser ? currentUser.name : 'Choose user'}
         {currentUser ? (
           <XMarkIcon
             width={18}
@@ -96,12 +96,8 @@ export default function PlannerTableLeadCell(props: Props) {
                   onChangeLead(user.id)
                 }}
               >
-                <img
-                  className="w-6 h-6 mr-2 rounded-full"
-                  src={user.imageUrlString}
-                  alt={user.firstName + ' ' + user.lastName + ' image'}
-                />
-                {user.firstName + ' ' + user.lastName}
+                <img className="w-6 h-6 mr-2 rounded-full" src={user.imageUrlString} alt={user.name + ' image'} />
+                {user.name}
               </button>
             </li>
           ))}

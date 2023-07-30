@@ -1,7 +1,8 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { pageInfo } from './models/common/AppPage'
-import LoginPage from './modules/authentication/pages/LoginPage'
+import LoginPage from './modules/auth/pages/LoginPage'
+import SignUpPage from './modules/auth/pages/SignUpPage'
 import AvailabilityPage from './modules/availability/pages/AvailabilityPage'
 import CalendarPage from './modules/calendar/pages/CalendarPage'
 import ErrorPage from './modules/common/pages/ErrorPage'
@@ -10,7 +11,6 @@ import ServiceDetailsPage from './modules/dashboard/pages/ServiceDetailPage'
 import PlannerPage from './modules/planner/pages/PlannerPage'
 import ServiceListPage from './modules/serviceList/pages/ServiceListPage'
 import SettingsPage from './modules/settings/pages/SettingsPage'
-import SignUpPage from './modules/signup/pages/SignUpPage'
 import SongDetailPage from './modules/songs/pages/SongDetailPage'
 import SongsPage from './modules/songs/pages/SongsPage'
 import UserDetailPage from './modules/users/pages/UserDetailPage'
@@ -77,7 +77,6 @@ const router = createBrowserRouter([
     Component: () => <ServiceDetailsPage />,
     errorElement: <ErrorPage />,
   },
-  // TODO: define logout
   {
     path: pageInfo.serviceList.href,
     Component: () => <ServiceListPage />,

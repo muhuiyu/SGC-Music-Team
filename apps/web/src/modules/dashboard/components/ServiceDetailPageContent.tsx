@@ -1,8 +1,8 @@
 import { PaperClipIcon } from '@heroicons/react/20/solid'
 import _ from 'lodash'
-import useAllSongs from '../../../api/providers/useAllSongs'
-import useAllUsers from '../../../api/providers/useAllUsers'
-import useService from '../../../api/providers/useService'
+import useAllSongs from '../../../hooks/useAllSongs'
+import useAllUsers from '../../../hooks/useAllUsers'
+import useService from '../../../hooks/useService'
 import Service, { getFormattedLocalString } from '../../../models/service/Service'
 import { roleInfo } from '../../../models/user/User'
 
@@ -10,7 +10,7 @@ import { faEdit, faLightbulb } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import classNames from 'classnames'
 import { useCallback, useEffect, useState } from 'react'
-import useUpdateService from '../../../api/providers/useUpdateService'
+import useUpdateService from '../../../hooks/useUpdateService'
 import { songOccasionInfo } from '../../../models/song/SongOccasion'
 import TagLabel from '../../common/components/TagLabel'
 import {
@@ -36,7 +36,7 @@ export default function ServiceDetailPageContent({ serviceId }: Props) {
   const getServiceLeadName = (): string => {
     if (service?.lead === undefined || _.isEmpty(service.lead)) return '-'
     const leadUser = generateUserDictionary()[service.lead]
-    return leadUser.firstName + ' ' + leadUser.lastName
+    return leadUser.name
   }
 
   const getServiceTeamList = useCallback(() => {
@@ -45,11 +45,11 @@ export default function ServiceDetailPageContent({ serviceId }: Props) {
       const user = generateUserDictionary()[userId]
       return (
         <div key={userId} className={detailPageInfoContentStyle}>
-          {user.firstName} {user.lastName} ({roleInfo[role].name})
+          {user.name} ({roleInfo[role].name})
         </div>
       )
     })
-  }, [])
+  }, [service])
 
   const getSongList = useCallback(() => {
     if (!service || _.isEmpty(service.songs)) {
@@ -63,7 +63,7 @@ export default function ServiceDetailPageContent({ serviceId }: Props) {
         </div>
       )
     })
-  }, [])
+  }, [service])
 
   const getServiceDateString = (): string => {
     if (service?.dateTime === undefined) return '-'

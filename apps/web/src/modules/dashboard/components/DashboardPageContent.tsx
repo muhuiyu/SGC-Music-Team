@@ -2,12 +2,12 @@ import classNames from 'classnames'
 import { DateTime } from 'luxon'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import useAllAvailability from '../../../api/providers/useAllAvailability'
-import useAllServicesWithFilter, { getCurrentServiceYearMonths } from '../../../api/providers/useAllServicesWithFilter'
-import useAllSongs from '../../../api/providers/useAllSongs'
-import useAllUsers from '../../../api/providers/useAllUsers'
-import useCurrentUser from '../../../api/providers/useCurrentUser'
-import useUpdateAvailability from '../../../api/providers/useUpdateAvailability'
+import useAllAvailability from '../../../hooks/useAllAvailability'
+import useAllServicesWithFilter, { getCurrentServiceYearMonths } from '../../../hooks/useAllServicesWithFilter'
+import useAllSongs from '../../../hooks/useAllSongs'
+import useAllUsers from '../../../hooks/useAllUsers'
+import useAuth from '../../../hooks/useAuth'
+import useUpdateAvailability from '../../../hooks/useUpdateAvailability'
 import { pageInfo } from '../../../models/common/AppPage'
 import { Availability } from '../../../models/service/Availability'
 import Service, { isUserOnDuty, morningServiceTime } from '../../../models/service/Service'
@@ -33,14 +33,14 @@ export default function DashboardPageContent() {
     order: 'name',
   })
 
-  const { currentUser } = useCurrentUser()
-  const { availabilities, isLoading } = useAllAvailability(currentUser?.id ?? null, allServiceDates)
+  const { user } = useAuth()
+  const { availabilities, isLoading } = useAllAvailability(user?.id ?? null, allServiceDates)
   const { updateAvailability } = useUpdateAvailability()
 
   const getUpcomingServices = () => {
     return services
       .filter((service) => service.dateTime >= DateTime.now())
-      .filter((service) => isUserOnDuty(service, currentUser?.id ?? ''))
+      .filter((service) => isUserOnDuty(service, user?.id ?? ''))
   }
 
   const onSubmitAvailabilitySurvey = (responses: Availability[]) => {

@@ -1,19 +1,18 @@
 import classNames from 'classnames'
 import _ from 'lodash'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import useAllSongs from '../../../api/providers/useAllSongs'
-import TableHeader from '../../../components/TableHeader'
+
+import useAddSong from '../../../hooks/useAddSong'
+import useAllSongs from '../../../hooks/useAllSongs'
 import { Song, emptySong } from '../../../models/song/Song'
 import { SongTag } from '../../../models/song/SongTag'
-import NavigationPagination from '../../common/components/NavigationPagination'
 import SearchBar from '../../common/components/SearchBar'
+import TableHeader from '../../common/components/TableHeader'
+import { pageContentDivStyle } from '../../common/styles/ComponentStyles'
 import AddSongModal from './AddSongModal'
 import SongFilterButton from './SongFilterButton'
 import SongFilterPanel from './SongFilterPanel'
 import SongListTable from './SongListTable'
-import useUpdateSong from '../../../api/providers/useUpdateSong'
-import useAddSong from '../../../api/providers/useAddSong'
-import { pageContentDivStyle } from '../../common/styles/ComponentStyles'
 
 export default function SongPageContent() {
   const [isShowingAddSongModal, setShowingAddSongModal] = useState(false)

@@ -1,11 +1,9 @@
-import { Menu, Transition } from '@headlessui/react'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
-import { EllipsisVerticalIcon } from '@heroicons/react/24/outline'
 import classNames from 'classnames'
 import { DateTime, Duration } from 'luxon'
-import { Fragment, useMemo, useState } from 'react'
-import { getMonthName } from '../../../helpers/DateHelpers'
+import { useMemo, useState } from 'react'
 import Service from '../../../models/service/Service'
+import { getMonthName } from '../../common/helpers/DateHelpers'
 
 const meetings = [
   {
@@ -49,9 +47,7 @@ export default function CalendarView({ services }: Props) {
       days.push(displayingDate.set({ day: i }))
     }
 
-    const lastDay = displayingDate
-      .plus(Duration.fromObject({ month: 1 }))
-      .minus(Duration.fromObject({ day: 1 }))
+    const lastDay = displayingDate.plus(Duration.fromObject({ month: 1 })).minus(Duration.fromObject({ day: 1 }))
     // if the last day is not saturday, we need to add days from the next month
     if (lastDay.weekday === 7) {
       for (let i = 1; i < 7; i++) {
@@ -115,10 +111,7 @@ export default function CalendarView({ services }: Props) {
       </div>
       <div className="mt-2 grid grid-cols-7 text-sm">
         {days.map((day, dayIdx) => (
-          <div
-            key={day.toISODate() ?? ''}
-            className={classNames(dayIdx > 6 && 'border-t border-gray-200', 'py-2')}
-          >
+          <div key={day.toISODate() ?? ''} className={classNames(dayIdx > 6 && 'border-t border-gray-200', 'py-2')}>
             <button
               type="button"
               className={classNames(

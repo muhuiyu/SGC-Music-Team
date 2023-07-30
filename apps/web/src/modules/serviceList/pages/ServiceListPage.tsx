@@ -1,5 +1,5 @@
-import { withRequireAuth } from '../../../api/auth/RequireAuth'
-import LayoutCommon from '../../../app/LayoutCommon'
+import { withRequireAuth } from '../../../auth/RequireAuth'
+import LayoutCommon from '../../common/components/LayoutCommon'
 import ServiceListPageContent from '../components/ServiceListPageContent'
 
 const ServiceListPage = () => {

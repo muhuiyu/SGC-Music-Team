@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom'
-import { withRequireAuth } from '../../../api/auth/RequireAuth'
-import LayoutCommon from '../../../app/LayoutCommon'
+import { withRequireAuth } from '../../../auth/RequireAuth'
+import LayoutCommon from '../../common/components/LayoutCommon'
 import UserDetailPageContent from '../components/UserDetailPageContent'
 
 const UserDetailPage = () => {
@@ -8,12 +8,7 @@ const UserDetailPage = () => {
   if (userId === undefined) {
     return null
   }
-  return (
-    <LayoutCommon
-      currentPage={'userDetail'}
-      mainContent={<UserDetailPageContent {...{ userId }} />}
-    />
-  )
+  return <LayoutCommon currentPage={'userDetail'} mainContent={<UserDetailPageContent {...{ userId }} />} />
 }
 
 export default withRequireAuth(UserDetailPage)

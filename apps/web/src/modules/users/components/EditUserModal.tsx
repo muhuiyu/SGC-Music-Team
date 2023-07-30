@@ -14,13 +14,7 @@ interface Props {
   className?: string
 }
 
-export default function EditUserModal({
-  isShowingEditUserModal,
-  user,
-  onSaveUser,
-  onDismiss,
-  className,
-}: Props) {
+export default function EditUserModal({ isShowingEditUserModal, user, onSaveUser, onDismiss, className }: Props) {
   // User
   const [editingUser, setEditingUser] = useState<Partial<User>>({})
   const resolvedUser = useMemo(
@@ -61,7 +55,7 @@ export default function EditUserModal({
   }
 
   const areDetailsValid = useMemo(() => {
-    return !_.isEmpty(resolvedUser.firstName)
+    return !_.isEmpty(resolvedUser.name)
   }, [resolvedUser])
 
   return (
@@ -94,42 +88,21 @@ export default function EditUserModal({
           </div>
 
           <form className="space-y-6 text-left pt-6" action="#">
-            <div className="flex gap-4">
-              {/* First Name */}
-              <div className="w-full">
-                <label
-                  htmlFor="firstName"
-                  className="block mb-2 text-sm font-medium text-gray-900 "
-                >
-                  First name
-                </label>
-                <input
-                  type="text"
-                  name="firstName"
-                  id="firstName"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                  placeholder="Enter first name"
-                  required
-                  value={resolvedUser.firstName}
-                  onChange={onChangeUserDetail('firstName')}
-                />
-              </div>
-              {/* Last Name */}
-              <div className="w-full">
-                <label htmlFor="lastName" className="block mb-2 text-sm font-medium text-gray-900 ">
-                  Last name
-                </label>
-                <input
-                  type="text"
-                  name="lastName"
-                  id="lastName"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                  placeholder="Enter last name"
-                  required
-                  value={resolvedUser.lastName}
-                  onChange={onChangeUserDetail('lastName')}
-                />
-              </div>
+            {/* Name */}
+            <div>
+              <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 ">
+                Name
+              </label>
+              <input
+                type="text"
+                name="name"
+                id="name"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                placeholder="Enter name"
+                required
+                value={resolvedUser.name}
+                onChange={onChangeUserDetail('name')}
+              />
             </div>
             {/* Email */}
             <div>
@@ -170,20 +143,13 @@ export default function EditUserModal({
                       checked={resolvedUser.availableRoles.includes(role)}
                       onClick={(_) => {
                         if (resolvedUser.availableRoles.includes(role)) {
-                          onChangeRoles(
-                            resolvedUser.availableRoles.filter(
-                              (selectedRole) => selectedRole !== role,
-                            ),
-                          )
+                          onChangeRoles(resolvedUser.availableRoles.filter((selectedRole) => selectedRole !== role))
                         } else {
                           onChangeRoles([...resolvedUser.availableRoles, role])
                         }
                       }}
                     />
-                    <label
-                      htmlFor="orange-checkbox"
-                      className="ml-2 text-sm font-medium text-gray-900"
-                    >
+                    <label htmlFor="orange-checkbox" className="ml-2 text-sm font-medium text-gray-900">
                       {roleInfo[role].name}
                     </label>
                   </div>
@@ -211,10 +177,7 @@ export default function EditUserModal({
                         }
                       }}
                     />
-                    <label
-                      htmlFor={option.id}
-                      className="ml-3 block text-sm font-medium leading-6 text-gray-900"
-                    >
+                    <label htmlFor={option.id} className="ml-3 block text-sm font-medium leading-6 text-gray-900">
                       {option.title}
                     </label>
                   </div>

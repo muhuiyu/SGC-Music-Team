@@ -14,7 +14,7 @@ export default function PlannerTableUserCell(props: Props) {
           <img className="h-11 w-11 rounded-full" src={user.imageUrlString ?? ''} alt="" />
         </div>
         <div className="ml-4">
-          <div className="font-medium text-gray-900">{user.firstName + ' ' + user.lastName}</div>
+          <div className="font-medium text-gray-900">{user.name}</div>
           <div className="mt-1 text-gray-500 text-xs">{user.availableRoles.join(', ')}</div>
         </div>
       </div>
