@@ -25,13 +25,13 @@ Welcome to the frontend repository of the SGC Music Team Platform. This applicat
 
 ## Access and Routing
 
-Access the application at: http://localhost:5173
+- Access the application at: http://localhost:5173
 
-The main page is <DashboardPage />. Most pages, except <LoginPage />, are wrapped with withRequireAuth() which utilizes useAuth() hook to manage user sessions and redirection.
+- The main page is <DashboardPage />. Most pages, except <LoginPage />, are wrapped with withRequireAuth() which utilizes useAuth() hook to manage user sessions and redirection.
 
-If a user is authenticated (not null), they will stay on the current page.
-If a user is not authenticated (null), they will be redirected to <LoginPage />.
-Authentication flow is defined in RequireAuth.tsx.
+- If a user is authenticated (not null), they will stay on the current page.
+- If a user is not authenticated (null), they will be redirected to <LoginPage />.
+- Authentication flow is defined in RequireAuth.tsx.
 
 ## Setup and Installation
 
@@ -45,5 +45,5 @@ To get the frontend up and running:
 
 ## Technology Stack
 
-React
-TypeScript
+- React
+- TypeScript
