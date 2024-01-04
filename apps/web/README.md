@@ -1,32 +1,49 @@
-# SGC Music team platform
+# SGC Music Team Platform - Frontend
 
-### Folder structure
+Welcome to the frontend repository of the SGC Music Team Platform. This application serves as the user interface for managing various aspects of the music team's activities.
 
-- /src
-  - /assets
-  - /auth
-    - RequireAuth.tsx
-  - /constants
-  - /hooks
-  - /models
-  - /modules (features)
-    - /auth
-    - /availability
-    - /calendar
-    - /dashboard
-    - /planner
-    - /serviceList
-    - /settings
-    - /songs
-    - /users
-  - App.tsx
+## Folder Structure
 
-#### Access
+- /src: Main source code for the application.
+- /assets: Static files like images, fonts, etc.
+- /auth: Authentication related components.
+- RequireAuth.tsx: Component to handle route protection based on authentication.
+- /constants: Application-wide constant values.
+- /hooks: Custom React hooks.
+- /models: Data models and types.
+- /modules: Feature-specific modules.
+- /auth: Authentication module.
+- /availability: Availability management.
+- /calendar: Calendar functionalities.
+- /dashboard: Main dashboard.
+- /planner: Event and schedule planning.
+- /serviceList: List of services.
+- /settings: User settings.
+- /songs: Song management.
+- /users: User management.
+- App.tsx: Main application component.
 
-Open `http://localhost:5173` (the page `<DashboardPage />`)
-All pages (except `<LoginPage />`) is warpped in `withRequireAuth()`, which will fetch current user session by using `useAuth()` and determine the redirection.
+## Access and Routing
 
-- If user is not `null`, stay in current page.
-- If user is `null`, redirect to `<LoginPage />`.
+Access the application at: http://localhost:5173
 
-The logic is defined in `RequireAuth.ts`.
+The main page is <DashboardPage />. Most pages, except <LoginPage />, are wrapped with withRequireAuth() which utilizes useAuth() hook to manage user sessions and redirection.
+
+If a user is authenticated (not null), they will stay on the current page.
+If a user is not authenticated (null), they will be redirected to <LoginPage />.
+Authentication flow is defined in RequireAuth.tsx.
+
+## Setup and Installation
+
+To get the frontend up and running:
+
+1. Clone the repository.
+2. Navigate to the frontend directory.
+3. Run `yarn install` to install dependencies.
+4. Start the development server using `yarn dev`.
+5. The application will be available at http://localhost:5173.
+
+## Technology Stack
+
+React
+TypeScript
